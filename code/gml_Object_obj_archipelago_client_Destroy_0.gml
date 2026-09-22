@@ -1,0 +1,1 @@
+show_error("ERROR: archipelago client deleted!", false);

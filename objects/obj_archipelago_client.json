@@ -27,6 +27,11 @@
       "CodeEntry": "gml_Object_obj_archipelago_client_Create_0"
     },
     {
+      "Category": "Destroy",
+      "Subtype": "",
+      "CodeEntry": "gml_Object_obj_archipelago_client_Destroy_0"
+    },
+    {
       "Category": "Step",
       "Subtype": "Step",
       "CodeEntry": "gml_Object_obj_archipelago_client_Step_0"

@@ -362,7 +362,7 @@ function stage_index_setup()
     level_order = [];
     for (var l = 0; l < 11; l++)
     {
-        for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
+        for (var s = 0; s < ((l == 9) ? 6 : 15); s++)
         {
             array_push(level_order, global.stage_order[l][s]);
             ds_map_set(global.stage_index_to_true_code, global.stage_order[l][s], [l + 1, s + 1]);
@@ -370,11 +370,12 @@ function stage_index_setup()
     }
     
     randomize();
+    random_set_seed(1225, true);
     array_shuffle_ext(level_order);
     
     for (var l = 0; l < 11; l++)
     {
-        for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
+        for (var s = 0; s < ((l == 9) ? 6 : 15); s++)
         {
             var stage = array_pop(level_order);
             global.stage_order[l][s] = stage;

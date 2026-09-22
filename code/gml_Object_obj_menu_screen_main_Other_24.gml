@@ -195,8 +195,12 @@ menu_screen_add_option(new MENU_OPTION("options", spr_menu_icon_none, 0, functio
     text_l = "Archipelago";
 }, function()
 {
-    global.AP_server = get_string("Enter server IP:", "archipelago.gg");
-    var port = get_string("Enter server port (blank for default):", "");
+    // Create AP client
+    if (!instance_exists(obj_archipelago_client))
+        instance_create_depth(0, 0, 0, obj_archipelago_client);
+    
+    global.AP_server = get_string("Enter server IP:", global.AP_server);
+    var port = get_string("Enter server port (blank for default):", string(global.AP_port));
     try
     {
         port = real(port);
@@ -206,9 +210,12 @@ menu_screen_add_option(new MENU_OPTION("options", spr_menu_icon_none, 0, functio
         port = 38281;
     }
     global.AP_port = port;
-    global.AP_password = get_string("Enter password (blank for none):", "");
-    global.AP_name = get_string("Enter slot name:", "");
+    global.AP_password = get_string("Enter password (blank for none):", global.AP_password);
+    global.AP_name = get_string("Enter slot name:", global.AP_name);
+    global.AP_deathlink = true; // TEMP FORCE DEATHLINK
+    
     obj_archipelago_client.AP_connect(true);
+    
     menu_set_top_caption("Connecting...");
 }, -1));
 

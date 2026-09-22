@@ -82,10 +82,6 @@ if (load_on_next_frame == 1 && shut_timer < 0)
                 ani3d_animation_load_all();
             }
             
-            // Create AP client
-            if (!instance_exists(obj_archipelago_client))
-                instance_create_depth(0, 0, 0, obj_archipelago_client);
-            
             stage_index_setup();
             break;
         

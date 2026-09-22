@@ -129,7 +129,7 @@ function AP_sendConnectionInfo()
     {
         cmd: "Connect",
         password: global.AP_password,
-        game: "Baba Is You", // game: APgame, // Baba Is You is TEMP
+        game: "DELTARUNE", // game: APgame, // DELTARUNE is TEMP
         name: global.AP_name,
         uuid: global.AP_uuid,
         items_handling: UnknownEnum.Value_7,
@@ -387,6 +387,18 @@ function AP_sendDeathlink(text)
     
     if (!AP_isAuthenticated())
         exit;
+    
+    if (global.AP_deathlink_amnesty > 1)
+    {
+        helpful_text_display_raw("KOs: " + string(global.AP_deathlink_current_deaths+1) + "/" + string(global.AP_deathlink_amnesty));
+    }
+        
+    if (global.AP_deathlink_amnesty > global.AP_deathlink_current_deaths + 1)
+    {
+        global.AP_deathlink_current_deaths += 1;
+        exit;
+    }
+    global.AP_deathlink_current_deaths = 0;
 
     var _contents =
     {
@@ -458,6 +470,7 @@ function AP_postScouting()
 function AP_fill_id_to_itemname_struct()
 {
     if (array_length(global.AP_remaining_locations) == 0) exit;
+    if (true) exit; // TEMP FAILSAFE
 
     id_to_itemname_path = AP_get_save_folder_prefix() + "id_to_itemname.json"
 
@@ -487,7 +500,7 @@ function AP_fill_id_to_itemname_struct()
         if (true) {
             exit; // TEMP FAILSAFE, fix later
         }
-        item_name_to_id = global.AP_data_package_raw.Baba_Is_You.item_name_to_id // should be VIVIDLOPE
+        item_name_to_id = global.AP_data_package_raw.DELTARUNE.item_name_to_id // should be VIVIDLOPE
 
         names = variable_struct_get_names(item_name_to_id);
 

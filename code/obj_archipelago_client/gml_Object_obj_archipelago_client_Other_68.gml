@@ -32,7 +32,7 @@ if (ds_map_exists(async_load, "buffer"))
                         {
                             if (data[i].games[ii] == "Archipelago") continue;
 
-                            if (data[i].games[ii] == "Baba Is You") // TEMP: should be VIVIDLOPE
+                            if (data[i].games[ii] == "DELTARUNE") // TEMP: should be VIVIDLOPE
                             {
                                 if (!ownGame)
                                 {
@@ -73,20 +73,11 @@ if (ds_map_exists(async_load, "buffer"))
 
                     global.AP_slot = data[i].slot;
 
-                    /*if (variable_struct_exists(data[i].slot_data.options, "chosen_route"))
-                    {
-                        global.AP_route_from_settings = data[i].slot_data.options.chosen_route;
-                        if (global.AP_route_from_settings == global.AP_ENUM_CHOSEN_ROUTE.BOTH_ROUTES)
-                        {
-                            global.AP_current_route = global.AP_ENUM_CHOSEN_ROUTE.ALL_RECRUITS;
-                        }
-                        else
-                        {
-                            global.AP_current_route = data[i].slot_data.options.chosen_route;
-                        }
-                    }*/
-
                     // Settings here
+                    if (variable_struct_exists(data[i].slot_data.options, "deathlink"))
+                        global.AP_deathlink = data[i].slot_data.options.deathlink;
+                    if (variable_struct_exists(data[i].slot_data.options, "deathlink_amnesty"))
+                        global.AP_deathlink_amnesty = data[i].slot_data.options.deathlink;
                     //if (variable_struct_exists(data[i].slot_data.options, "include_unused_items"))
                         //global.AP_include_unused_items = data[i].slot_data.options.include_unused_items;
 
@@ -145,7 +136,7 @@ if (ds_map_exists(async_load, "buffer"))
                 case "ReceivedItems":
                     if (variable_struct_exists(data[i], "items"))
                     {
-                        if (true)
+                        if (false) // TEMP FAILSAFE
                         {
                             global.AP_is_receiving_items = true
                             starting_index = data[i].index;
@@ -179,7 +170,7 @@ if (ds_map_exists(async_load, "buffer"))
                         {
                             if (data[i].tags[ii] == ("DeathLink" + global.AP_deathlink_group) && !global.AP_deathlink_protected)
                             {
-                                if (true) // probably should change to check mode
+                                if (!(global.current_stage == "overworld") && room == rm_maingame)
                                 {
                                     var time;
                                     if (variable_struct_exists(data[i].data, "time"))
@@ -216,6 +207,9 @@ if (ds_map_exists(async_load, "buffer"))
 
                                     global.AP_deathlink_infos = {source: source, cause: cause, time: time, uuid: uuid};
                                     global.AP_deathlink_protected = true;
+                                    if (cause != undefined) {
+                                        helpful_text_display_raw(cause);
+                                    }
                                     gstate_activate_player_ko(5); // KO player
                                     global.AP_deathlink_protected = false;
                                 }
@@ -284,7 +278,7 @@ if (ds_map_exists(async_load, "buffer"))
                     }
                     break;
                 case "DataPackage":
-                    if (variable_struct_exists(data[i], "data"))
+                    if (false && variable_struct_exists(data[i], "data")) // TEMP FAILSAFE, fix later
                     {
                         global.AP_received_datapackage++;
                         AP_add_new_datapackage(data[i].data)
