@@ -1,1 +1,1 @@
-show_error("ERROR: archipelago client deleted!", false);
+show_message("ERROR: Archipelago client object was deleted! Please report this.");

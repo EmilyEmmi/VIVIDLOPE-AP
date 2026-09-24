@@ -175,7 +175,7 @@ if (ds_map_exists(async_load, "buffer"))
                         {
                             if (data[i].tags[ii] == ("DeathLink" + global.AP_deathlink_group) && !global.AP_deathlink_protected)
                             {
-                                if (!(global.current_stage == "overworld") && room == rm_maingame)
+                                if (global.current_stage != "overworld" && room == rm_maingame)
                                 {
                                     var time;
                                     if (variable_struct_exists(data[i].data, "time"))

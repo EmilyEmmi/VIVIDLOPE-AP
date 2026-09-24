@@ -136,7 +136,8 @@ function game_is_in_final_level()
 
 function game_is_in_final_stage()
 {
-    if ((global.gmode == UnknownEnum.Value_3 || global.gmode == UnknownEnum.Value_4 || global.gmode == UnknownEnum.Value_1 || global.gmode == UnknownEnum.Value_2) && global.current_stage == "s_love")
+    // ARCHIPELAGO: Change to not force s_love as final stage
+    if (game_is_in_final_level() && global.current_stage == global.stage_order[9][6])
         return true;
     
     return false;
@@ -253,8 +254,11 @@ function game_mark_stage_as_cleared(arg0, arg1)
             if (level < 10)
             {
                 global.overworld_position = level;
-                global.overworld_cleared = max(level, global.overworld_cleared);
-                global.overworld_just_cleared = 1;
+                // ARCHIPELAGO: don't set overworld cleared
+                if (!(instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated())) {
+                    global.overworld_cleared = max(level, global.overworld_cleared);
+                    global.overworld_just_cleared = 1;
+                }
             }
         }
         

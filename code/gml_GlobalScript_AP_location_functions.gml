@@ -1,5 +1,5 @@
 /// FUNCTIONS
-function AP_get_location_reward_text(location_id)
+function AP_get_location_reward_text(location_id, capital = false)
 {
     if (!variable_global_exists("AP_location_item")) return "Unknown Item";
     if !variable_struct_exists(global.AP_location_item, location_id) return "Unknown Item";
@@ -7,10 +7,14 @@ function AP_get_location_reward_text(location_id)
     var data = variable_struct_get(global.AP_location_item, location_id);
 
     if (data.playerName == "Yourself" || data.playerName == "<yourself>")
-        var text = string("your {0}", data.itemName);
+        if (capital) {
+            var text = string("Your {0}", data.itemName);
+        } else {
+            var text = string("your {0}", data.itemName);
+        }
     else
         var text = string("{0}'s {1}", data.playerName, data.itemName);
-    return AP_item_classification_color_text(text, data.flags);
+    return text; // AP_item_classification_color_text(text, data.flags);
 }
 
 function AP_get_location_reward_data(location_id)
