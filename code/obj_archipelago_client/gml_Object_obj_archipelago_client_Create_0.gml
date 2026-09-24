@@ -43,7 +43,7 @@ global.AP_deathlink = false;
 global.AP_deathlink_protected = false;
 global.AP_deathlink_infos = {source: undefined, cause: undefined, time: undefined, uuid: undefined};
 global.AP_deathlink_group = ""
-global.AP_deathlink_amnesty = 1;
+global.AP_deathlink_amnesty = 5;
 global.AP_deathlink_current_deaths = 0;
 global.AP_damagelink = false;
 global.AP_damagelink_protected = false;
@@ -59,14 +59,14 @@ global.AP_received_datapackage = 0;
 global.AP_requested_datapackage = 0;
 global.AP_resquest_list = [];
 global.AP_last_datapackage_requested = "";
-global.AP_colors = 
+/*global.AP_colors = 
 {
     filler: "00FFFF",
     progression: "800080",
     useful: "0000FF",
     trap: "FF0000",
     useful_progression: "FFFF00"
-};
+};*/
 global.AP_item_offset =
 {
     keyitem: 10000,
@@ -97,10 +97,10 @@ if (!file_exists("ap_settings.json"))
         port: "38281",
         name: "Player",
         password: "",
-        settings: 
+        /*settings: 
         {
             colors: global.AP_colors
-        },
+        },*/
         uuid: generate_uuidv4()
     };
     ap_setting_json = json_stringify(ap_settings_struct);
@@ -114,7 +114,7 @@ global.AP_server = ap_settings.server;
 global.AP_port = ap_settings.port;
 global.AP_name = ap_settings.name;
 global.AP_password = ap_settings.password;
-global.AP_colors = ap_settings.settings.colors;
+//global.AP_colors = ap_settings.settings.colors;
 
 if (variable_struct_exists(ap_settings, "uuid") && ap_settings.uuid != "EC0EE80E-B5CB-4148-BA5F-0FB2177F0707")
 {

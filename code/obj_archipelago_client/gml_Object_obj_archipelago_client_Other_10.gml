@@ -2,16 +2,18 @@
 
 function AP_write_settings_file()
 {
+    AP_updateTags();
+    
     ap_settings = 
     {
         server: global.AP_server,
         port: global.AP_port,
         name: global.AP_name,
         password: global.AP_password,
-        settings: 
+        /*settings: 
         {
             colors: global.AP_colors
-        },
+        },*/
         uuid: global.AP_uuid
     };
     ap_setting_json = json_stringify(ap_settings);
@@ -22,55 +24,12 @@ function AP_write_settings_file()
     settings = 
     {
         deathLink: global.AP_deathlink,
-        damageLink: global.AP_damagelink
+        deathLinkAmnesty: global.AP_deathlink_amnesty
     }
     setting_json = json_stringify(settings);
     var file = file_text_open_write(AP_get_save_folder_prefix() +  "settings.json");
     file_text_write_string(file, setting_json);
     file_text_close(file);
-}
-
-function AP_handle_old_saves()
-{
-    for (var i = 2; i >= 1; i--)
-    {
-        if (AP_copy_saves_to_new_folder(AP_get_save_folder_prefix(i)))
-            break;
-    }
-}
-
-function AP_copy_saves_to_new_folder(old_path)
-{
-    new_path = AP_get_save_folder_prefix()
-
-    if (!directory_exists(new_path) && directory_exists(old_path))
-    {
-        // https://yal.cc/gamemaker-recursive-folder-copying/
-        directory_create(new_path);
-
-        files = []
-        for (fname = file_find_first(old_path + "*"); fname != ""; fname = file_find_next()) {
-            // don't include current/parent directory "matches":
-            if (fname == ".") continue
-            if (fname == "..") continue
-            // push file into array
-            array_push(files, fname)
-        }
-        file_find_close()
-
-        for (var i = 0; i < array_length(files); i++)
-        {
-            from = old_path + files[i]
-            to = new_path + files[i]
-            file_copy(from, to)
-        }
-
-        return true;
-    }
-    else
-    {
-        return false;
-    }
 }
 
 function AP_read_settings_file()
@@ -88,7 +47,7 @@ function AP_read_settings_file()
 
 function AP_connect(isSecure = true)
 {
-    AP_disconnect();
+    AP_disconnect(false);
     
     global.AP_secure = isSecure;
     global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.TRYING_TO_CONNECT;
@@ -146,7 +105,7 @@ function AP_sendConnectionInfo()
     AP_internal_send_packet(_contents);
 }
 
-function AP_disconnect()
+function AP_disconnect(showMessage = true)
 {
     if (global.AP_socket != -1)
     {
@@ -154,6 +113,9 @@ function AP_disconnect()
         network_destroy(global.AP_socket);
         global.AP_socket = -1;
         global.AP_item_from_server = [];
+        
+        if (showMessage)
+            helpful_text_display_raw("You were disconnected from the Multiworld.");
     }
 }
 
@@ -178,6 +140,7 @@ function AP_sendLocation(ids)
                 array_push(global.AP_locations_during_disconnect, ids[i]);
                 location_data = AP_get_location_reward_data(ids[i]);
                 //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(location_data.itemName, AP_item_flag_to_color(location_data.flags), location_data.playerName, true));
+                helpful_text_display_raw(string("Sent {1} to {0}", location_data.playerName, location_data.itemName)); // probably TEMP
             }
         }
         else
@@ -185,6 +148,7 @@ function AP_sendLocation(ids)
             array_push(global.AP_locations_during_disconnect, ids);
             location_data = AP_get_location_reward_data(ids);
             //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(location_data.itemName, AP_item_flag_to_color(location_data.flags), location_data.playerName, true));
+            helpful_text_display_raw(string("Sent {1} to {0}", location_data.playerName, location_data.itemName)); // probably TEMP
         }
     }
 
@@ -199,6 +163,7 @@ function AP_sendLocation(ids)
         if (location_data.playerName != "Yourself")
         {
             //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(location_data.itemName, AP_item_flag_to_color(location_data.flags), location_data.playerName, true));
+            helpful_text_display_raw(string("Sent {1} to {0}", location_data.playerName, location_data.itemName)); // probably TEMP
         }
 
         for (var j = 0; j < array_length(global.AP_remaining_locations); j++)
@@ -388,17 +353,21 @@ function AP_sendDeathlink(text)
     if (!AP_isAuthenticated())
         exit;
     
+    
     if (global.AP_deathlink_amnesty > 1)
     {
-        helpful_text_display_raw("KOs: " + string(global.AP_deathlink_current_deaths+1) + "/" + string(global.AP_deathlink_amnesty));
-    }
-        
-    if (global.AP_deathlink_amnesty > global.AP_deathlink_current_deaths + 1)
-    {
         global.AP_deathlink_current_deaths += 1;
-        exit;
+        helpful_text_display_raw("KOs: " + string(global.AP_deathlink_current_deaths) + "/" + string(global.AP_deathlink_amnesty));
+        if (global.AP_deathlink_amnesty > global.AP_deathlink_current_deaths)
+        {
+            AP_setDataStorage("current_deaths", global.AP_deathlink_current_deaths);
+            exit;
+        }
+        global.AP_deathlink_current_deaths = 0;
+        AP_setDataStorage("current_deaths", global.AP_deathlink_current_deaths);
+    } else {
+        global.AP_deathlink_current_deaths = 0;
     }
-    global.AP_deathlink_current_deaths = 0;
 
     var _contents =
     {
@@ -470,7 +439,6 @@ function AP_postScouting()
 function AP_fill_id_to_itemname_struct()
 {
     if (array_length(global.AP_remaining_locations) == 0) exit;
-    if (true) exit; // TEMP FAILSAFE
 
     id_to_itemname_path = AP_get_save_folder_prefix() + "id_to_itemname.json"
 
@@ -497,9 +465,6 @@ function AP_fill_id_to_itemname_struct()
                 global.AP_data_package_raw = json_parse(content);
         }
 
-        if (true) {
-            exit; // TEMP FAILSAFE, fix later
-        }
         item_name_to_id = global.AP_data_package_raw.DELTARUNE.item_name_to_id // should be VIVIDLOPE
 
         names = variable_struct_get_names(item_name_to_id);

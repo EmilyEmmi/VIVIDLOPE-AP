@@ -80,6 +80,10 @@ if (ds_map_exists(async_load, "buffer"))
                         global.AP_deathlink_amnesty = data[i].slot_data.options.deathlink;
                     //if (variable_struct_exists(data[i].slot_data.options, "include_unused_items"))
                         //global.AP_include_unused_items = data[i].slot_data.options.include_unused_items;
+                    
+                    // get current deaths from the server
+                    if global.AP_deathlink and global.AP_deathlink_amnesty > 1
+                        AP_getDataStorage("current_deaths");
 
                     var path_settings = AP_get_save_folder_prefix()  + "settings.json"
 
@@ -93,8 +97,8 @@ if (ds_map_exists(async_load, "buffer"))
                             settings_struct = json_parse(content);
 
                         global.AP_deathlink = settings_struct.deathLink;
+                        global.AP_deathlink_amnesty = settings_struct.deathLinkAmnesty;
                     }
-                    global.AP_deathlink = true; // TEMP FORCE DEATHLINK
 
                     AP_write_settings_file();
                     
@@ -136,7 +140,7 @@ if (ds_map_exists(async_load, "buffer"))
                 case "ReceivedItems":
                     if (variable_struct_exists(data[i], "items"))
                     {
-                        if (false) // TEMP FAILSAFE
+                        if (true)
                         {
                             global.AP_is_receiving_items = true
                             starting_index = data[i].index;
@@ -153,6 +157,7 @@ if (ds_map_exists(async_load, "buffer"))
                                     playerName = global.AP_player_names[item_data.player]
                                     itemName = variable_struct_get(global.AP_id_to_itemname, string(item_data.item))
 
+                                    helpful_text_display_raw(string("Received {1} from {0}", playerName, itemName)); // probably TEMP
                                     //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(itemName, AP_item_flag_to_color(item_data.flags), playerName, false));
                                 }
                             }
@@ -262,7 +267,7 @@ if (ds_map_exists(async_load, "buffer"))
                         }
 
                         var player_ids_unique = array_unique(player_ids);
-                        var games = ["Baba Is You"]; // TEMP: Should be VIVIDLOPE
+                        var games = ["DELTARUNE"]; // TEMP: Should be VIVIDLOPE
 
                         for (var ii = 0; ii < array_length(player_ids_unique); ii++)
                         {
@@ -278,7 +283,7 @@ if (ds_map_exists(async_load, "buffer"))
                     }
                     break;
                 case "DataPackage":
-                    if (false && variable_struct_exists(data[i], "data")) // TEMP FAILSAFE, fix later
+                    if (variable_struct_exists(data[i], "data"))
                     {
                         global.AP_received_datapackage++;
                         AP_add_new_datapackage(data[i].data)
@@ -335,18 +340,18 @@ if (ds_map_exists(async_load, "buffer"))
 
                     AP_postScouting();
                     break;
-                /*case "Retrieved":
+                case "Retrieved":
                     if (variable_struct_exists(data[i], "keys"))
                     {
                         var keys = variable_struct_get_names(data[i].keys);
 
-                        if (variable_struct_exists(keys, AP_getDatastoragePrefix() + "completed_chapters"))
+                        if (variable_struct_exists(keys, AP_getDatastoragePrefix() + "current_deaths"))
                         {
-                            AP_handle_retreived_completed_chapters(variable_struct_get(keys, AP_getDatastoragePrefix() + "completed_chapters"))
+                            global.AP_deathlink_current_deaths = variable_struct_get(keys, AP_getDatastoragePrefix() + "current_deaths")
                         }
                     }
                     break;
-                case "SetReply":
+                /*case "SetReply":
                     if (data[i].key == AP_getDatastoragePrefix() + "completed_chapters")
                         AP_handle_retreived_completed_chapters(data[i].value)
                     break;*/
