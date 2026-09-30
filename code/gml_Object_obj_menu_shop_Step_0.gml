@@ -84,7 +84,7 @@ if (minput_held(4))
 if (try_purchase)
 {
     // handle AP item purchasing
-    if (!menu_option[page][chosen[page]].is_ap_item)
+    if (menu_option[page][chosen[page]].is_ap_item)
     {
         if (menu_option[page][chosen[page]].price <= global.money && !menu_option[page][chosen[page]].maxed)
         {

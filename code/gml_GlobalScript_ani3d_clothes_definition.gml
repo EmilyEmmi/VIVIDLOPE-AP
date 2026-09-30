@@ -586,13 +586,19 @@ function add_clothes_to_shop(arg0)
     }
 }
 
-function add_ap_item_to_shop(arg0, name, desc, price, location_id, purchased)
+function add_ap_item_to_shop(arg0, location_id)
 {
+    if (!(array_contains(global.AP_remaining_locations, location_id)))
+        exit;
+ 
+    AP_sendHint(location_id);
     var rewardData = AP_get_location_reward_data(location_id);
-    var name = AP_get_location_reward_name(location_id, true);
+    var name = rewardData.itemName;
     var desc = string("A strange item from {0}'s world.", rewardData.playerName);
+    if (rewardData.playerName == "Yourself") {
+        desc = "A item that belongs to you.";
+    }
     var price = 500;
-    var purchased = (array_contains(obj_archipelago_client.AP_remaining_locations, location_id));
     switch (rewardData.flags)
     {
         case 0: // filler
@@ -618,15 +624,14 @@ function add_ap_item_to_shop(arg0, name, desc, price, location_id, purchased)
     {
         name: name,
         description: desc,
-        //spr: (_over_properties_sprite > -1) ? _over_properties_sprite_cosicon : asset_get_index("spr_cosicon_" + string(arg1)),
-        //tex_overlay_spr: _over_properties_sprite,
-        //tex_overlay_scale: _over_properties_scale,
-        //tex_overlay_no_zoom: _over_properties_no_zoom,
+        spr: spr_powerup_extra_life, // TEMP sprite
         location_id: location_id,
+        code: string("AP_{0}", location_id),
         price: price,
         owned: 0,
-        maxed: purchased,
-        is_ap_item: true
+        maxed: false,
+        is_ap_item: true,
+        is_cloth: false,
    });
 }
 
@@ -634,8 +639,8 @@ function add_ap_item_to_shop(arg0, name, desc, price, location_id, purchased)
 function add_shop_items_ap(arg0)
 {
     var max_shop_items = 25;
-    for (var location_id = 299; location_id < max_shop_items + 299) {
-        add_ap_item_to_shop(arg0);
+    for (var location_id = 299; location_id < max_shop_items + 299; location_id++) {
+        add_ap_item_to_shop(arg0, location_id);
     }
 }
 

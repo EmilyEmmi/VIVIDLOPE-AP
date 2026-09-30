@@ -56,6 +56,7 @@ if (ds_map_exists(async_load, "buffer"))
                     global.AP_team = data[i].team;
                     global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.CONNECTED;
                     global.AP_connection_errors = undefined;
+                    stage_index_setup();
                     show_debug_message("Login successful!");
                     menu_set_top_caption("Connected!")
 

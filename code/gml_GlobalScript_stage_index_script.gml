@@ -370,7 +370,7 @@ function stage_index_setup()
     }
     
     randomize();
-    random_set_seed(1225, true);
+    random_set_seed((variable_global_exists("AP_multiworld") ? global.AP_multiworld : 1234), true);
     array_shuffle_ext(level_order);
     
     for (var l = 0; l < 11; l++)
