@@ -406,7 +406,6 @@ function add_cloth_to_shop(arg0, arg1, arg2)
 function add_clothes_to_shop(arg0)
 {
     if (instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated()) {
-        add_shop_items_ap(arg0);
         exit;
     }
     
@@ -583,64 +582,6 @@ function add_clothes_to_shop(arg0)
         
         if (is_struct(shared_savedata_get_achievement("splendid")))
             add_cloth_to_shop(arg0, "missnoir_hat_red", 5000);
-    }
-}
-
-function add_ap_item_to_shop(arg0, location_id)
-{
-    if (!(array_contains(global.AP_remaining_locations, location_id)))
-        exit;
- 
-    AP_sendHint(location_id);
-    var rewardData = AP_get_location_reward_data(location_id);
-    var name = rewardData.itemName;
-    var desc = string("A strange item from {0}'s world.", rewardData.playerName);
-    if (rewardData.playerName == "Yourself") {
-        desc = "A item that belongs to you.";
-    }
-    var price = 500;
-    switch (rewardData.flags)
-    {
-        case 0: // filler
-            desc += " Looks like junk...";
-            price = 100;
-            break;
-        case 1: // progression or progression + useful
-        case 3:
-            desc += " It looks really important!";
-            price = 1000;
-            break;
-        case 2: // useful
-            desc += " Seems like it might be useful...";
-            price = 500;
-            break;
-        case 4: // trap
-            desc += " Looks... bad. Is it worth the extra cash?";
-            price = -1000;
-            break;
-    }
-        
-    array_push(arg0, 
-    {
-        name: name,
-        description: desc,
-        spr: spr_powerup_extra_life, // TEMP sprite
-        location_id: location_id,
-        code: string("AP_{0}", location_id),
-        price: price,
-        owned: 0,
-        maxed: false,
-        is_ap_item: true,
-        is_cloth: false,
-   });
-}
-
-// ARCHIPELAGO: handle AP shop items
-function add_shop_items_ap(arg0)
-{
-    var max_shop_items = 25;
-    for (var location_id = 299; location_id < max_shop_items + 299; location_id++) {
-        add_ap_item_to_shop(arg0, location_id);
     }
 }
 
