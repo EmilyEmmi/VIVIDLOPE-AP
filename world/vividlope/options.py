@@ -9,11 +9,9 @@ class GoalCondition(Choice):
     level_x: Goal when Level X is fully cleared.
     """
     display_name = "Goal Condition"
-
-    finale = 0
-    level_x = 1
-
-    default = finale
+    option_finale = 0
+    option_level_x = 1
+    default = 0
 
 class GoalUnlock(Range):
     """
@@ -41,12 +39,10 @@ class RankChecks(Choice):
     full: Split checks into D-V ranks. S+ and V ranks are separate checks.
     """
     display_name = "Rank Checks"
-
-    none = 0
-    partial = 1
-    full = 2
-
-    default = none
+    option_none = 0
+    option_partial = 1
+    option_full = 2
+    default = 0
 
 @dataclass
 class VividlopeOptions(PerGameCommonOptions):

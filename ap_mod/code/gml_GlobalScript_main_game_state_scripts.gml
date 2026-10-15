@@ -225,12 +225,11 @@ function game_mark_stage_as_cleared(arg0, arg1)
     var old_rank = ds_map_find_value(global.saved_rank, arg0);
     ds_map_set(global.saved_rank, arg0, rank_get_stronger(arg1, ds_map_find_value(global.saved_rank, arg0)));
     
-    // ARCHIPELAGO: send location
+    // ARCHIPELAGO: send stage locations
     if (instance_exists(obj_archipelago_client)) {
         var stage = game_get_current_substage();
-        var locationID = (stage - 1) + (level - 1) * 15 + 266
-        AP_sendLocation(locationID);
-        // helpful_text_display_raw("Checked location " + string(locationID)); // TEMP
+        var rank = ds_map_find_value(global.saved_rank, arg0);
+        AP_sendStageLocation(level, stage, rank);
     }
     
     if (is_undefined(old_rank) || old_rank != arg1)
@@ -260,6 +259,11 @@ function game_mark_stage_as_cleared(arg0, arg1)
                     global.overworld_just_cleared = 1;
                 }
             }
+        }
+        
+        // ARCHIPELAGO: Send level clear check
+        if (instance_exists(obj_archipelago_client)) {
+            AP_sendLocation(90000 + level - 1);
         }
         
         if (!was_complete && level_is_complete(level))

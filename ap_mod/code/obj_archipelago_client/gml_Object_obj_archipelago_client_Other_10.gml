@@ -88,7 +88,7 @@ function AP_sendConnectionInfo()
     {
         cmd: "Connect",
         password: global.AP_password,
-        game: "DELTARUNE", // game: APgame, // DELTARUNE is TEMP
+        game: APgame,
         name: global.AP_name,
         uuid: global.AP_uuid,
         items_handling: UnknownEnum.Value_7,
@@ -465,7 +465,7 @@ function AP_fill_id_to_itemname_struct()
                 global.AP_data_package_raw = json_parse(content);
         }
 
-        item_name_to_id = global.AP_data_package_raw.DELTARUNE.item_name_to_id // should be VIVIDLOPE
+        item_name_to_id = global.AP_data_package_raw.VIVIDLOPE.item_name_to_id;
 
         names = variable_struct_get_names(item_name_to_id);
 

@@ -32,7 +32,7 @@ if (ds_map_exists(async_load, "buffer"))
                         {
                             if (data[i].games[ii] == "Archipelago") continue;
 
-                            if (data[i].games[ii] == "DELTARUNE") // TEMP: should be VIVIDLOPE
+                            if (data[i].games[ii] == "VIVIDLOPE")
                             {
                                 if (!ownGame)
                                 {
@@ -271,7 +271,7 @@ if (ds_map_exists(async_load, "buffer"))
                         }
 
                         var player_ids_unique = array_unique(player_ids);
-                        var games = ["DELTARUNE"]; // TEMP: Should be VIVIDLOPE
+                        var games = ["VIVIDLOPE"];
 
                         for (var ii = 0; ii < array_length(player_ids_unique); ii++)
                         {

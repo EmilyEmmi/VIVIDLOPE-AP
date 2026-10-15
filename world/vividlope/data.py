@@ -1,11 +1,11 @@
-from .names import Items
+from .names import ItemNames
 
 class Stage:
     level: int
     stage: int
-    req_items: list[Items]
+    req_items: list[ItemNames]
 
-    def __init__(self, level: int, stage: int, req_items: list[Items]):
+    def __init__(self, level: int, stage: int, req_items: list[ItemNames]):
         self.level = level
         self.stage = stage
         self.req_items = req_items

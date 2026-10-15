@@ -90,13 +90,13 @@ else
     }, -1));
     
     // debug
-    menu_screen_add_option(new MENU_OPTION("animviewer", spr_menu_icon_none, 0, function()
+    /*menu_screen_add_option(new MENU_OPTION("animviewer", spr_menu_icon_none, 0, function()
     {
         text_l = "Anim Viewer";
     }, function()
     {
         menu_flow_goto_room(rm_animviewer);
-    }, -1));
+    }, -1));*/
 
     menu_screen_add_option(new MENU_OPTION("endless", spr_menu_icon_none, 0, function()
     {
