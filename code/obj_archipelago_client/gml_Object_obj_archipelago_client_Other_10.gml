@@ -115,7 +115,7 @@ function AP_disconnect(showMessage = true)
         global.AP_item_from_server = [];
         
         if (showMessage)
-            helpful_text_display_raw("You were disconnected from the Multiworld.");
+            AP_create_notification("You were disconnected from the Multiworld.");
     }
 }
 
@@ -140,7 +140,7 @@ function AP_sendLocation(ids)
                 array_push(global.AP_locations_during_disconnect, ids[i]);
                 location_data = AP_get_location_reward_data(ids[i]);
                 //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(location_data.itemName, AP_item_flag_to_color(location_data.flags), location_data.playerName, true));
-                helpful_text_display_raw(string("Sent {1} to {0}", location_data.playerName, location_data.itemName)); // probably TEMP
+                AP_create_notification(string("Sent {1} to {0}", location_data.playerName, location_data.itemName));
             }
         }
         else
@@ -148,7 +148,7 @@ function AP_sendLocation(ids)
             array_push(global.AP_locations_during_disconnect, ids);
             location_data = AP_get_location_reward_data(ids);
             //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(location_data.itemName, AP_item_flag_to_color(location_data.flags), location_data.playerName, true));
-            helpful_text_display_raw(string("Sent {1} to {0}", location_data.playerName, location_data.itemName)); // probably TEMP
+            AP_create_notification(string("Sent {1} to {0}", location_data.playerName, location_data.itemName));
         }
     }
 
@@ -163,7 +163,7 @@ function AP_sendLocation(ids)
         if (location_data.playerName != "Yourself")
         {
             //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(location_data.itemName, AP_item_flag_to_color(location_data.flags), location_data.playerName, true));
-            helpful_text_display_raw(string("Sent {1} to {0}", location_data.playerName, location_data.itemName)); // probably TEMP
+            AP_create_notification(string("Sent {1} to {0}", location_data.playerName, location_data.itemName));
         }
 
         for (var j = 0; j < array_length(global.AP_remaining_locations); j++)
@@ -357,7 +357,7 @@ function AP_sendDeathlink(text)
     if (global.AP_deathlink_amnesty > 1)
     {
         global.AP_deathlink_current_deaths += 1;
-        helpful_text_display_raw("KOs: " + string(global.AP_deathlink_current_deaths) + "/" + string(global.AP_deathlink_amnesty));
+        AP_create_notification("KOs: " + string(global.AP_deathlink_current_deaths) + "/" + string(global.AP_deathlink_amnesty), true);
         if (global.AP_deathlink_amnesty > global.AP_deathlink_current_deaths)
         {
             AP_setDataStorage("current_deaths", global.AP_deathlink_current_deaths);
@@ -675,6 +675,15 @@ function AP_add_new_datapackage(data)
     game_name = game_names[0]
 
     variable_struct_set(global.AP_data_package_raw, game_name, variable_struct_get(variable_struct_get(data, "games"), game_name))
+}
+
+function AP_create_notification(str, priority = false) {
+    var o = instance_create_lay(0, 0, 2, obj_ap_notification_scheduler);
+    with (o)
+        text = str;
+        if (priority) {
+            timer = 3;
+        }
 }
 
 enum UnknownEnum

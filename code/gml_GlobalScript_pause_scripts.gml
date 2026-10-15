@@ -35,8 +35,11 @@ function game_pause()
         if (object_index == obj_OLDTVFilter_CUSTOM)
             continue;
         
-        // don't delete this!
+        // don't delete these!
         if (object_index == obj_archipelago_client)
+            continue;
+        
+        if (object_index == obj_ap_notification_scheduler)
             continue;
         
         ds_list_add(global.pause_objects, self.id);

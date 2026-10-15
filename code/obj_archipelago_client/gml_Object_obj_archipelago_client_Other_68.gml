@@ -59,6 +59,9 @@ if (ds_map_exists(async_load, "buffer"))
                     stage_index_setup();
                     show_debug_message("Login successful!");
                     menu_set_top_caption("Connected!")
+                    
+                    with (obj_ap_notification_scheduler)
+                        instance_destroy();
 
                     global.AP_all_locations_ids = array_concat(data[i].missing_locations, data[i].checked_locations);
                     global.AP_remaining_locations = data[i].missing_locations;
@@ -78,7 +81,7 @@ if (ds_map_exists(async_load, "buffer"))
                     if (variable_struct_exists(data[i].slot_data.options, "deathlink"))
                         global.AP_deathlink = data[i].slot_data.options.deathlink;
                     if (variable_struct_exists(data[i].slot_data.options, "deathlink_amnesty"))
-                        global.AP_deathlink_amnesty = data[i].slot_data.options.deathlink;
+                        global.AP_deathlink_amnesty = data[i].slot_data.options.deathlink_amnesty;
                     //if (variable_struct_exists(data[i].slot_data.options, "include_unused_items"))
                         //global.AP_include_unused_items = data[i].slot_data.options.include_unused_items;
                     
@@ -158,7 +161,7 @@ if (ds_map_exists(async_load, "buffer"))
                                     playerName = global.AP_player_names[item_data.player]
                                     itemName = variable_struct_get(global.AP_id_to_itemname, string(item_data.item))
 
-                                    helpful_text_display_raw(string("Received {1} from {0}", playerName, itemName)); // probably TEMP
+                                    AP_create_notification(string("Received {1} from {0}", playerName, itemName));
                                     //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(itemName, AP_item_flag_to_color(item_data.flags), playerName, false));
                                 }
                             }
@@ -214,7 +217,7 @@ if (ds_map_exists(async_load, "buffer"))
                                     global.AP_deathlink_infos = {source: source, cause: cause, time: time, uuid: uuid};
                                     global.AP_deathlink_protected = true;
                                     if (cause != undefined) {
-                                        helpful_text_display_raw(cause);
+                                        AP_create_notification(cause, true);
                                     }
                                     gstate_activate_player_ko(5); // KO player
                                     global.AP_deathlink_protected = false;
