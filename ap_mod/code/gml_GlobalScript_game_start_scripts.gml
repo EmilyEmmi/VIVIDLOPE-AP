@@ -40,7 +40,7 @@ function start_story_mode_new(arg0 = -1, arg1 = -1)
     global.current_stage = "overworld";
     
     // ARCHIPELAGO: allow accessing all levels except Finale
-    if (instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated()) {
+    if (AP_is_multiworld_active()) {
         global.overworld_cleared = max(global.overworld_cleared, 8);
         global.overworld_just_cleared = 0;
         ds_map_clear(global.overworld_clear_events);
@@ -64,7 +64,7 @@ function start_story_mode_load(arg0)
     global.current_stage = "overworld";
     
     // ARCHIPELAGO: allow accessing all levels except Finale
-    if (instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated()) {
+    if (AP_is_multiworld_active()) {
         global.overworld_cleared = max(global.overworld_cleared, 8);
         global.overworld_just_cleared = 0;
         ds_map_clear(global.overworld_clear_events);

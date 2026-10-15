@@ -77,7 +77,7 @@ menu_screen_add_option(new MENU_OPTION("controls", spr_menu_icon_none, 0, functi
 }, -1));
 
 // deathlink settings
-if (instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated()){
+if (AP_is_multiworld_active()){
     menu_screen_add_option(new MENU_OPTION("deathlink_toggle", spr_menu_icon_none, 0, function()
     {
         text_l = "DeathLink";

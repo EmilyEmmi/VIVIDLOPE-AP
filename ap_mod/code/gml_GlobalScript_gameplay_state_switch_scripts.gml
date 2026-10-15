@@ -101,7 +101,7 @@ function gstate_activate_player_ko(arg0)
         o.damage_type = arg0;
         o.post_create();
         // Send deathlink
-        if (instance_exists(obj_archipelago_client)) {
+        if (AP_is_multiworld_active(false)) {
             obj_archipelago_client.AP_sendDeathlink(global.AP_name + " was KOed");
         }
     }

@@ -144,32 +144,28 @@ if (ds_map_exists(async_load, "buffer"))
                 case "ReceivedItems":
                     if (variable_struct_exists(data[i], "items"))
                     {
-                        if (true)
+                        global.AP_is_receiving_items = true
+                        starting_index = data[i].index;
+
+                        for (var ii = 0; ii < array_length(data[i].items); ii++)
                         {
-                            global.AP_is_receiving_items = true
-                            starting_index = data[i].index;
+                            global.AP_item_from_server[starting_index + ii] = data[i].items[ii].item;
 
-                            for (var ii = 0; ii < array_length(data[i].items); ii++)
+                            // if starting index is not 0 then it's not the first connection packet
+                            if (starting_index != 0)
                             {
-                                global.AP_item_from_server[starting_index + ii] = data[i].items[ii].item;
+                                item_data = data[i].items[ii]
 
-                                // if starting index is not 0 then it's not the first connection packet
-                                if (starting_index != 0)
-                                {
-                                    item_data = data[i].items[ii]
+                                playerName = global.AP_player_names[item_data.player]
+                                itemName = variable_struct_get(global.AP_id_to_itemname, string(item_data.item))
 
-                                    playerName = global.AP_player_names[item_data.player]
-                                    itemName = variable_struct_get(global.AP_id_to_itemname, string(item_data.item))
-
-                                    AP_create_notification(string("Received {1} from {0}", playerName, itemName));
-                                    //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(itemName, AP_item_flag_to_color(item_data.flags), playerName, false));
-                                }
+                                AP_create_notification(string("Received {1} from {0}", playerName, itemName));
+                                //array_push(obj_archipelago_toast_notificator.current_notification, new AP_toast_notification(itemName, AP_item_flag_to_color(item_data.flags), playerName, false));
                             }
-
-                            // idk
-                            //AP_sync_item_from_server();
-                            global.AP_is_receiving_items = false;
                         }
+
+                        AP_handle_received_items();
+                        global.AP_is_receiving_items = false;
                     }
                     break;
                 case "Bounced":
@@ -225,7 +221,7 @@ if (ds_map_exists(async_load, "buffer"))
                             }
                             else if (data[i].tags[ii] == ("SharedDamage" + global.AP_damagelink_group) && data[i].data.uuid != global.AP_uuid && !global.AP_damagelink_protected)
                             {
-                                if (variable_global_exists("chapter"))
+                                /*if (variable_global_exists("chapter"))
                                 {
                                     var time;
                                     if (variable_struct_exists(data[i].data, "time"))
@@ -254,7 +250,7 @@ if (ds_map_exists(async_load, "buffer"))
                                     global.AP_damagelink_infos = {source: source, time: time, uuid: uuid, damage_points: damage_points}
                                     //AP_handle_Damagelink(); // TODO
 
-                                }
+                                }*/
                             }
                         }
                     }

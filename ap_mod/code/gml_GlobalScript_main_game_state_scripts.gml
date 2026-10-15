@@ -226,7 +226,7 @@ function game_mark_stage_as_cleared(arg0, arg1)
     ds_map_set(global.saved_rank, arg0, rank_get_stronger(arg1, ds_map_find_value(global.saved_rank, arg0)));
     
     // ARCHIPELAGO: send stage locations
-    if (instance_exists(obj_archipelago_client)) {
+    if (AP_is_multiworld_active(false)) {
         var stage = game_get_current_substage();
         var rank = ds_map_find_value(global.saved_rank, arg0);
         AP_sendStageLocation(level, stage, rank);
@@ -254,7 +254,7 @@ function game_mark_stage_as_cleared(arg0, arg1)
             {
                 global.overworld_position = level;
                 // ARCHIPELAGO: don't set overworld cleared
-                if (!(instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated())) {
+                if (!AP_is_multiworld_active(false)) {
                     global.overworld_cleared = max(level, global.overworld_cleared);
                     global.overworld_just_cleared = 1;
                 }
@@ -262,7 +262,7 @@ function game_mark_stage_as_cleared(arg0, arg1)
         }
         
         // ARCHIPELAGO: Send level clear check
-        if (instance_exists(obj_archipelago_client)) {
+        if (AP_is_multiworld_active(false)) {
             AP_sendLocation(90000 + level - 1);
         }
         

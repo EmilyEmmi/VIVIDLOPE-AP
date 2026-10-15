@@ -50,7 +50,7 @@ else
     }, function()
     {
         // prompt if not connected to server
-        if (!(instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated())) {
+        if (!AP_is_multiworld_active()) {
             menu_ask_question(function()
             {
                 menu_flow_goto_menu_screen(obj_menu_screen_file_select);

@@ -33,7 +33,7 @@ function update_shop_codes()
 
 function add_items_to_shop(arg0, doHint = false)
 {
-    if (instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated()) {
+    if (AP_is_multiworld_active()) {
         add_shop_items_ap(arg0, doHint);
         exit;
     }
@@ -117,7 +117,7 @@ function add_ap_item_to_shop(arg0, location_id, doHint = false)
 // ARCHIPELAGO: handle AP shop items
 function add_shop_items_ap(arg0, doHint = false)
 {
-    var max_shop_items = 25;
+    var max_shop_items = global.AP_shop_upgrades * 5;
     for (var location_id = 299; location_id < max_shop_items + 299; location_id++) {
         add_ap_item_to_shop(arg0, location_id, doHint);
     }

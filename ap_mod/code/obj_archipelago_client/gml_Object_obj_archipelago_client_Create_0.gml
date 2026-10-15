@@ -36,6 +36,7 @@ global.AP_password = "";
 global.AP_secure = false;
 global.AP_connect_deadline = 10 * 30;
 global.AP_item_from_server = [];
+global.AP_item_in_save = [];
 global.AP_is_receiving_items = false;
 global.AP_is_first_sync = true;
 global.AP_locations_during_disconnect = [];
@@ -69,19 +70,27 @@ global.AP_last_datapackage_requested = "";
 };*/
 global.AP_item_offset =
 {
-    keyitem: 10000,
-    armor: 20000,
-    weapon: 30000,
-    money: 40000,
-    progressive: 50000,
-    character_unlock: 60000,
-    macguffin: 70000,
-    ch3_points: 80000,
-    chapter_unlock: 90000,
-    other_unlock: 100000, // Currently fun gang actions unlock
-    flowery_dollar: 110000,
+    levelunlock: 0,
+    powerupunlock: 20,
+    shopupgrade: 30,
+    filleritem: 40,
 };
+// Game specific
+global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];
+global.AP_shop_upgrades = 0;
 global.AP_other_games = []
+
+POWERUP_MAP = [
+    obj_powerup_impact,
+    obj_powerup_dash,
+    obj_powerup_stamphammer,
+    obj_powerup_wrap_paper,
+    obj_powerup_paint_balloon,
+    obj_powerup_paint_burst,
+    obj_powerup_bomb,
+    obj_powerup_instant_bomb,
+    obj_powerup_superjump,
+];
 
 step = 0;
 

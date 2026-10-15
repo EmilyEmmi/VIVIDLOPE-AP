@@ -112,7 +112,7 @@ function AP_disconnect(showMessage = true)
         global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.DISCONNECTED;
         network_destroy(global.AP_socket);
         global.AP_socket = -1;
-        global.AP_item_from_server = [];
+        AP_reset_items();
         
         if (showMessage)
             AP_create_notification("You were disconnected from the Multiworld.");
@@ -684,6 +684,54 @@ function AP_create_notification(str, priority = false) {
         if (priority) {
             timer = 3;
         }
+}
+
+function AP_handle_received_items() {
+    server_size = array_length(global.AP_item_from_server)
+    save_size = array_length(global.AP_item_in_save)
+
+    item_to_sync = server_size - save_size
+
+    for (var i = save_size; i < server_size; i++)
+    {
+        global.AP_item_in_save[i] = global.AP_item_from_server[i];
+
+        if (global.AP_item_from_server[i] > 0)
+            AP_handle_receive_item(global.AP_item_from_server[i]);
+    }
+
+    if (global.AP_is_first_sync && server_size != 0)
+    {
+        global.AP_is_first_sync = false;
+    }
+}
+
+function AP_handle_receive_item(item_id) {
+    if (item_id >= global.AP_item_offset.filleritem) {
+        // Filler item (TODO)
+    } else if (item_id >= global.AP_item_offset.shopupgrade) {
+        // Shop upgrade
+        global.AP_shop_upgrades++;
+        // Spawn shopkeeper if this is our first upgrade
+        if (global.AP_shop_upgrades == 1 && room == rm_maingame && global.current_stage == "overworld") {
+            npc_initialize(10)
+        }
+    } else if (item_id >= global.AP_item_offset.powerupunlock) {
+        // Powerup
+        var powerup_obj = POWERUP_MAP[item_id - global.AP_item_offset.powerupunlock];
+        if (!array_contains(global.AP_unlocked_items, powerup_obj))
+            array_push(global.AP_unlocked_items, powerup_obj);
+    } else if (item_id >= global.AP_item_offset.levelunlock) {
+        // Level unlock
+        global.AP_unlocked_levels[item_id - global.AP_item_offset.levelunlock] = true;
+    }
+}
+
+function AP_reset_items() {
+    global.AP_item_from_server = [];
+    global.AP_unlocked_levels = [false, false, false, false, false, false, false, false, false, false, false];
+    global.AP_unlocked_items = [];
+    global.AP_shop_upgrades = 0;
 }
 
 enum UnknownEnum

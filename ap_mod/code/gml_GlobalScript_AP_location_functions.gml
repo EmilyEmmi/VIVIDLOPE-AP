@@ -101,3 +101,7 @@ function AP_sendStageLocation(stage, level, rank) {
     
     // helpful_text_display_raw("Checked location " + string(locationID)); // TEMP
 }
+
+function AP_is_multiworld_active(requireAuthentication = true) {
+    return (instance_exists(obj_archipelago_client) && (!requireAuthentication || obj_archipelago_client.AP_isAuthenticated()))
+}

@@ -405,7 +405,7 @@ function add_cloth_to_shop(arg0, arg1, arg2)
 
 function add_clothes_to_shop(arg0)
 {
-    if (instance_exists(obj_archipelago_client) && obj_archipelago_client.AP_isAuthenticated()) {
+    if (AP_is_multiworld_active()) {
         exit;
     }
     
