@@ -218,7 +218,7 @@ function enemy_spawn(arg0)
         // ARCHIPELAGO: Prevent locked powerups from spawning
         if (obj_to_spawn != -4 && AP_is_multiworld_active())
         {
-            if (object_is_ancestor(obj_to_spawn, obj_par_powerup) && obj_to_spawn != obj_powerup_cherry && !array_contains(global.AP_unlocked_items, obj_to_spawn))
+            if (object_is_ancestor(obj_to_spawn, obj_par_powerup) && !array_contains(global.AP_unlocked_items, obj_to_spawn))
                 obj_to_spawn = -4;
         }
         

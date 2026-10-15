@@ -7,7 +7,7 @@ if (global.AP_connection_state == global.AP_ENUM_CONNECTION_STATE.TRYING_TO_CONN
     {
         show_debug_message("Connection timed out");
         global.AP_connection_errors = "Connection timed out after " + string(global.AP_connect_deadline/30) + "s";
-        obj_archipelago_client.AP_disconnect();
+        obj_archipelago_client.AP_disconnect(false, true);
         global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.ERROR_TIMEOUT;
         step = 0;
     }

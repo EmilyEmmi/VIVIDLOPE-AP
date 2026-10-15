@@ -85,7 +85,7 @@ function AP_sendStageLocation(stage, level, rank) {
     AP_sendLocation(stage_id);
     
     // Send checks for all ranks that we achieved and lower
-    var rankPower = ds_map_exists(global.rank_power, arg0) ? ds_map_find_value(global.rank_power, arg0) : 0;
+    var rankPower = ds_map_exists(global.rank_power, rank) ? ds_map_find_value(global.rank_power, rank) : 0;
     var rank_id = floor(rankPower / 2); // Treat D+ the same as D, etc.
     if (rank_id >= 11) rank_id++; // ...but seperate S+ and S
     if (rank_id > 0) {
@@ -102,6 +102,6 @@ function AP_sendStageLocation(stage, level, rank) {
     // helpful_text_display_raw("Checked location " + string(locationID)); // TEMP
 }
 
-function AP_is_multiworld_active(requireAuthentication = true) {
+function AP_is_multiworld_active(requireAuthentication = false) { // TEMP, should be TRUE
     return (instance_exists(obj_archipelago_client) && (!requireAuthentication || obj_archipelago_client.AP_isAuthenticated()))
 }

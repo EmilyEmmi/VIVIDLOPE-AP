@@ -105,7 +105,7 @@ function AP_sendConnectionInfo()
     AP_internal_send_packet(_contents);
 }
 
-function AP_disconnect(showMessage = true)
+function AP_disconnect(showMessage = true, updateMenu = false)
 {
     if (global.AP_socket != -1)
     {
@@ -116,6 +116,8 @@ function AP_disconnect(showMessage = true)
         
         if (showMessage)
             AP_create_notification("You were disconnected from the Multiworld.");
+        if (room = rm_mainmenu && updateMenu)
+            menu_set_top_caption("Connection failed");
     }
 }
 
@@ -730,7 +732,7 @@ function AP_handle_receive_item(item_id) {
 function AP_reset_items() {
     global.AP_item_from_server = [];
     global.AP_unlocked_levels = [false, false, false, false, false, false, false, false, false, false, false];
-    global.AP_unlocked_items = [];
+    global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
     global.AP_shop_upgrades = 0;
 }
 

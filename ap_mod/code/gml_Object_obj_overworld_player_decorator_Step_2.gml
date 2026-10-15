@@ -104,7 +104,7 @@ if (global.debugging && keyboard_check_pressed(vk_f7))
 // ARCHIPELAGO: handle level unlocks
 if (instance_exists(obj_overworld_warp_whirl) && AP_is_multiworld_active()) {
     with (obj_overworld_warp_whirl) {
-        if (global.AP_unlocked_levels[level]) {
+        if (global.AP_unlocked_levels[level-1]) {
             obj_overworld_player_decorator.level_allowed_to_enter[level] = true;
             unlocked = true;
             lock_as_visible = false;

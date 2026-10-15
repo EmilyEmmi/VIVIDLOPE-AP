@@ -78,6 +78,7 @@ global.AP_item_offset =
 // Game specific
 global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];
 global.AP_shop_upgrades = 0;
+global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
 global.AP_other_games = []
 
 POWERUP_MAP = [
