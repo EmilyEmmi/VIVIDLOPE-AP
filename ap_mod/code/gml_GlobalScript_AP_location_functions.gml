@@ -79,9 +79,9 @@ function AP_sendHint(location_id)
     obj_archipelago_client.AP_sendHint(location_id);
 }
 
-function AP_sendStageLocation(stage, level, rank) {
+function AP_sendStageLocation(level, stage, rank) {
     // Send base clear check
-    var stage_id = level * 100 + (stage - 1);
+    var stage_id = (level - 1) * 100 + (stage - 1);
     AP_sendLocation(stage_id);
     
     // Send checks for all ranks that we achieved and lower

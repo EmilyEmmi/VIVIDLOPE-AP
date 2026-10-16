@@ -24,7 +24,7 @@ def generate_location_table() -> dict[str, int]:
         # They are 9000+ to not clash with Stage IDs.
         location_table[f"{level_names[level]} Clear"] = 90000 + level
 
-        for stage in range(0,15):
+        for stage in range(1,16):
             # Stage location IDs take up this form: XYYZZ
             # Where X depends on the location type:
             # 0 for generic Completion checks
@@ -32,7 +32,7 @@ def generate_location_table() -> dict[str, int]:
             # 2-8 for D-V Ranks
             # YY is the level number: 1-9 -> 0-8, X -> 9, Finale -> 10
             # and ZZ is the stage number minus 1, 0-14.
-            stage_id = level * 100 + stage
+            stage_id = level * 100 + (stage - 1)
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_clear}"] = stage_id
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_perfect}"] = stage_id + 10000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_d}"] = stage_id + 20000
@@ -66,8 +66,8 @@ def create_map_regions(world: VividlopeWorld):
 
         # Stage entrance regions in that level
         for stage in range(0, 15):
-            if level == 10 and stage >= 7:
-                continue # Finale only has 7 parts, so this prevents it from adding more
+            if level == 9 and stage >= 7:
+                break # Finale only has 7 parts, so this prevents it from adding more
 
             # Keep in mind these are only containers for stage randomization.
             # We will connect a (random) stage region with locations in another function
@@ -96,7 +96,7 @@ def attach_shuffled_levels(world: VividlopeWorld):
     # The levels only get shuffled if the option to shuffle them is on.
     # But the comments from here on out will act like they are always shuffled.
     if world.options.stage_shuffle:
-        stages.shuffle()
+        world.random.shuffle(stages)
 
     stage_index = 0
     for level in range(0, 11):
@@ -109,53 +109,53 @@ def attach_shuffled_levels(world: VividlopeWorld):
 
         level_region.locations.append(clear_location)
         clear_item_name = f"{level_names[level]} Clear Event Item"
-        if level == 10: # Finale
+        if level == 9: # Finale
             world.set_rule(clear_location, Has(clear_item_name, count=7))
         else: # Others
             world.set_rule(clear_location, Has(clear_item_name, count=15))
 
         for stage in range(0, 15):
-            if level == 10 and stage >= 7:
-                continue # Finale only has 7 parts, so this prevents it from checking for extra
+            if level == 9 and stage >= 7:
+                break # Finale only has 7 parts, so this prevents it from checking for extra
             entrance_region = world.get_region(f"{stage_prefixes[level]}{stage} Entrance")
             random_stage = stages[stage_index]
 
             # Create region from the randomly selected level
-            stage_region = Region(f"{stage_prefixes[random_stage.level]}{random_stage.stage}", player, multiworld)
+            stage_region = Region(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage}", player, multiworld)
             multiworld.regions.append(stage_region)
             connection = entrance_region.connect(stage_region)
 
             # Assign rules
-            if random_stage.req_items[0] != None:
+            if len(random_stage.req_items) != 0:
                 all_items = list[str]
                 for item in random_stage.req_items:
                     all_items.append(item_id_to_unlock[item])
                 world.set_rule(connection, HasAll(all_items))
 
             # Create and attach locations to the newly created region
-            stage_region.add_event(f"{stage_prefixes[random_stage.level]}{random_stage.stage} Clear Event", clear_item_name, location_type=VividlopeLocation, item_type=items.VividlopeItem)
+            stage_region.add_event(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} Clear Event", clear_item_name, location_type=VividlopeLocation, item_type=items.VividlopeItem)
 
             location_names = []
-            if world.options.rank_checks == world.options.rank_checks.none:
+            if world.options.rank_checks == 0:
                 location_names = get_location_names_with_ids(f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_clear}")
-            elif world.options.rank_checks == world.options.rank_checks.partial:
+            elif world.options.rank_checks == 1:
                 location_names = get_location_names_with_ids([
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_d}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_c}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_b}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_a}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_s}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_perfect}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_c}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_b}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_a}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_s}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_perfect}",
                 ])
             else:
                 location_names = get_location_names_with_ids([
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_d}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_c}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_b}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_a}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_s}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_sp}",
-                    f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_v}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_c}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_b}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_a}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_s}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_sp}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_v}",
                 ])
             stage_region.add_locations(location_names, VividlopeLocation)
 

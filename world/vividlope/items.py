@@ -16,28 +16,28 @@ ITEM_NAME_TO_ID = {
     "Level 7 Unlock": 6,
     "Level 8 Unlock": 7,
     "Level 9 Unlock": 8,
-    "Level X Unlock": 9,
-    "Finale Unlock": 10,
+    "Finale Unlock": 9,
+    "Level X Unlock": 10,
 
-    ItemNames.impact_unlock:    20,
-    ItemNames.dash_unlock:      21,
-    ItemNames.stamp_unlock:     22,
-    ItemNames.wrap_unlock:      23,
-    ItemNames.balloon_unlock:   24,
-    ItemNames.burst_unlock:     25,
-    ItemNames.bomb_unlock:      26,
-    ItemNames.insta_unlock:     27,
-    ItemNames.superjump_unlock: 28,
+    ItemNames.impact_unlock.value:    20,
+    ItemNames.dash_unlock.value:      21,
+    ItemNames.stamp_unlock.value:     22,
+    ItemNames.wrap_unlock.value:      23,
+    ItemNames.balloon_unlock.value:   24,
+    ItemNames.burst_unlock.value:     25,
+    ItemNames.bomb_unlock.value:      26,
+    ItemNames.insta_unlock.value:     27,
+    ItemNames.superjump_unlock.value: 28,
 
-    ItemNames.shop_upgrade: 30,
+    ItemNames.shop_upgrade.value: 30,
 
-    ItemNames.impact_filler:    40,
-    ItemNames.dash_filler:      41,
-    ItemNames.stamp_filler:     42,
-    ItemNames.wrap_filler:      43,
-    ItemNames.balloon_filler:   44,
-    ItemNames.burst_filler:     45,
-    ItemNames.bomb_filler:      46
+    ItemNames.impact_filler.value:    40,
+    ItemNames.dash_filler.value:      41,
+    ItemNames.stamp_filler.value:     42,
+    ItemNames.wrap_filler.value:      43,
+    ItemNames.balloon_filler.value:   44,
+    ItemNames.burst_filler.value:     45,
+    ItemNames.bomb_filler.value:      46
 }
 
 DEFAULT_ITEM_CLASSIFICATIONS = {
@@ -78,7 +78,7 @@ class VividlopeItem(Item):
     game = "VIVIDLOPE"
 
 def get_random_filler_item_name(world: VividlopeWorld) -> str:
-    random = world.random.randint(0, 7)
+    random = world.random.randint(0, 6)
     filler = [
         ItemNames.impact_filler,
         ItemNames.dash_filler,

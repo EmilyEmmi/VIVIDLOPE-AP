@@ -227,9 +227,9 @@ function game_mark_stage_as_cleared(arg0, arg1)
     
     // ARCHIPELAGO: send stage locations
     if (AP_is_multiworld_active(false)) {
-        var stage = game_get_current_substage();
+        var true_code = stage_get_level_code(arg0);
         var rank = ds_map_find_value(global.saved_rank, arg0);
-        AP_sendStageLocation(level, stage, rank);
+        AP_sendStageLocation(true_code[0], true_code[1], rank);
     }
     
     if (is_undefined(old_rank) || old_rank != arg1)

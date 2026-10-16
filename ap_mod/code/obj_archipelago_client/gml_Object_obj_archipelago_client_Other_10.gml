@@ -731,6 +731,7 @@ function AP_handle_receive_item(item_id) {
 
 function AP_reset_items() {
     global.AP_item_from_server = [];
+    global.AP_item_in_save = [];
     global.AP_unlocked_levels = [false, false, false, false, false, false, false, false, false, false, false];
     global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
     global.AP_shop_upgrades = 0;
