@@ -1,11 +1,13 @@
 from __future__ import annotations
 from typing import TYPE_CHECKING
 from BaseClasses import Entrance, Region, Location
+from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, HasAll, Rule
-from . import items
+from .items import VividlopeItem
 from .names import level_names, stage_prefixes, LocationSuffix, ItemNames, item_id_to_unlock
 from .data import stage_data, Stage
+from .options import GoalUnlock
 
 if TYPE_CHECKING:
     from .world import VividlopeWorld
@@ -48,21 +50,18 @@ def generate_location_table() -> dict[str, int]:
 # Creates the regions that deal with the map portion of the world.
 # This is the menu region, level regions, and "X-Y Entrance" Regions.
 def create_map_regions(world: VividlopeWorld):
-    table = generate_location_table()
     multiworld = world.multiworld
     player = world.player
 
+    # Overworld region
     overworld = Region("Overworld", player, multiworld)
     multiworld.regions.append(overworld)
 
     # Level regions
     for level in range(0, 11):
+        # Create the level region
         level_region = Region(level_names[level], player, multiworld)
         multiworld.regions.append(level_region)
-
-        # Players can only enter the level if they have the unlock
-        overworld_to_level = overworld.connect(level_region)
-        world.set_rule(overworld_to_level, Has(f"{level_names[level]} Unlock"))
 
         # Stage entrance regions in that level
         for stage in range(0, 15):
@@ -74,6 +73,33 @@ def create_map_regions(world: VividlopeWorld):
             stage_region = Region(f"{stage_prefixes[level]}{stage} Entrance", player, multiworld)
             multiworld.regions.append(stage_region)
             overworld.connect(stage_region)
+
+        # Level region rules:
+        overworld_to_level = overworld.connect(level_region)
+        clear_location_name = f"{level_names[level]} {LocationSuffix.level_clear}"
+
+        # If this world is a goal, we need to make a lot of things different to account for it
+        if (level == 9 and world.options.goal_condition == 0) or ( # Finale
+            level == 10 and world.options.goal_condition == 1): # Level X
+            world.set_rule(overworld_to_level, Has(ItemNames.level_clear_event, count=FromOption(GoalUnlock)))
+
+            level_region.add_event(f"{clear_location_name} Goal Event", "Victory", location_type=VividlopeLocation, item_type=VividlopeItem)
+            world.set_completion_rule(Has("Victory"))
+        else:
+            # Players can only enter the level if they have the unlock
+            world.set_rule(overworld_to_level, Has(f"{level_names[level]} Unlock"))
+
+            # Add a level clear event and event item pair for the goal
+            level_region.add_event(f"{level_names[level]} {LocationSuffix.level_clear_event}", ItemNames.level_clear_event, location_type=VividlopeLocation, item_type=VividlopeItem)
+
+            # Add the level clear location to the newly created region
+            clear_location = VividlopeLocation(player, clear_location_name, world.location_name_to_id[clear_location_name], level_region)
+            level_region.locations.append(clear_location)
+            clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
+            if level == 9:  # Finale, which has 7 levels
+                world.set_rule(clear_location, Has(clear_item_name, count=7))
+            else:  # Others
+                world.set_rule(clear_location, Has(clear_item_name, count=15))
 
     # Shop regions
     shop_regions = []
@@ -102,18 +128,6 @@ def attach_shuffled_levels(world: VividlopeWorld):
     for level in range(0, 11):
         level_region = world.get_region(level_names[level])
 
-        # Create an event item so we can keep track of mow many stages are beat in a level
-        # for proper logic for the level clear checks.
-        clear_location_name = f"{level_names[level]} {LocationSuffix.level_clear}"
-        clear_location = VividlopeLocation(player, clear_location_name, world.location_name_to_id[clear_location_name], level_region)
-
-        level_region.locations.append(clear_location)
-        clear_item_name = f"{level_names[level]} Clear Event Item"
-        if level == 9: # Finale
-            world.set_rule(clear_location, Has(clear_item_name, count=7))
-        else: # Others
-            world.set_rule(clear_location, Has(clear_item_name, count=15))
-
         for stage in range(0, 15):
             if level == 9 and stage >= 7:
                 break # Finale only has 7 parts, so this prevents it from checking for extra
@@ -132,12 +146,14 @@ def attach_shuffled_levels(world: VividlopeWorld):
                     all_items.append(item_id_to_unlock[item])
                 world.set_rule(connection, HasAll(all_items))
 
-            # Create and attach locations to the newly created region
-            stage_region.add_event(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} Clear Event", clear_item_name, location_type=VividlopeLocation, item_type=items.VividlopeItem)
+            # Create an event item so we can keep track of mow many stages are beat in a level
+            # for proper logic for the level clear checks.
+            clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
+            stage_region.add_event(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear_event}", clear_item_name, location_type=VividlopeLocation, item_type=VividlopeItem)
 
             location_names = []
             if world.options.rank_checks == 0:
-                location_names = get_location_names_with_ids(f"{stage_prefixes[random_stage.level]}{random_stage.stage} {LocationSuffix.stage_clear}")
+                location_names = get_location_names_with_ids([f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear}"])
             elif world.options.rank_checks == 1:
                 location_names = get_location_names_with_ids([
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",

@@ -28,7 +28,7 @@ stage_prefixes: dict[int, str] = {
 }
 
 class LocationSuffix(StrEnum):
-    level_clear =   "Clear"
+    level_clear = "Clear"
 
     stage_clear =   "Completion"
     stage_perfect = "Perfect"
@@ -39,6 +39,10 @@ class LocationSuffix(StrEnum):
     stage_s =       "S Rank"
     stage_sp =      "S+ Rank"
     stage_v =       "V Rank"
+
+    # Event items
+    stage_clear_event = "Stage Clear Event"
+    level_clear_event = "Level Clear Event"
 
 class ItemNames(StrEnum):
     # Powerup Unlocks
@@ -63,6 +67,9 @@ class ItemNames(StrEnum):
 
     # Shop upgrades
     shop_upgrade = "Progressive Shop Upgrade"
+
+    # Events
+    level_clear_event = "Level Clear Event Item"
 
 item_id_to_unlock: dict[int, str] = {
     0: ItemNames.impact_unlock,

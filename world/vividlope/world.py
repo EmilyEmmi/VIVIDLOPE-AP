@@ -15,7 +15,7 @@ UT_SLOT_DATA_OPTION_NAMES = (
     "rank_checks",
 )
 
-class VIVIDLOPEWorld(World):
+class VividlopeWorld(World):
     """
     description
     """
