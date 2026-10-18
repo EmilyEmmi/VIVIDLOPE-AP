@@ -11,7 +11,7 @@ class Stage:
         self.req_items = req_items
 
     def location_id(self) -> int:
-        return self.level * 100 + self.stage
+        return self.level * 100 + (self.stage - 1)
 
 stage_data: list[Stage] = [
     Stage(1, 1, []),

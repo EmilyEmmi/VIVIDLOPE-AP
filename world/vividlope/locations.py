@@ -32,7 +32,7 @@ def generate_location_table() -> dict[str, int]:
             # 0 for generic Completion checks
             # 1 for Perfect checks (combination S+/V rank if that option is set)
             # 2-8 for D-V Ranks
-            # YY is the level number: 1-9 -> 0-8, X -> 9, Finale -> 10
+            # YY is the level number: 1-9 -> 1-9, Finale -> 10, X -> 11
             # and ZZ is the stage number minus 1, 0-14.
             stage_id = level * 100 + (stage - 1)
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_clear}"] = stage_id
@@ -76,7 +76,7 @@ def create_map_regions(world: VividlopeWorld):
             # We will connect a (random) stage region with locations in another function
             stage_region = Region(f"{stage_prefixes[level]}{stage} Entrance", player, multiworld)
             multiworld.regions.append(stage_region)
-            overworld.connect(stage_region)
+            level_region.connect(stage_region)
 
         # Level region rules:
         overworld_to_level = overworld.connect(level_region)
@@ -129,8 +129,10 @@ def attach_shuffled_levels(world: VividlopeWorld):
 
     # The levels only get shuffled if the option to shuffle them is on.
     # But the comments from here on out will act like they are always shuffled.
+    world.stage_shuffle_order = []
     if world.options.stage_shuffle:
         world.random.shuffle(stages)
+        world.stage_shuffle_order = [stage.location_id() for stage in stages]
 
     stage_index = 0
     for level in range(0, 11):

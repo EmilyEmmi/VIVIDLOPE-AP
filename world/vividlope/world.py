@@ -53,4 +53,7 @@ class VividlopeWorld(World):
         slot_data = {
             "options": self.options.as_dict(*UT_SLOT_DATA_OPTION_NAMES),
         }
+        # Add stage shuffle order to slot data
+        if (self.options.stage_shuffle):
+            slot_data["stage_shuffle_order"] = self.stage_shuffle_order
         return slot_data

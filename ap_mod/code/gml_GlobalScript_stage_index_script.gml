@@ -360,26 +360,49 @@ function stage_index_setup()
     // CUSTOM: STAGE SHUFFLE
     global.stage_index_to_true_code = ds_map_create();
     level_order = [];
-    for (var l = 0; l < 11; l++)
-    {
-        for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
-        {
-            array_push(level_order, global.stage_order[l][s]);
-            ds_map_set(global.stage_index_to_true_code, global.stage_order[l][s], [l + 1, s + 1]);
+    if (AP_is_multiworld_active()) {
+        var stage_shuffle_order = global.AP_stage_shuffle_order
+        if (array_length(stage_shuffle_order) != 0) {
+            for (var i = 0; i < array_length(stage_shuffle_order); i++)
+            {
+                var location_id = stage_shuffle_order[i];
+                var l = floor(location_id / 100) - 1;
+                var s = location_id % 100;
+                /*if (array_length(level_order) >= 15 && array_length(level_order) < 30) {
+                    show_message(string("Stage shuffle: 2-{0} to {1}-{2} ({3})", (array_length(level_order)-14), l+1, s+1, location_id));
+                }*/
+                if (array_length(global.stage_order) <= l || array_length(global.stage_order[l]) <= s) {
+                    show_message(string("Error: Stage shuffle: couldn't find {0}-{1}", l+1, s+1));
+                } else {
+                    array_push(level_order, global.stage_order[l][s]);
+                    ds_map_set(global.stage_index_to_true_code, global.stage_order[l][s], [l + 1, s + 1]);
+                }
+            }
         }
+    } else {
+        // manual stage shuffle
+        for (var l = 0; l < 11; l++)
+        {
+            for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
+            {
+                array_push(level_order, global.stage_order[l][s]);
+                ds_map_set(global.stage_index_to_true_code, global.stage_order[l][s], [l + 1, s + 1]);
+            }
+        }
+        randomize();
+        random_set_seed(12345, true);
+        array_shuffle_ext(level_order);
     }
     
-    randomize();
-    random_set_seed((variable_global_exists("AP_multiworld") ? global.AP_multiworld : 1234), true);
-    array_shuffle_ext(level_order);
-    
-    for (var l = 0; l < 11; l++)
-    {
-        for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
+    if (array_length(level_order) != 0) {
+        for (var l = 0; l < 11; l++)
         {
-            var stage = array_pop(level_order);
-            global.stage_order[l][s] = stage;
-            ds_map_set(global.stage_index_to_level, stage, l + 1);
+            for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
+            {
+                var stage = array_pop(level_order);
+                global.stage_order[l][s] = stage;
+                ds_map_set(global.stage_index_to_level, stage, l + 1);
+            }
         }
     }
     

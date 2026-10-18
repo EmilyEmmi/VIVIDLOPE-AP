@@ -118,7 +118,7 @@ function add_ap_item_to_shop(arg0, location_id, doHint = false)
 function add_shop_items_ap(arg0, doHint = false)
 {
     var max_shop_items = global.AP_shop_upgrades * 5;
-    for (var location_id = 299; location_id < max_shop_items + 299; location_id++) {
+    for (var location_id = 100000; location_id < max_shop_items + 100000; location_id++) {
         add_ap_item_to_shop(arg0, location_id, doHint);
     }
 }

@@ -56,7 +56,7 @@ if (ds_map_exists(async_load, "buffer"))
                     global.AP_team = data[i].team;
                     global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.CONNECTED;
                     global.AP_connection_errors = undefined;
-                    stage_index_setup();
+                    global.AP_stage_shuffle_order = [];
                     show_debug_message("Login successful!");
                     menu_set_top_caption("Connected!")
                     
@@ -88,6 +88,12 @@ if (ds_map_exists(async_load, "buffer"))
                     // get current deaths from the server
                     if global.AP_deathlink and global.AP_deathlink_amnesty > 1
                         AP_getDataStorage("current_deaths");
+                        
+                    // Set up stage shuffle
+                    if (variable_struct_exists(data[i].slot_data.options, "stage_shuffle") && data[i].slot_data.options.stage_shuffle && variable_struct_exists(data[i].slot_data, "stage_shuffle_order")) {
+                        global.AP_stage_shuffle_order = data[i].slot_data.stage_shuffle_order;
+                    }
+                    stage_index_setup();
 
                     var path_settings = AP_get_save_folder_prefix()  + "settings.json"
 
