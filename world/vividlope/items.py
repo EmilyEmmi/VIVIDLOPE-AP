@@ -106,6 +106,10 @@ def create_all_items(world: VividlopeWorld) -> None:
         world.create_item(ItemNames.insta_unlock),
         world.create_item(ItemNames.superjump_unlock),
         world.create_item(ItemNames.shop_upgrade),
+        world.create_item(ItemNames.shop_upgrade),
+        world.create_item(ItemNames.shop_upgrade),
+        world.create_item(ItemNames.shop_upgrade),
+        world.create_item(ItemNames.shop_upgrade),
         world.create_item(ItemNames.impact_filler),
         world.create_item(ItemNames.dash_filler),
         world.create_item(ItemNames.stamp_filler),
@@ -116,11 +120,7 @@ def create_all_items(world: VividlopeWorld) -> None:
     ]
 
     # Give the player a random level to start so they don't have 0 checks at the start of their game
-    random_starting_level = world.random.randint(0, 11)
-    # Re-randomize until we dont pick the goal level as our starting level
-    while  (random_starting_level == 9 and world.options.goal_condition == 0) or ( # Finale
-            random_starting_level == 10 and world.options.goal_condition == 1): # Level X
-        random_starting_level = world.random.randint(0, 11)
+    random_starting_level = 1
 
     for i in range(0, 11):
         # Skip creating the unlock for the goal world since we wont need it

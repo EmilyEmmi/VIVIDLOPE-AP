@@ -45,6 +45,10 @@ def generate_location_table() -> dict[str, int]:
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_sp}"] = stage_id + 70000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_v}"] = stage_id + 80000
 
+    for shop in range(0,25):
+        # Shop ids are in the range 90000-90024
+        location_table[f"Shop Purchase {shop + 1}"] = 100000 + shop
+
     return location_table
 
 # Creates the regions that deal with the map portion of the world.
@@ -102,16 +106,20 @@ def create_map_regions(world: VividlopeWorld):
                 world.set_rule(clear_location, Has(clear_item_name, count=15))
 
     # Shop regions
-    shop_regions = []
-    for upgrade in range(0, 15):
-        # I picked 15 shop upgrades completely arbitrarily.
-        # You can change this, or maybe you'll want to make it an option instead
-        upgrade_region = Region(f"Shop Upgrade {upgrade}", player, multiworld)
-        shop_regions.append(upgrade_region)
-        if upgrade > 0:
-            shop_regions[upgrade - 1].connect(upgrade_region)
-        else:
-            overworld.connect(upgrade_region)
+    shop_check_number = 1
+    for shop in range(0, 5):
+        # There are 5 shop regions which are all unlocked by having more shop upgrades.
+        shop_region = Region(f"Shop Upgrade {shop}", player, multiworld)
+        multiworld.regions.append(shop_region)
+        overworld_to_shop = overworld.connect(shop_region)
+        world.set_rule(overworld_to_shop, Has(ItemNames.shop_upgrade, count=(shop + 1)))
+
+        # Add locations to shops
+        for _ in range(0, 5):
+            location_name = f"Shop Purchase {shop_check_number}"
+            shop_location = VividlopeLocation(player, location_name, world.location_name_to_id[location_name], shop_region)
+            shop_region.locations.append(shop_location)
+            shop_check_number += 1
 
 def attach_shuffled_levels(world: VividlopeWorld):
     multiworld = world.multiworld
