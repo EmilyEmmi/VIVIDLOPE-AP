@@ -67,7 +67,7 @@ stage_data: list[Stage] = [
     Stage(4, 6, []),
     Stage(4, 7, []),
     Stage(4, 8, []),
-    Stage(4, 9, []),
+    Stage(4, 9, [ItemNames.wrap_unlock]),
     Stage(4, 10, []),
     Stage(4, 11, []),
     Stage(4, 12, []),

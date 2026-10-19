@@ -5,7 +5,7 @@ from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, HasAll, Rule
 from .items import VividlopeItem
-from .names import level_names, stage_prefixes, LocationSuffix, ItemNames, item_id_to_unlock
+from .names import level_names, stage_prefixes, LocationSuffix, ItemNames
 from .data import stage_data, level_clear_count, Stage
 from .options import GoalUnlock
 
@@ -30,20 +30,18 @@ def generate_location_table() -> dict[str, int]:
             # Stage location IDs take up this form: XYYZZ
             # Where X depends on the location type:
             # 0 for generic Completion checks
-            # 1 for Perfect checks (combination S+/V rank if that option is set)
-            # 2-8 for D-V Ranks
+            # 1-7 for D-V Ranks
             # YY is the level number: 1-9 -> 1-9, Finale -> 10, X -> 11
             # and ZZ is the stage number minus 1, 0-14.
             stage_id = level * 100 + (stage - 1)
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_clear}"] = stage_id
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_perfect}"] = stage_id + 10000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_d}"] = stage_id + 20000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_c}"] = stage_id + 30000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_b}"] = stage_id + 40000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_a}"] = stage_id + 50000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_s}"] = stage_id + 60000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_sp}"] = stage_id + 70000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_v}"] = stage_id + 80000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_d}"] = stage_id + 10000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_c}"] = stage_id + 20000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_b}"] = stage_id + 30000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_a}"] = stage_id + 40000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_s}"] = stage_id + 50000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_sp}"] = stage_id + 60000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_v}"] = stage_id + 70000
 
     for shop in range(0,25):
         # Shop ids are in the range 90000-90024
@@ -148,30 +146,22 @@ def attach_shuffled_levels(world: VividlopeWorld):
 
             # Assign rules
             if len(random_stage.req_items) != 0:
-                all_items = list[str]
+                all_items = []
                 for item in random_stage.req_items:
-                    all_items.append(item_id_to_unlock[item])
-                world.set_rule(connection, HasAll(all_items))
+                    all_items.append(item.value)
+                world.set_rule(connection, HasAll(*all_items))
 
             # Create an event item so we can keep track of mow many stages are beat in a level
             # for proper logic for the level clear checks.
             clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
             stage_region.add_event(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear_event}", clear_item_name, location_type=VividlopeLocation, item_type=VividlopeItem)
 
-            location_names = []
-            if world.options.rank_checks == 0:
-                location_names = get_location_names_with_ids([f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear}"])
-            elif world.options.rank_checks == 1:
-                location_names = get_location_names_with_ids([
-                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",
-                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_c}",
-                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_b}",
-                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_a}",
-                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_s}",
-                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_perfect}",
-                ])
-            else:
-                location_names = get_location_names_with_ids([
+            location_ids = []
+            if world.options.rank_checks != 2:
+                location_ids.append(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear}")
+            if world.options.rank_checks != 0:
+                location_ids = []
+                all_location_names = [
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_c}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_b}",
@@ -179,7 +169,13 @@ def attach_shuffled_levels(world: VividlopeWorld):
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_s}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_sp}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_v}",
-                ])
+                ]
+                if world.options.rank_checks == 1:
+                    location_ids.append(all_location_names[world.options.max_rank_check])
+                else:
+                    for n in range(0, world.options.max_rank_check+1):
+                        location_ids.append(all_location_names[n])
+            location_names = get_location_names_with_ids(location_ids)
             stage_region.add_locations(location_names, VividlopeLocation)
 
             stage_index += 1

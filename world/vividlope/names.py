@@ -31,7 +31,6 @@ class LocationSuffix(StrEnum):
     level_clear = "Clear"
 
     stage_clear =   "Completion"
-    stage_perfect = "Perfect"
     stage_d =       "D Rank"
     stage_c =       "C Rank"
     stage_b =       "B Rank"
@@ -70,15 +69,3 @@ class ItemNames(StrEnum):
 
     # Events
     level_clear_event = "Level Clear Event Item"
-
-item_id_to_unlock: dict[int, str] = {
-    0: ItemNames.impact_unlock,
-    1: ItemNames.dash_unlock,
-    2: ItemNames.stamp_unlock,
-    3: ItemNames.wrap_unlock,
-    4: ItemNames.balloon_unlock,
-    5: ItemNames.burst_unlock,
-    6: ItemNames.bomb_unlock,
-    7: ItemNames.insta_unlock,
-    8: ItemNames.superjump_unlock,
-}

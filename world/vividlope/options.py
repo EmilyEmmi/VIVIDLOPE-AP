@@ -2,6 +2,22 @@ from dataclasses import dataclass
 
 from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
 
+class DeathLink(Toggle):
+    """
+    When you get KOed, all other players with Deathlink enabled receive a death, and vice versa.
+    """
+    display_name = "DeathLink"
+
+class DeathLinkAmnesty(Range):
+    """
+    You won't send a DeathLink until you are KOed this many times.
+    Since it is very easy to get KOed in this game, playing with this set to 1 is not recommended.
+    """
+    display_name = "DeathLink Amnesty"
+    range_start = 1
+    range_end = 50
+    default = 5
+
 class GoalCondition(Choice):
     """
     The win/victory condition for this world.
@@ -32,11 +48,12 @@ class StageShuffle(Toggle):
 
 class RankChecks(Choice):
     """
-    Splits Stage Completion checks into several checks, one for each rank (excluding E-Rank).
+    Splits Stage Completion checks into multiple checks depending on rank.
     You earn them by completing a level and reaching that rank or above.
     none: No rank checks, only one check for clearing the stage.
-    partial: Split checks into D-S ranks, and only 1 check for a perfect rank (S+/V).
-    full: Split checks into D-V ranks. S+ and V ranks are separate checks.
+    partial: One check for clearing the stage, one check for reaching the max rank (defined by max_rank_check below).
+    full: One check for each rank, starting from D rank up to the max rank, excluding include plus ranks with the exception of S+. Note that this can SIGNIFICANTLY increase the number of locations, so use with caution!
+    
     """
     display_name = "Rank Checks"
     option_none = 0
@@ -44,9 +61,27 @@ class RankChecks(Choice):
     option_full = 2
     default = 0
 
+class MaxRankCheck(Choice):
+    """
+    The max rank expected for rank checks. Earning a V rank requires playing in Hard.
+    Plus ranks other than S+ (written as sp) are excluded.
+    """
+    display_name = "Rank Checks"
+    option_d = 0
+    option_c = 1
+    option_b = 2
+    option_a = 3
+    option_s = 4
+    option_sp = 5
+    option_v = 6
+    default = 4
+
 @dataclass
 class VividlopeOptions(PerGameCommonOptions):
+    deathlink: DeathLink
+    deathlink_amnesty: DeathLinkAmnesty
     goal_condition: GoalCondition
     goal_unlock: GoalUnlock
     stage_shuffle: StageShuffle
     rank_checks: RankChecks
+    max_rank_check: MaxRankCheck

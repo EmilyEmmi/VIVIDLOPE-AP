@@ -90,13 +90,8 @@ function AP_sendStageLocation(level, stage, rank) {
     if (rankPower >= 11) rank_id++; // ...but seperate S+ and S
     if (rank_id > 0) {
         for (var i = 1; i <= rank_id; i++) {
-            AP_sendLocation(10000 * (i + 1) + stage_id);
+            AP_sendLocation(10000 * i + stage_id);
         }
-    }
-    
-    // Send perfect check (S+ or V)
-    if (rankPower >= 11) {
-        AP_sendLocation(10000 + stage_id);
     }
     
     // helpful_text_display_raw("Checked location " + string(locationID)); // TEMP

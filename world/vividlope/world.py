@@ -9,10 +9,13 @@ from . import locations, items
 from . import options as vividlope_options  # rename due to a name conflict with World.options
 
 UT_SLOT_DATA_OPTION_NAMES = (
+    "deathlink",
+    "deathlink_amnesty",
     "goal_condition",
     "goal_unlock",
     "stage_shuffle",
     "rank_checks",
+    "max_rank_check",
 )
 
 class VividlopeWorld(World):
