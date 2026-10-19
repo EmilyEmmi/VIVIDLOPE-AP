@@ -1,2 +1,2 @@
 #from . import components as components
-from .world import VIVIDLOPEWorld as VIVIDLOPEWorld
+from .world import VividlopeWorld as VividlopeWorld

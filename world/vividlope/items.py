@@ -7,17 +7,17 @@ if TYPE_CHECKING:
 
 # There's so few items in this game I just decided to give them all IDs by hand
 ITEM_NAME_TO_ID = {
-    "Level 1 Unlock": 0,
-    "Level 2 Unlock": 1,
-    "Level 3 Unlock": 2,
-    "Level 4 Unlock": 3,
-    "Level 5 Unlock": 4,
-    "Level 6 Unlock": 5,
-    "Level 7 Unlock": 6,
-    "Level 8 Unlock": 7,
-    "Level 9 Unlock": 8,
-    "Finale Unlock": 9,
-    "Level X Unlock": 10,
+    "Level 1 Unlock": 1,
+    "Level 2 Unlock": 2,
+    "Level 3 Unlock": 3,
+    "Level 4 Unlock": 4,
+    "Level 5 Unlock": 5,
+    "Level 6 Unlock": 6,
+    "Level 7 Unlock": 7,
+    "Level 8 Unlock": 8,
+    "Level 9 Unlock": 9,
+    "Finale Unlock": 10,
+    "Level X Unlock": 11,
 
     ItemNames.impact_unlock.value:    20,
     ItemNames.dash_unlock.value:      21,
@@ -120,7 +120,10 @@ def create_all_items(world: VividlopeWorld) -> None:
     ]
 
     # Give the player a random level to start so they don't have 0 checks at the start of their game
-    random_starting_level = 1
+    random_starting_level = world.random.randint(0, 10)
+    # If Finale is our goal level and we pick it, pick Level X as the start instead
+    if (random_starting_level == 9 and world.options.goal_condition == 0):
+        random_starting_level = 10
 
     for i in range(0, 11):
         # Skip creating the unlock for the goal world since we wont need it

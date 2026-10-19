@@ -92,7 +92,7 @@ while (i < n)
         // ARCHIPELAGO: Prevent equipping locked items
         else if (refobj.type == UnknownEnum.Value_2 && AP_is_multiworld_active())
         {
-            var powerup_obj = struct_exists(AP_POWERUP_OBJ_MAP, refobj.code) ? AP_POWERUP_OBJ_MAP[refobj.code] : obj_powerup_cherry;
+            var powerup_obj = struct_exists(AP_POWERUP_OBJ_MAP, refobj.code) ? struct_get(AP_POWERUP_OBJ_MAP, refobj.code) : obj_powerup_cherry;
             if (!array_contains(global.AP_unlocked_items, powerup_obj)) {
                 options_warning[it] = "You haven't unlocked this item.";
                 options_locked[it] = true;

@@ -725,7 +725,7 @@ function AP_handle_receive_item(item_id) {
             array_push(global.AP_unlocked_items, powerup_obj);
     } else if (item_id >= global.AP_item_offset.levelunlock) {
         // Level unlock
-        global.AP_unlocked_levels[item_id - global.AP_item_offset.levelunlock] = true;
+        global.AP_unlocked_levels[item_id - global.AP_item_offset.levelunlock - 1] = true;
     }
 }
 

@@ -363,7 +363,8 @@ function stage_index_setup()
     if (AP_is_multiworld_active()) {
         var stage_shuffle_order = global.AP_stage_shuffle_order
         if (array_length(stage_shuffle_order) != 0) {
-            for (var i = 0; i < array_length(stage_shuffle_order); i++)
+            // go backwards so we pop in the correct  order
+            for (var i = array_length(stage_shuffle_order) - 1; i >= 0; i--)
             {
                 var location_id = stage_shuffle_order[i];
                 var l = floor(location_id / 100) - 1;
