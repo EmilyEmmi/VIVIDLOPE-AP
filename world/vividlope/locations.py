@@ -6,7 +6,7 @@ from rule_builder.options import OptionFilter
 from rule_builder.rules import Has, HasAll, Rule
 from .items import VividlopeItem
 from .names import level_names, stage_prefixes, LocationSuffix, ItemNames, item_id_to_unlock
-from .data import stage_data, Stage
+from .data import stage_data, level_clear_count, Stage
 from .options import GoalUnlock
 
 if TYPE_CHECKING:
@@ -100,10 +100,7 @@ def create_map_regions(world: VividlopeWorld):
             clear_location = VividlopeLocation(player, clear_location_name, world.location_name_to_id[clear_location_name], level_region)
             level_region.locations.append(clear_location)
             clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
-            if level == 9:  # Finale, which has 7 levels
-                world.set_rule(clear_location, Has(clear_item_name, count=7))
-            else:  # Others
-                world.set_rule(clear_location, Has(clear_item_name, count=15))
+            world.set_rule(clear_location, Has(clear_item_name, count=level_clear_count[level]))
 
     # Shop regions
     shop_check_number = 1

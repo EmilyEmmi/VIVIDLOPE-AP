@@ -172,3 +172,5 @@ stage_data: list[Stage] = [
     Stage(11, 14, []),
     Stage(11, 15, []),
 ]
+
+level_clear_count = [8, 10, 9, 8, 8, 9, 8, 10, 8, 7, 15]
