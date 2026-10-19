@@ -213,6 +213,8 @@ function game_mark_stage_as_cleared(arg0, arg1)
             ds_map_set(global.cleared_levels, level, true);
         }
         
+        // ARCHIPELAGO: Send finale goal
+        AP_handleLevelClear(level);
         shared_savedata_register_rank("finale", arg1);
         exit;
     }
@@ -261,10 +263,8 @@ function game_mark_stage_as_cleared(arg0, arg1)
             }
         }
         
-        // ARCHIPELAGO: Send level clear check
-        if (AP_is_multiworld_active(false)) {
-            AP_sendLocation(90000 + level - 1);
-        }
+        // ARCHIPELAGO: Send level clear check / check level X goal
+        AP_handleLevelClear(level);
         
         if (!was_complete && level_is_complete(level))
         {

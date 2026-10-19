@@ -87,7 +87,7 @@ function AP_sendStageLocation(level, stage, rank) {
     // Send checks for all ranks that we achieved and lower
     var rankPower = ds_map_exists(global.rank_power, rank) ? ds_map_find_value(global.rank_power, rank) : 0;
     var rank_id = floor(rankPower / 2); // Treat D+ the same as D, etc.
-    if (rank_id >= 11) rank_id++; // ...but seperate S+ and S
+    if (rankPower >= 11) rank_id++; // ...but seperate S+ and S
     if (rank_id > 0) {
         for (var i = 1; i <= rank_id; i++) {
             AP_sendLocation(10000 * (i + 1) + stage_id);
@@ -100,6 +100,45 @@ function AP_sendStageLocation(level, stage, rank) {
     }
     
     // helpful_text_display_raw("Checked location " + string(locationID)); // TEMP
+}
+
+function AP_handleLevelClear(level) {
+    if (!AP_is_multiworld_active(false)) exit;
+    
+    AP_sendLocation(90000 + level - 1);
+    AP_initiate_overworld();
+    
+    if (level == 10 && global.AP_goal_condition == 0) || (level == 11 && global.AP_goal_condition == 1) {
+        obj_archipelago_client.AP_goal();
+    }
+}
+
+function AP_initiate_overworld() {
+    if (!AP_is_multiworld_active()) exit;
+    
+    global.overworld_just_cleared = 0;
+    ds_map_clear(global.overworld_clear_events);
+    
+    var maxOverworldClear = (global.AP_goal_condition == 1) ? 9 : 8;
+    // Unlock Finale or Level X if we've cleared enough levels
+    var clearedLevelCount = 0;
+    for (var level = 1; level <= 11; level++) {
+        if (!is_undefined(ds_map_find_value(global.cleared_levels, level))) {
+            clearedLevelCount++;
+        }
+    }
+    if (clearedLevelCount >= global.AP_goal_unlock) {
+        if (global.AP_goal_condition == 0) {
+            maxOverworldClear = 9;
+            global.overworld_just_cleared = (global.overworld_cleared < maxOverworldClear) ? 1 : 0;
+            global.AP_unlocked_levels[9] = true;
+        } else if (global.AP_goal_condition == 1) {
+            global.AP_override_level_x_reveal = !global.AP_unlocked_levels[10];
+            global.AP_unlocked_levels[10] = true;
+        }
+    }
+    
+    global.overworld_cleared = max(global.overworld_cleared, maxOverworldClear);
 }
 
 function AP_is_multiworld_active(requireAuthentication = false) { // TEMP, should be TRUE

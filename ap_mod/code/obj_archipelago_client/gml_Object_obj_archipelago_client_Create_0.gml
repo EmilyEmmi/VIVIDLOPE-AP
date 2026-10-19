@@ -80,6 +80,9 @@ global.AP_unlocked_levels = [false, false, false, false, false,false, false, fal
 global.AP_shop_upgrades = 0;
 global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
 global.AP_stage_shuffle_order = [];
+global.AP_goal_condition = 0;
+global.AP_goal_unlock = 0;
+global.AP_override_level_x_reveal = false;
 
 global.AP_other_games = []
 

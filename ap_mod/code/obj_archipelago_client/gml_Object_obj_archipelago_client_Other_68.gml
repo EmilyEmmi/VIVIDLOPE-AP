@@ -82,8 +82,10 @@ if (ds_map_exists(async_load, "buffer"))
                         global.AP_deathlink = data[i].slot_data.options.deathlink;
                     if (variable_struct_exists(data[i].slot_data.options, "deathlink_amnesty"))
                         global.AP_deathlink_amnesty = data[i].slot_data.options.deathlink_amnesty;
-                    //if (variable_struct_exists(data[i].slot_data.options, "include_unused_items"))
-                        //global.AP_include_unused_items = data[i].slot_data.options.include_unused_items;
+                    if (variable_struct_exists(data[i].slot_data.options, "goal_condition"))
+                        global.AP_goal_condition = data[i].slot_data.options.goal_condition;
+                    if (variable_struct_exists(data[i].slot_data.options, "goal_unlock"))
+                        global.AP_goal_unlock = data[i].slot_data.options.goal_unlock;
                     
                     // get current deaths from the server
                     if global.AP_deathlink and global.AP_deathlink_amnesty > 1

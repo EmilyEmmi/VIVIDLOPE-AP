@@ -714,10 +714,6 @@ function AP_handle_receive_item(item_id) {
     } else if (item_id >= global.AP_item_offset.shopupgrade) {
         // Shop upgrade
         global.AP_shop_upgrades++;
-        // Spawn shopkeeper if this is our first upgrade
-        if (global.AP_shop_upgrades == 1 && room == rm_maingame && global.current_stage == "overworld") {
-            npc_initialize(10)
-        }
     } else if (item_id >= global.AP_item_offset.powerupunlock) {
         // Powerup
         var powerup_obj = POWERUP_MAP[item_id - global.AP_item_offset.powerupunlock];

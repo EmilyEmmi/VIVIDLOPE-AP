@@ -40,11 +40,7 @@ function start_story_mode_new(arg0 = -1, arg1 = -1)
     global.current_stage = "overworld";
     
     // ARCHIPELAGO: allow accessing all levels except Finale
-    if (AP_is_multiworld_active()) {
-        global.overworld_cleared = max(global.overworld_cleared, 8);
-        global.overworld_just_cleared = 0;
-        ds_map_clear(global.overworld_clear_events);
-    }
+    AP_initiate_overworld();
     
     if (arg1 == UnknownEnum.Value_4)
         room_goto_transition_slow_fade(rm_maingame);
@@ -64,11 +60,7 @@ function start_story_mode_load(arg0)
     global.current_stage = "overworld";
     
     // ARCHIPELAGO: allow accessing all levels except Finale
-    if (AP_is_multiworld_active()) {
-        global.overworld_cleared = max(global.overworld_cleared, 8);
-        global.overworld_just_cleared = 0;
-        ds_map_clear(global.overworld_clear_events);
-    }
+    AP_initiate_overworld();
     
     show_story_debug_dump();
     room_goto_transition_slow_fade(rm_maingame);
