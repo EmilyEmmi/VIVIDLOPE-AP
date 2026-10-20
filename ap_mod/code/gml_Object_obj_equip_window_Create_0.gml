@@ -89,19 +89,19 @@ while (i < n)
             options_warning[it] = lang("eqw_reverse");
             options_locked[it] = true;
         }
-        // ARCHIPELAGO: Prevent equipping locked items
-        else if (refobj.type == UnknownEnum.Value_2 && AP_is_multiworld_active())
+        else
         {
+            options_warning[it] = "";
+            options_locked[it] = false;
+        }
+        
+        // ARCHIPELAGO: Prevent equipping locked items
+        if (refobj.type == UnknownEnum.Value_2 && AP_is_multiworld_active() && !options_locked[it]) {
             var powerup_obj = struct_exists(AP_POWERUP_OBJ_MAP, refobj.code) ? struct_get(AP_POWERUP_OBJ_MAP, refobj.code) : obj_powerup_cherry;
             if (!array_contains(global.AP_unlocked_items, powerup_obj)) {
                 options_warning[it] = "You haven't unlocked this item.";
                 options_locked[it] = true;
             }
-        }
-        else
-        {
-            options_warning[it] = "";
-            options_locked[it] = false;
         }
         
         it++;

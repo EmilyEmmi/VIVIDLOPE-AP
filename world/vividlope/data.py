@@ -93,7 +93,7 @@ stage_data: list[Stage] = [
     Stage(6, 2, []),
     Stage(6, 3, []),
     Stage(6, 4, []),
-    Stage(6, 5, []),
+    Stage(6, 5, [ItemNames.superjump_unlock]),
     Stage(6, 6, []),
     Stage(6, 7, []),
     Stage(6, 8, []),
