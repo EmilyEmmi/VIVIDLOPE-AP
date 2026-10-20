@@ -49,44 +49,18 @@ else
         text_l = lang("mn_story");
     }, function()
     {
-        // prompt if not connected to server
-        if (!AP_is_multiworld_active()) {
-            menu_ask_question(function()
-            {
-                menu_flow_goto_menu_screen(obj_menu_screen_file_select);
-            }, "You aren't connected to a Multiworld. Are you sure you want to continue?", lang("yes"), lang("no"), 1);
-        } else {
-            menu_flow_goto_menu_screen(obj_menu_screen_file_select);
-        }
+        menu_flow_goto_menu_screen(obj_menu_screen_file_select);
     }, -1));
     
     // New archipelago option
-    menu_screen_add_option(new MENU_OPTION("options", spr_menu_icon_none, 0, function()
+    menu_screen_add_option(new MENU_OPTION("archipelago", spr_menu_icon_none, 0, function()
     {
         text_l = "Archipelago";
+        color = $FF45C4;
+        color_secondary = $FF7AD5;
     }, function()
     {
-        // Create AP client
-        if (!instance_exists(obj_archipelago_client))
-            instance_create_depth(0, 0, 0, obj_archipelago_client);
-        
-        global.AP_server = get_string("Enter server IP:", global.AP_server);
-        var port = get_string("Enter server port (blank for default):", string(global.AP_port));
-        try
-        {
-            port = real(port);
-        }
-        catch (e)
-        {
-            port = 38281;
-        }
-        global.AP_port = port;
-        global.AP_password = get_string("Enter password (blank for none):", global.AP_password);
-        global.AP_name = get_string("Enter slot name:", global.AP_name);
-        
-        obj_archipelago_client.AP_connect(true);
-        
-        menu_set_top_caption("Connecting...");
+        menu_flow_goto_menu_screen(obj_menu_screen_archipelago);
     }, -1));
     
     // debug

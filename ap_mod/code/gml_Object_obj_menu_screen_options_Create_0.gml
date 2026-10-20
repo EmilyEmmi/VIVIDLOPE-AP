@@ -76,35 +76,17 @@ menu_screen_add_option(new MENU_OPTION("controls", spr_menu_icon_none, 0, functi
     menu_flow_goto_menu_screen(obj_menu_screen_controls);
 }, -1));
 
-// deathlink settings
-if (AP_is_multiworld_active()){
-    menu_screen_add_option(new MENU_OPTION("deathlink_toggle", spr_menu_icon_none, 0, function()
+// AP settings
+if (AP_is_multiworld_active(false)){
+    menu_screen_add_option(new MENU_OPTION("ap_options", spr_menu_icon_none, 0, function()
     {
-        text_l = "DeathLink";
-        
-        if (global.AP_deathlink)
-            text_r = lang("on");
-        else
-            text_r = lang("off");
-    }, -1, function(arg0)
+        text_l = "AP Options";
+        color = $FF45C4;
+        color_secondary = $FF7AD5;
+    }, function()
     {
-        menu_play_sound_change();
-        menu_register_option_change();
-        global.AP_deathlink = !global.AP_deathlink;
-        obj_archipelago_client.AP_write_settings_file();
-    }, "When you get KOed, all other players with Deathlink enabled receive a death, and vice versa."));
-    
-    menu_screen_add_option(new MENU_OPTION("deathlink_amnesty", spr_menu_icon_none, 0, function()
-    {
-        text_l = "DL Amnesty";
-        text_r = string(global.AP_deathlink_amnesty);
-    }, -1, function(arg0)
-    {
-        menu_play_sound_change();
-        menu_register_option_change();
-        global.AP_deathlink_amnesty = (global.AP_deathlink_amnesty + arg0 - 1) % 50 + 1;
-        obj_archipelago_client.AP_write_settings_file();
-    }, "You won't send a DeathLink until you are KOed this many times."));
+        menu_flow_goto_menu_screen(obj_menu_screen_ap_options);
+    }, -1));
 }
 
 if (!is_demo_version() && room == rm_mainmenu && true)

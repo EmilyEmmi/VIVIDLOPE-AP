@@ -58,7 +58,36 @@ if (ds_map_exists(async_load, "buffer"))
                     global.AP_connection_errors = undefined;
                     global.AP_stage_shuffle_order = [];
                     show_debug_message("Login successful!");
-                    menu_set_top_caption("Connected!")
+                    
+                    // Load save file if we're on the right menu (TEMP: doesn't work)
+                    menu_set_top_caption("Connected!");
+                     /*show_message(string(room == rm_mainmenu));
+                    if (room == rm_mainmenu) {
+                        // Switch to alt save
+                        if (variable_global_exists("AP_is_playing") && !global.AP_is_playing) {
+                            global.save_base_dir = AP_get_save_folder_prefix() + game_save_id;
+                            global.steem_is_initialised = false;
+                        }
+                        global.AP_is_playing = true;
+                        
+                        // Create default save
+                        shared_savedata_unlock_character(1);
+                        shared_savedata_unlock_character(4);
+                        shared_savedata_unlock_clothes("cerise_hat_red");
+                        shared_savedata_unlock_clothes("ecru_hat_beige");
+                        shared_savedata_unlock_clothes("missnoir_hat_black");
+                        ach_refresh();
+                        
+                        global.current_savedata_slot = 7; // TEMP
+                        var filename = savedata_get_filename(7);
+                        if (file_exists(filename)) {
+                            show_message("story load");
+                            menu_flow_script_after_shutdown(start_story_mode_load, -1);
+                        } else {
+                            show_message("char select");
+                            menu_flow_goto_menu_screen(obj_menu_screen_chara_select, -1);
+                        }
+                    }*/
                     
                     with (obj_ap_notification_scheduler)
                         instance_destroy();
