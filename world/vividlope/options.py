@@ -66,7 +66,7 @@ class MaxRankCheck(Choice):
     The max rank expected for rank checks. Earning a V rank requires playing in Hard.
     Plus ranks other than S+ (written as sp) are excluded.
     """
-    display_name = "Rank Checks"
+    display_name = "Max Rank Check"
     option_d = 0
     option_c = 1
     option_b = 2

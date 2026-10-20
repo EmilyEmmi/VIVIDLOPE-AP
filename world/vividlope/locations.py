@@ -160,7 +160,6 @@ def attach_shuffled_levels(world: VividlopeWorld):
             if world.options.rank_checks != 2:
                 location_ids.append(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear}")
             if world.options.rank_checks != 0:
-                location_ids = []
                 all_location_names = [
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_c}",
