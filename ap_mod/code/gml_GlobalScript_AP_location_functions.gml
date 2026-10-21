@@ -86,8 +86,7 @@ function AP_sendStageLocation(level, stage, rank) {
     
     // Send checks for all ranks that we achieved and lower
     var rankPower = ds_map_exists(global.rank_power, rank) ? ds_map_find_value(global.rank_power, rank) : 0;
-    var rank_id = floor(rankPower / 2); // Treat D+ the same as D, etc.
-    if (rankPower >= 11) rank_id++; // ...but seperate S+ and S
+    var rank_id = rankPower - 1; // Lowest is D
     if (rank_id > 0) {
         for (var i = 1; i <= rank_id; i++) {
             AP_sendLocation(10000 * i + stage_id);
@@ -100,7 +99,7 @@ function AP_sendStageLocation(level, stage, rank) {
 function AP_handleLevelClear(level) {
     if (!AP_is_multiworld_active(false)) exit;
     
-    AP_sendLocation(90000 + level - 1);
+    AP_sendLocation(200000 + level - 1);
     AP_initiate_overworld();
     
     if (level == 10 && global.AP_goal_condition == 0) || (level == 11 && global.AP_goal_condition == 1) {

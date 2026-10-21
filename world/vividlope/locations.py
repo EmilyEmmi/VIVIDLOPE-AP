@@ -22,26 +22,30 @@ def get_location_names_with_ids(location_names: list[str]) -> dict[str, int | No
 def generate_location_table() -> dict[str, int]:
     location_table = {}
     for level in range (0,11):
-        # Level clear location IDs range from 90000-90010 depending on the level.
-        # They are 9000+ to not clash with Stage IDs.
-        location_table[f"{level_names[level]} Clear"] = 90000 + level
+        # Level clear location IDs range from 200000-200010 depending on the level.
+        # They are 200000+ to not clash with Stage IDs.
+        location_table[f"{level_names[level]} Clear"] = 200000 + level
 
         for stage in range(1,16):
             # Stage location IDs take up this form: XYYZZ
             # Where X depends on the location type:
             # 0 for generic Completion checks
-            # 1-7 for D-V Ranks
+            # 1-11 for D-V Ranks
             # YY is the level number: 1-9 -> 1-9, Finale -> 10, X -> 11
             # and ZZ is the stage number minus 1, 0-14.
             stage_id = level * 100 + (stage - 1)
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_clear}"] = stage_id
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_d}"] = stage_id + 10000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_c}"] = stage_id + 20000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_b}"] = stage_id + 30000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_a}"] = stage_id + 40000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_s}"] = stage_id + 50000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_sp}"] = stage_id + 60000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_v}"] = stage_id + 70000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_dp}"] = stage_id + 20000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_c}"] = stage_id + 30000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_cp}"] = stage_id + 40000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_b}"] = stage_id + 50000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_bp}"] = stage_id + 60000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_a}"] = stage_id + 70000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_ap}"] = stage_id + 70000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_s}"] = stage_id + 90000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_sp}"] = stage_id + 100000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_v}"] = stage_id + 110000
 
     for shop in range(0,25):
         # Shop ids are in the range 90000-90024
@@ -119,7 +123,7 @@ def create_map_regions(world: VividlopeWorld):
 def attach_shuffled_levels(world: VividlopeWorld):
     multiworld = world.multiworld
     player = world.player
-    table = generate_location_table()
+    # table = generate_location_table()
     stages: list[Stage] = stage_data
 
     # The levels only get shuffled if the option to shuffle them is on.
@@ -131,7 +135,7 @@ def attach_shuffled_levels(world: VividlopeWorld):
 
     stage_index = 0
     for level in range(0, 11):
-        level_region = world.get_region(level_names[level])
+        # level_region = world.get_region(level_names[level])
 
         for stage in range(0, 15):
             if level == 9 and stage >= 7:
@@ -162,9 +166,13 @@ def attach_shuffled_levels(world: VividlopeWorld):
             if world.options.rank_checks != 0:
                 all_location_names = [
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_dp}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_c}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_cp}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_b}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_bp}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_a}",
+                    f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_ap}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_s}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_sp}",
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_v}",

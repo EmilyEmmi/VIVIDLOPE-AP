@@ -32,9 +32,13 @@ class LocationSuffix(StrEnum):
 
     stage_clear =   "Completion"
     stage_d =       "D Rank"
+    stage_dp =      "D+ Rank"
     stage_c =       "C Rank"
+    stage_cp =      "C+ Rank"
     stage_b =       "B Rank"
+    stage_bp =      "B+ Rank"
     stage_a =       "A Rank"
+    stage_ap =      "A+ Rank"
     stage_s =       "S Rank"
     stage_sp =      "S+ Rank"
     stage_v =       "V Rank"

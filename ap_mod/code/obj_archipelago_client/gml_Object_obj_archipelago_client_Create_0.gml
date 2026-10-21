@@ -72,8 +72,8 @@ global.AP_item_offset =
 {
     levelunlock: 0,
     powerupunlock: 20,
-    shopupgrade: 30,
-    filleritem: 40,
+    shopupgrade: 50,
+    filleritem: 70,
 };
 // Game specific
 global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];

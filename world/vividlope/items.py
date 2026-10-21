@@ -29,15 +29,15 @@ ITEM_NAME_TO_ID = {
     ItemNames.insta_unlock.value:     27,
     ItemNames.superjump_unlock.value: 28,
 
-    ItemNames.shop_upgrade.value: 30,
+    ItemNames.shop_upgrade.value: 40,
 
-    ItemNames.impact_filler.value:    40,
-    ItemNames.dash_filler.value:      41,
-    ItemNames.stamp_filler.value:     42,
-    ItemNames.wrap_filler.value:      43,
-    ItemNames.balloon_filler.value:   44,
-    ItemNames.burst_filler.value:     45,
-    ItemNames.bomb_filler.value:      46
+    ItemNames.impact_filler.value:    50,
+    ItemNames.dash_filler.value:      51,
+    ItemNames.stamp_filler.value:     52,
+    ItemNames.wrap_filler.value:      53,
+    ItemNames.balloon_filler.value:   54,
+    ItemNames.burst_filler.value:     55,
+    ItemNames.bomb_filler.value:      56
 }
 
 DEFAULT_ITEM_CLASSIFICATIONS = {
@@ -58,9 +58,9 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     ItemNames.stamp_unlock:     ItemClassification.progression,
     ItemNames.wrap_unlock:      ItemClassification.progression,
     ItemNames.balloon_unlock:   ItemClassification.progression,
-    ItemNames.burst_unlock:     ItemClassification.progression,
+    ItemNames.burst_unlock:     ItemClassification.useful,
     ItemNames.bomb_unlock:      ItemClassification.progression,
-    ItemNames.insta_unlock:     ItemClassification.progression,
+    ItemNames.insta_unlock:     ItemClassification.useful,
     ItemNames.superjump_unlock: ItemClassification.progression,
 
     ItemNames.shop_upgrade: ItemClassification.progression,

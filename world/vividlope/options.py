@@ -52,8 +52,8 @@ class RankChecks(Choice):
     You earn them by completing a level and reaching that rank or above.
     none: No rank checks, only one check for clearing the stage.
     partial: One check for clearing the stage, one check for reaching the max rank (defined by max_rank_check below).
-    full: One check for each rank, starting from D rank up to the max rank, excluding include plus ranks with the exception of S+. Note that this can SIGNIFICANTLY increase the number of locations, so use with caution!
-    
+    full: One check for each rank, starting from D rank up to the max rank, excluding include plus ranks with the exception of S+.
+    NOTICE: Using full will SIGNIFICANTLY increase the number of locations (up to 11 times compared to none), so use with caution!
     """
     display_name = "Rank Checks"
     option_none = 0
@@ -63,18 +63,22 @@ class RankChecks(Choice):
 
 class MaxRankCheck(Choice):
     """
-    The max rank expected for rank checks. Earning a V rank requires playing in Hard.
-    Plus ranks other than S+ (written as sp) are excluded.
+    The max rank expected for rank checks, from D-V. Earning a V rank requires playing in Hard.
+    Plus ranks are written as (letter)p (Ex: S+ -> sp).
     """
     display_name = "Max Rank Check"
     option_d = 0
-    option_c = 1
-    option_b = 2
-    option_a = 3
-    option_s = 4
-    option_sp = 5
-    option_v = 6
-    default = 4
+    option_dp = 1
+    option_c = 2
+    option_cp = 3
+    option_b = 4
+    option_bp = 5
+    option_a = 6
+    option_ap = 7
+    option_s = 8
+    option_sp = 9
+    option_v = 10
+    default = 8
 
 @dataclass
 class VividlopeOptions(PerGameCommonOptions):
