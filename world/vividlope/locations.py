@@ -175,10 +175,18 @@ def attach_shuffled_levels(world: VividlopeWorld):
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_v}",
                 ]
                 if world.options.rank_checks == 1:
-                    location_ids.append(all_location_names[world.options.max_rank_check])
+                    location_id = all_location_names[world.options.max_rank_check]
+                    location_ids.append(location_id)
+                    # Require items for ranks B and higher
+                    if world.options.max_rank_check >= 4 and random_stage.req_items_rank != None:
+                        world.set_rule(location_id, random_stage.req_items_rank)
                 else:
                     for n in range(0, world.options.max_rank_check+1):
-                        location_ids.append(all_location_names[n])
+                        location_id = all_location_names[n]
+                        location_ids.append(location_id)
+                        # Require items for ranks B and higher
+                        if n >= 4 and random_stage.req_items_rank != None:
+                            world.set_rule(location_id, random_stage.req_items_rank)
             location_names = get_location_names_with_ids(location_ids)
             stage_region.add_locations(location_names, VividlopeLocation)
 
