@@ -735,14 +735,14 @@ function AP_handle_receive_item(item_id) {
         if (!is_undefined(ds_map_find_value(global.AP_received_filler, relative_id)))
             receivedFiller = ds_map_find_value(global.AP_received_filler, relative_id);
         
-        if (array_length(FILLER_MAP) <= relative_id) {
+        if (array_length(FILLER_LIST) <= relative_id) {
             show_message("Got invalid filler item: " + relative_id + "\nPlease report this!");
             exit;
         }
         
         // If we've processed more items than on the save file, save the new items
         if (processedFiller > receivedFiller) {
-            equip_item_add(FILLER_MAP[relative_id], processedFiller - receivedFiller);
+            equip_item_add(FILLER_LIST[relative_id], processedFiller - receivedFiller);
             ds_map_set(global.AP_received_filler, relative_id, processedFiller);
         }
     } else if (item_id >= global.AP_item_offset.shopupgrade) {
@@ -750,9 +750,9 @@ function AP_handle_receive_item(item_id) {
         global.AP_shop_upgrades++;
     } else if (item_id >= global.AP_item_offset.powerupunlock) {
         // Powerup
-        var powerup_obj = POWERUP_MAP[item_id - global.AP_item_offset.powerupunlock];
-        if (!array_contains(global.AP_unlocked_items, powerup_obj))
-            array_push(global.AP_unlocked_items, powerup_obj);
+        var powerup_name = POWERUP_UNLOCK_LIST[item_id - global.AP_item_offset.powerupunlock];
+        if (!array_contains(global.AP_unlocked_items, powerup_name))
+            array_push(global.AP_unlocked_items, powerup_name);
     } else if (item_id >= global.AP_item_offset.levelunlock) {
         // Level unlock
         global.AP_unlocked_levels[item_id - global.AP_item_offset.levelunlock - 1] = true;

@@ -9,6 +9,36 @@ function overworld_progress()
     return 11;
 }
 
+function AP_setup_wobbler_dialog() {
+    var unlocked_level_list = [];
+    for (var i = 0; i < array_length(global.AP_unlocked_levels); i++) {
+        if (global.AP_unlocked_levels[i]) {
+            if (i == 9) {
+                array_push(unlocked_level_list, "Finale");
+            } else if (i == 10) {
+                array_push(unlocked_level_list, "Level X");
+            } else {
+                array_push(unlocked_level_list, "Level "+string(i+1));
+            }
+        }
+    }
+    
+    var base_line = "";
+    if (array_length(unlocked_level_list) == 0) {
+        base_line = "None of the VIVIDCORE is open right now... I'll have to report this to the Boss.";
+    } else if (array_length(unlocked_level_list) == 1) {
+        base_line = string("The starting level is {0}!", unlocked_level_list[0]);
+    } else if (array_length(unlocked_level_list) == 2) {
+        base_line = string("{0} and {1} are open right now.", unlocked_level_list[0], unlocked_level_list[1]);
+    } else {
+        for (var i = 0; i < (array_length(unlocked_level_list) - 1); i++) {
+            base_line += (unlocked_level_list[i] + ", ");
+        }
+        base_line += ("and " + unlocked_level_list[array_length(unlocked_level_list) - 1] + " are open right now.");
+    }
+    event_array = [base_line];
+}
+
 function npc_initialize(arg0)
 {
     event_repeat_array = -1;
@@ -30,10 +60,15 @@ function npc_initialize(arg0)
             
             if (arg0 == 1)
             {
-                // ARCHIPELAGO: Don't spawn intro guy
+                // ARCHIPELAGO: Guy tells you which level you're in
                 if (AP_is_multiworld_active()) {
-                    instance_destroy();
-                    exit;
+                    if (!story_progression_has_normal_atrium()) {
+                        AP_setup_wobbler_dialog();
+                        autofire = true;
+                    } else {
+                        instance_destroy();
+                        exit;
+                    }
                 }
                 else if (overworld_progress() == 0 && !level_is_accessed(1))
                 {
@@ -59,8 +94,17 @@ function npc_initialize(arg0)
             
             if (arg0 == 2)
             {
-                // ARCHIPELAGO: Treat as if we've accessed level 1 in archi
-                if (overworld_progress() == 0 && (level_is_accessed(1) || AP_is_multiworld_active()))
+                // ARCHIPELAGO: Guy tells you which level you're in
+                if (AP_is_multiworld_active()) {
+                    if (story_progression_has_normal_atrium()) {
+                        AP_setup_wobbler_dialog();
+                        autofire = true;
+                    } else {
+                        instance_destroy();
+                        exit;
+                    }
+                }
+                else if (overworld_progress() == 0 && level_is_accessed(1))
                 {
                     if (global.player_character == UnknownEnum.Value_4)
                         event_array = npc_get_event_array_auto("npc_wobbler_noir_welcomeb");

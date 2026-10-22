@@ -42,14 +42,14 @@ def generate_location_table() -> dict[str, int]:
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_b}"] = stage_id + 50000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_bp}"] = stage_id + 60000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_a}"] = stage_id + 70000
-            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_ap}"] = stage_id + 70000
+            location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_ap}"] = stage_id + 80000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_s}"] = stage_id + 90000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_sp}"] = stage_id + 100000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_v}"] = stage_id + 110000
 
     for shop in range(0,25):
-        # Shop ids are in the range 90000-90024
-        location_table[f"Shop Purchase {shop + 1}"] = 100000 + shop
+        # Shop ids are in the range 150000-150024
+        location_table[f"Shop Purchase {shop + 1}"] = 150000 + shop
 
     return location_table
 
@@ -149,11 +149,8 @@ def attach_shuffled_levels(world: VividlopeWorld):
             connection = entrance_region.connect(stage_region)
 
             # Assign rules
-            if len(random_stage.req_items) != 0:
-                all_items = []
-                for item in random_stage.req_items:
-                    all_items.append(item.value)
-                world.set_rule(connection, HasAll(*all_items))
+            if random_stage.req_items != None:
+                world.set_rule(connection, random_stage.req_items)
 
             # Create an event item so we can keep track of mow many stages are beat in a level
             # for proper logic for the level clear checks.

@@ -24,18 +24,6 @@ change_state = function(arg0)
     state_initialized = false;
 };
 
-// ARCHIPELAGO: map shop items to object
-AP_POWERUP_OBJ_MAP = {
-    impact: obj_powerup_impact,
-    dash: obj_powerup_dash,
-    stamphammer: obj_powerup_stamphammer,
-    wrap_paper: obj_powerup_wrap_paper,
-    paint_balloon: obj_powerup_paint_balloon,
-    paint_burst: obj_powerup_dash,
-    bomb: obj_powerup_bomb,
-};
-
-
 chosen = 0;
 var refmap = ds_map_create();
 var i = 0;
@@ -56,7 +44,8 @@ while (i < n)
 {
     var refobj = @@array_get@@(global.equip_items_data, ds_map_find_value(refmap, global.equip_items_usable_ingame[i]));
     
-    if (refobj.level_requirement != 0 && !ds_map_exists(global.cleared_levels, refobj.level_requirement))
+    // ARCHIPELAGO: Allow powerups at any time
+    if ((!AP_is_multiworld_active()) && refobj.level_requirement != 0 && !ds_map_exists(global.cleared_levels, refobj.level_requirement))
     {
     }
     else
@@ -96,9 +85,8 @@ while (i < n)
         }
         
         // ARCHIPELAGO: Prevent equipping locked items
-        if (refobj.type == UnknownEnum.Value_2 && AP_is_multiworld_active() && !options_locked[it]) {
-            var powerup_obj = struct_exists(AP_POWERUP_OBJ_MAP, refobj.code) ? struct_get(AP_POWERUP_OBJ_MAP, refobj.code) : obj_powerup_cherry;
-            if (!array_contains(global.AP_unlocked_items, powerup_obj)) {
+        if (AP_is_multiworld_active() && !options_locked[it]) {
+            if (!array_contains(global.AP_unlocked_items, refobj.code)) {
                 options_warning[it] = "You haven't unlocked this item.";
                 options_locked[it] = true;
             }

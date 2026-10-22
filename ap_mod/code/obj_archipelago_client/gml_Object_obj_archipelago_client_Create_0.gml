@@ -78,7 +78,7 @@ global.AP_item_offset =
 // Game specific
 global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];
 global.AP_shop_upgrades = 0;
-global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
+global.AP_unlocked_items = ["bonus_fruit", "shield"];
 global.AP_stage_shuffle_order = [];
 global.AP_goal_condition = 0;
 global.AP_goal_unlock = 0;
@@ -88,19 +88,33 @@ global.AP_processed_filler = ds_map_create();
 
 global.AP_other_games = []
 
-POWERUP_MAP = [
-    obj_powerup_impact,
-    obj_powerup_dash,
-    obj_powerup_stamphammer,
-    obj_powerup_wrap_paper,
-    obj_powerup_paint_balloon,
-    obj_powerup_paint_burst,
-    obj_powerup_bomb,
-    obj_powerup_instant_bomb,
-    obj_powerup_superjump,
+global.AP_POWERUP_OBJ_MAP = {
+    obj_powerup_impact: "impact",
+    obj_powerup_dash: "dash",
+    obj_powerup_stamphammer: "stamphammer",
+    obj_powerup_wrap_paper: "wrap_paper",
+    obj_powerup_paint_balloon: "paint_balloon",
+    obj_powerup_paint_burst: "paint_burst",
+    obj_powerup_bomb: "bomb",
+    obj_powerup_instant_bomb: "instant_bomb",
+    obj_powerup_superjump: "superjump",
+    obj_powerup_shield: "shield",
+    obj_powerup_cherry: "bonus_fruit",
+};
+
+POWERUP_UNLOCK_LIST = [
+    "impact",
+    "dash",
+    "stamphammer",
+    "wrap_paper",
+    "paint_balloon",
+    "paint_burst",
+    "bomb",
+    "instant_bomb",
+    "superjump",
 ];
 
-FILLER_MAP = [
+FILLER_LIST = [
     "impact",
     "dash",
     "stamphammer",
