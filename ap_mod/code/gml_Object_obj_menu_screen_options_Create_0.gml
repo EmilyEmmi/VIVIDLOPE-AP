@@ -81,8 +81,8 @@ if (AP_is_multiworld_active(false)){
     menu_screen_add_option(new MENU_OPTION("ap_options", spr_menu_icon_none, 0, function()
     {
         text_l = "AP Options";
-        color = $FF45C4;
-        color_secondary = $FF7AD5;
+        color = #FF45C4;
+        color_secondary = #FF7AD5;
     }, function()
     {
         menu_flow_goto_menu_screen(obj_menu_screen_ap_options);

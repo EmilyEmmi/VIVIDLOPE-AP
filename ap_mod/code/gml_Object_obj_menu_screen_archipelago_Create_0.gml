@@ -51,12 +51,32 @@ menu_screen_add_option(new MENU_OPTION("ap_name", spr_menu_icon_none, 0, functio
 menu_screen_add_option(new MENU_OPTION("ap_connect", spr_menu_icon_none, 0, function()
     {
         text_l = "Connect";
-        color = $FF45C4;
-        color_secondary = $FF7AD5;
+        color = #C445FF;
+        color_secondary = #D57AFF;
     }, function()
     {
         obj_archipelago_client.AP_connect(true);
         menu_set_top_caption("Connecting...");
+    }, -1));
+menu_screen_add_option(new MENU_OPTION("ap_erase", spr_menu_icon_none, 0, function()
+    {
+        text_l = "Erase AP Data";
+        color = #FF0000;
+        color_secondary = #FF5050;
+    }, function()
+    {
+        if (directory_exists("Archipelago")) {
+            audi_play_simple(snd_menu_delete_warning);
+            menu_ask_question(function()
+            {
+                audi_play_simple(snd_menu_delete);
+                if (directory_exists("Archipelago")) {
+                    directory_destroy("Archipelago");
+                }
+            }, "Clear all multiworld save data? This can't be undone!", lang("yes"), lang("no"), 1);
+        } else {
+            menu_ask_question(function() {}, "No Archipelago save data was found.", lang("ok"), lang("ok") + " 2", 0);
+        }
     }, -1));
 
 back_action = function()

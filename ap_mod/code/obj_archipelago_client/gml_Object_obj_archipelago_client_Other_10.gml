@@ -111,12 +111,17 @@ function AP_disconnect(showMessage = true, updateMenu = false)
     {
         global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.DISCONNECTED;
         network_destroy(global.AP_socket);
+        
         global.AP_socket = -1;
-        AP_reset_items();
+        global.AP_received_datapackage = 0;
+        global.AP_requested_datapackage = 0;
+        global.AP_resquest_list = [];
+        global.AP_last_datapackage_requested = "";
+        global.AP_is_first_sync = true;
         
         if (showMessage)
             AP_create_notification("You were disconnected from the Multiworld.");
-        if (room = rm_mainmenu && updateMenu)
+        if (room = rm_mainmenu && instance_exists(obj_menu_screen_archipelago) && updateMenu)
             menu_set_top_caption("Connection failed");
     }
 }
@@ -688,7 +693,12 @@ function AP_create_notification(str, priority = false) {
         }
 }
 
-function AP_handle_received_items() {
+function AP_handle_received_items(forceLoad = false) {
+    // Must be in-game
+    if (!forceLoad && (room == rm_mainmenu || !(global.gmode == 3 || global.gmode == 4 || global.gmode == 1 || global.gmode == 2))) {
+        exit;
+    }
+    
     server_size = array_length(global.AP_item_from_server)
     save_size = array_length(global.AP_item_in_save)
 
@@ -710,7 +720,31 @@ function AP_handle_received_items() {
 
 function AP_handle_receive_item(item_id) {
     if (item_id >= global.AP_item_offset.filleritem) {
-        // Filler item (TODO)
+        // Filler item
+        var relative_id = item_id - global.AP_item_offset.filleritem;
+        
+        // This is how many items we've processed from the server
+        var processedFiller = 0;
+        if (!is_undefined(ds_map_find_value(global.AP_processed_filler, relative_id)))
+            processedFiller = ds_map_find_value(global.AP_processed_filler, relative_id);
+        processedFiller++;
+        ds_map_set(global.AP_processed_filler, relative_id, processedFiller);
+        
+        // This is how many items were saved to the save file
+        var receivedFiller = 0;
+        if (!is_undefined(ds_map_find_value(global.AP_received_filler, relative_id)))
+            receivedFiller = ds_map_find_value(global.AP_received_filler, relative_id);
+        
+        if (array_length(FILLER_MAP) <= relative_id) {
+            show_message("Got invalid filler item: " + relative_id + "\nPlease report this!");
+            exit;
+        }
+        
+        // If we've processed more items than on the save file, save the new items
+        if (processedFiller > receivedFiller) {
+            equip_item_add(FILLER_MAP[relative_id], processedFiller - receivedFiller);
+            ds_map_set(global.AP_received_filler, relative_id, processedFiller);
+        }
     } else if (item_id >= global.AP_item_offset.shopupgrade) {
         // Shop upgrade
         global.AP_shop_upgrades++;
@@ -731,6 +765,7 @@ function AP_reset_items() {
     global.AP_unlocked_levels = [false, false, false, false, false, false, false, false, false, false, false];
     global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
     global.AP_shop_upgrades = 0;
+    ds_map_clear(global.AP_processed_filler);
 }
 
 enum UnknownEnum

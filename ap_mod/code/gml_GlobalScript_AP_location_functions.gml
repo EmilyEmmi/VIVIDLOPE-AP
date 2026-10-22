@@ -110,6 +110,8 @@ function AP_handleLevelClear(level) {
 function AP_initiate_overworld() {
     if (!AP_is_multiworld_active()) exit;
     
+    obj_archipelago_client.AP_handle_received_items(true);
+    
     global.overworld_just_cleared = 0;
     ds_map_clear(global.overworld_clear_events);
     
@@ -135,6 +137,6 @@ function AP_initiate_overworld() {
     global.overworld_cleared = max(global.overworld_cleared, maxOverworldClear);
 }
 
-function AP_is_multiworld_active(requireAuthentication = false) { // TEMP, should be TRUE
-    return (instance_exists(obj_archipelago_client) && (!requireAuthentication || obj_archipelago_client.AP_isAuthenticated()))
+function AP_is_multiworld_active(requireAuthentication = false) {
+    return (instance_exists(obj_archipelago_client) && variable_global_exists("AP_is_playing") && global.AP_is_playing && (!requireAuthentication || obj_archipelago_client.AP_isAuthenticated()))
 }

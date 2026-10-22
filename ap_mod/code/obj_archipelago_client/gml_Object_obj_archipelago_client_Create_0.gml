@@ -72,8 +72,8 @@ global.AP_item_offset =
 {
     levelunlock: 0,
     powerupunlock: 20,
-    shopupgrade: 50,
-    filleritem: 70,
+    shopupgrade: 40,
+    filleritem: 50,
 };
 // Game specific
 global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];
@@ -83,6 +83,8 @@ global.AP_stage_shuffle_order = [];
 global.AP_goal_condition = 0;
 global.AP_goal_unlock = 0;
 global.AP_override_level_x_reveal = false;
+global.AP_received_filler = ds_map_create();
+global.AP_processed_filler = ds_map_create();
 
 global.AP_other_games = []
 
@@ -97,6 +99,17 @@ POWERUP_MAP = [
     obj_powerup_instant_bomb,
     obj_powerup_superjump,
 ];
+
+FILLER_MAP = [
+    "impact",
+    "dash",
+    "stamphammer",
+    "wrap_paper",
+    "paint_balloon",
+    "paint_burst",
+    "bomb",
+];
+
 
 step = 0;
 

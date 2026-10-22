@@ -382,7 +382,7 @@ function stage_index_setup()
         }
     } else {
         // manual stage shuffle
-        for (var l = 0; l < 11; l++)
+        /*for (var l = 0; l < 11; l++)
         {
             for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
             {
@@ -392,7 +392,7 @@ function stage_index_setup()
         }
         randomize();
         random_set_seed(12345, true);
-        array_shuffle_ext(level_order);
+        array_shuffle_ext(level_order);*/
     }
     
     if (array_length(level_order) != 0) {

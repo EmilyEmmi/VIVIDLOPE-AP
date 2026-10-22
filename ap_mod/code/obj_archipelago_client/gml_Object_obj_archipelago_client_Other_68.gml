@@ -61,33 +61,30 @@ if (ds_map_exists(async_load, "buffer"))
                     
                     // Load save file if we're on the right menu (TEMP: doesn't work)
                     menu_set_top_caption("Connected!");
-                     /*show_message(string(room == rm_mainmenu));
-                    if (room == rm_mainmenu) {
+                    if (room == rm_mainmenu && instance_exists(obj_menu_screen_archipelago)) {
                         // Switch to alt save
-                        if (variable_global_exists("AP_is_playing") && !global.AP_is_playing) {
-                            global.save_base_dir = AP_get_save_folder_prefix() + game_save_id;
+                        if (!(variable_global_exists("AP_is_playing") && global.AP_is_playing)) {
+                            global.save_base_dir = game_save_id + AP_get_save_folder_prefix();
                             global.steem_is_initialised = false;
+                            
+                            // Load save
+                            prep_legacy_savefiles();
+                            loading_buffer_shared_savedata_load();
+                            
+                            for (var saveslot = 0; saveslot < 8; saveslot++)
+                                loading_buffer_savedata_preview_load(saveslot);
                         }
+                        
                         global.AP_is_playing = true;
-                        
-                        // Create default save
-                        shared_savedata_unlock_character(1);
-                        shared_savedata_unlock_character(4);
-                        shared_savedata_unlock_clothes("cerise_hat_red");
-                        shared_savedata_unlock_clothes("ecru_hat_beige");
-                        shared_savedata_unlock_clothes("missnoir_hat_black");
-                        ach_refresh();
-                        
-                        global.current_savedata_slot = 7; // TEMP
-                        var filename = savedata_get_filename(7);
-                        if (file_exists(filename)) {
-                            show_message("story load");
-                            menu_flow_script_after_shutdown(start_story_mode_load, -1);
-                        } else {
-                            show_message("char select");
-                            menu_flow_goto_menu_screen(obj_menu_screen_chara_select, -1);
+                        global.current_savedata_slot = 7;
+                        with (obj_menu_screen_archipelago) {
+                            if (file_exists(shared_savedata_get_filename())) {
+                                menu_flow_script_after_shutdown(start_story_mode_load, -1);
+                            } else {
+                                menu_flow_goto_menu_screen(obj_menu_screen_chara_select, -1);
+                            }
                         }
-                    }*/
+                    }
                     
                     with (obj_ap_notification_scheduler)
                         instance_destroy();
@@ -183,6 +180,9 @@ if (ds_map_exists(async_load, "buffer"))
                     {
                         global.AP_is_receiving_items = true
                         starting_index = data[i].index;
+                        if (starting_index == 0) {
+                            AP_reset_items();
+                        }
 
                         for (var ii = 0; ii < array_length(data[i].items); ii++)
                         {

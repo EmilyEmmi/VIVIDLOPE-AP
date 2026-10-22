@@ -56,8 +56,8 @@ else
     menu_screen_add_option(new MENU_OPTION("archipelago", spr_menu_icon_none, 0, function()
     {
         text_l = "Archipelago";
-        color = $FF45C4;
-        color_secondary = $FF7AD5;
+        color = #C445FF;
+        color_secondary = #D57AFF;
     }, function()
     {
         menu_flow_goto_menu_screen(obj_menu_screen_archipelago);
