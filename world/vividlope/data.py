@@ -67,15 +67,15 @@ stage_data: list[Stage] = [
     Stage(4, 3),
     Stage(4, 4),
     Stage(4, 5, HasAny(ItemNames.wrap_unlock.value, ItemNames.stamp_unlock.value)), # spikes
-    Stage(4, 6),
+    Stage(4, 6, HasAny(ItemNames.wrap_unlock.value, ItemNames.stamp_unlock.value)), # spikes
     Stage(4, 7),
     Stage(4, 8),
     Stage(4, 9, Has(ItemNames.wrap_unlock.value)), # spikes
     Stage(4, 10),
     Stage(4, 11),
     Stage(4, 12),
-    Stage(4, 13),
-    Stage(4, 14),
+    Stage(4, 13, None, Has(ItemNames.stamp_unlock.value)), # spikes
+    Stage(4, 14, None, Has(ItemNames.wrap_unlock.value)), # spikes
     Stage(4, 15),
     Stage(5, 1),
     Stage(5, 2),
@@ -112,8 +112,8 @@ stage_data: list[Stage] = [
     Stage(7, 3, Has(ItemNames.superjump_unlock.value)),
     Stage(7, 4),
     Stage(7, 5),
-    Stage(7, 6),
-    Stage(7, 7),
+    Stage(7, 6, Has(ItemNames.stamp_unlock.value)), # spikes
+    Stage(7, 7, None, Has(ItemNames.impact_unlock.value)),
     Stage(7, 8),
     Stage(7, 9),
     Stage(7, 10),
@@ -130,18 +130,18 @@ stage_data: list[Stage] = [
     Stage(8, 6),
     Stage(8, 7),
     Stage(8, 8),
-    Stage(8, 9),
+    Stage(8, 9, None, HasAny(ItemNames.wrap_unlock.value, ItemNames.balloon_unlock.value)), # landmines
     Stage(8, 10),
     Stage(8, 11),
     Stage(8, 12),
-    Stage(8, 13),
-    Stage(8, 14),
-    Stage(8, 15),
+    Stage(8, 13, None, HasAny(ItemNames.wrap_unlock.value, ItemNames.stamp_unlock.value)), # landmines
+    Stage(8, 14, None, Has(ItemNames.stamp_unlock.value)), # landmines
+    Stage(8, 15, Has(ItemNames.superjump_unlock.value)),
     Stage(9, 1),
     Stage(9, 2),
     Stage(9, 3),
     Stage(9, 4),
-    Stage(9, 5, None, HasAny(ItemNames.wrap_unlock.value)), # landmines
+    Stage(9, 5, None, Has(ItemNames.wrap_unlock.value)), # landmines
     Stage(9, 6),
     Stage(9, 7),
     Stage(9, 8),
@@ -159,7 +159,7 @@ stage_data: list[Stage] = [
     Stage(10, 5),
     Stage(10, 6),
     Stage(10, 7),
-    Stage(11, 1),
+    Stage(11, 1, HasAny(ItemNames.wrap_unlock.value, ItemNames.balloon_unlock.value, ItemNames.dash_unlock.value)), # spikes
     Stage(11, 2),
     Stage(11, 3),
     Stage(11, 4),
@@ -167,12 +167,12 @@ stage_data: list[Stage] = [
     Stage(11, 6),
     Stage(11, 7, Has(ItemNames.superjump_unlock.value)),
     Stage(11, 8),
-    Stage(11, 9),
+    Stage(11, 9, Has(ItemNames.impact_unlock.value)), # spikes
     Stage(11, 10),
     Stage(11, 11),
-    Stage(11, 12),
+    Stage(11, 12, None, Has(ItemNames.stamp_unlock.value)), # spikes AND landmines
     Stage(11, 13, Has(ItemNames.superjump_unlock.value)),
-    Stage(11, 14),
+    Stage(11, 14, None, Has(ItemNames.stamp_unlock.value)), # landmines
     Stage(11, 15),
 ]
 

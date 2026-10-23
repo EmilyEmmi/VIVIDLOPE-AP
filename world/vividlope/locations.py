@@ -157,9 +157,9 @@ def attach_shuffled_levels(world: VividlopeWorld):
             clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
             stage_region.add_event(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear_event}", clear_item_name, location_type=VividlopeLocation, item_type=VividlopeItem)
 
-            location_ids = []
+            location_names = []
             if world.options.rank_checks != 2:
-                location_ids.append(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear}")
+                location_names.append(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear}")
             if world.options.rank_checks != 0:
                 all_location_names = [
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_d}",
@@ -175,19 +175,22 @@ def attach_shuffled_levels(world: VividlopeWorld):
                     f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_v}",
                 ]
                 if world.options.rank_checks == 1:
-                    location_id = all_location_names[world.options.max_rank_check]
-                    location_ids.append(location_id)
-                    # Require items for ranks B and higher
-                    if world.options.max_rank_check >= 4 and random_stage.req_items_rank != None:
-                        world.set_rule(location_id, random_stage.req_items_rank)
+                    location_name = all_location_names[world.options.max_rank_check]
+                    location_names.append(location_name)
                 else:
                     for n in range(0, world.options.max_rank_check+1):
-                        location_id = all_location_names[n]
-                        location_ids.append(location_id)
-                        # Require items for ranks B and higher
-                        if n >= 4 and random_stage.req_items_rank != None:
-                            world.set_rule(location_id, random_stage.req_items_rank)
-            location_names = get_location_names_with_ids(location_ids)
-            stage_region.add_locations(location_names, VividlopeLocation)
+                        location_name = all_location_names[n]
+                        location_names.append(location_name)
+            location_ids = get_location_names_with_ids(location_names)
+            stage_region.add_locations(location_ids, VividlopeLocation)
+
+            # Require items for ranks B and higher
+            if random_stage.req_items_rank != None and world.options.rank_checks != 0 and world.options.max_rank_check >= 4:
+                if world.options.rank_checks == 1:
+                    world.set_rule(world.get_location(location_names[1]), random_stage.req_items_rank)
+                else:
+                    for n in range(4, world.options.max_rank_check+1):
+                        location_name = location_names[n]
+                        world.set_rule(world.get_location(location_name), random_stage.req_items_rank)
 
             stage_index += 1

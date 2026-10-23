@@ -71,5 +71,32 @@ class ItemNames(StrEnum):
     # Shop upgrades
     shop_upgrade = "Progressive Shop Upgrade"
 
+    # Attires
+    attire_1 =  "Attire 1 (Blue/White/Azure)"
+    attire_2 =  "Attire 2 (Green/Red/Spearmint)"
+    attire_3 =  "Attire 3 (Pink/Green/Lavender)"
+    attire_4 =  "Attire 4 (Orange/Yellow/Chocolate)"
+    attire_5 =  "Attire 5 (Purple/Blue/Amber)"
+    attire_6 =  "Attire 6 (Beige/Gift Wrap/Silk)"
+    attire_7 =  "Attire 7 (Denim)"
+    attire_8 =  "Attire 8 (Tracksuit/Amaranth)"
+    attire_9 =  "Attire 9 (Wooden/Mahogany)"
+    attire_10 = "Attire 10 (Zig-Zag)"
+    attire_11 = "Attire 11 (Buoy/Wet/Salmon)"
+    attire_12 = "Attire 12 (Contrast/Camo)"
+    attire_13 = "Attire 13 (Sunshine/Charcoal/Fiery)"
+    attire_14 = "Attire 14 (Snowflake/Ice/Aurora)"
+    attire_15 = "Attire 15 (Flannel/Polka Dot)"
+    attire_16 = "Attire 16 (Elegant/Tin Foil/Slate)"
+    attire_17 = "Attire 17 (Arcade/Moonlight)"
+    attire_18 = "Attire 18 (Lollipop/Twist/Crimson)"
+    attire_19 = "Attire 19 (Pastel/Chicken/Pop)"
+    attire_20 = "Attire 20 (Angelic)"
+    attire_21 = "Attire 21 (Hat/Banana/Cursed)"
+    attire_22 = "Attire 22 (Noise)"
+    attire_23 = "Attire 23 (Fuzzy/Gaudy)"
+    attire_24 = "Attire 24 (Recycle/Vintage/Time)"
+    attire_25 = "Attire 25 (Black/Golden/Red)"
+
     # Events
     level_clear_event = "Level Clear Event Item"
