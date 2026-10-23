@@ -360,6 +360,10 @@ function shared_savedata_reset()
 {
     global.money = 0;
     ds_map_clear(global.equip_items);
+    // ARCHIPELAGO: Clear received filler
+    if (AP_is_multiworld_active(false)) {
+        ds_map_clear(global.AP_received_filler);
+    }
     global.shared_savedata = {};
     shared_savedata_ensure_compatibility(global.shared_savedata);
 }
