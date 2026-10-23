@@ -73,7 +73,8 @@ global.AP_item_offset =
     levelunlock: 0,
     powerupunlock: 20,
     shopupgrade: 40,
-    filleritem: 50,
+    inventoryitem: 50,
+    attire: 70,
 };
 // Game specific
 global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];
@@ -124,6 +125,33 @@ FILLER_LIST = [
     "bomb",
 ];
 
+ATTIRE_LIST = [
+    ["cerise_hat_blue",         "ecru_hat_white",       "missnoir_hat_azure"],
+    ["cerise_hat_green",        "ecru_hat_red",         "missnoir_hat_spearmint"],
+    ["cerise_hat_pink",         "ecru_hat_green",       "missnoir_hat_lavender"],
+    ["cerise_hat_orange",       "ecru_hat_yellow",      "missnoir_hat_chocolate"],
+    ["cerise_hat_purple",       "ecru_hat_blue",        "missnoir_hat_amber"],
+    ["cerise_hat_beige",        "ecru_hat_gift",        "missnoir_hat_silk"],
+    ["cerise_hat_denim",        "",                     "missnoir_hat_denim"],
+    ["cerise_hat_tracksuit",    "",                     "missnoir_hat_amaranth"],
+    ["cerise_hat_wood",         "ecru_hat_wood",        "missnoir_hat_mahogany"],
+    ["cerise_hat_zigzag",       "ecru_hat_zigzag",      "missnoir_hat_zigzag"],
+    ["cerise_hat_buoy",         "ecru_hat_wet",         "missnoir_hat_salmon"],
+    ["cerise_hat_contrast",     "ecru_hat_camo",        "missnoir_hat_contrast"],
+    ["cerise_hat_sunshine",     "ecru_hat_charcoal",    "missnoir_hat_fiery"],
+    ["cerise_hat_icey",         "ecru_hat_ice",         "missnoir_hat_aurora"],
+    ["cerise_hat_scottish",     "ecru_hat_polka",       "missnoir_hat_scottish"],
+    ["cerise_hat_elegant",      "ecru_hat_tinfoil",     "missnoir_hat_slate"],
+    ["cerise_hat_arcade",       "ecru_hat_arcade",      "missnoir_hat_moonlight"],
+    ["cerise_hat_lollipop",     "ecru_hat_twist",       "missnoir_hat_crimson"],
+    ["cerise_hat_pastel",       "ecru_hat_chicken",     "missnoir_hat_pop"],
+    ["cerise_hat_angel",        "ecru_hat_angel",       "missnoir_hat_angel"],
+    ["cerise_hat_hat",          "ecru_hat_banana",      "missnoir_hat_cursed"],
+    ["",                        "",                     "missnoir_hat_noise"],
+    ["cerise_hat_fuzzy",        "ecru_hat_gaudy",       "missnoir_hat_fuzzy"],
+    ["cerise_hat_recycle",      "ecru_hat_vintage",     "missnoir_hat_time"],
+    ["cerise_hat_black",        "ecru_hat_gold",        "missnoir_hat_red"],
+]
 
 step = 0;
 

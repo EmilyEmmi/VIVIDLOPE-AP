@@ -25,6 +25,7 @@ if (variable_global_exists("AP_is_playing") && global.AP_is_playing) {
         loading_buffer_savedata_preview_load(i);
     
     // reset stages
+    global.AP_is_playing = false;
     stage_index_setup();
 }
 global.AP_is_playing = false;

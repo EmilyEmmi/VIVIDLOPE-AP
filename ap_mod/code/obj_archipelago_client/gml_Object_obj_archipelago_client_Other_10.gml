@@ -719,9 +719,21 @@ function AP_handle_received_items(forceLoad = false) {
 }
 
 function AP_handle_receive_item(item_id) {
-    if (item_id >= global.AP_item_offset.filleritem) {
+    if (item_id >= global.AP_item_offset.attire) {
+        if (array_length(ATTIRE_LIST) <= item_id - global.AP_item_offset.attire) {
+            show_message("Got invalid attire: " + string(item_id - global.AP_item_offset.attire) + "\nPlease report this!");
+            exit;
+        }
+        
+        var clothesSet = ATTIRE_LIST[item_id - global.AP_item_offset.attire];
+        for (var i = 0; i < array_length(clothesSet); i++) {
+            if (string_length(clothesSet[i]) != 0) {
+                shared_savedata_unlock_clothes(clothesSet[i]);
+            }
+        }
+    } else if (item_id >= global.AP_item_offset.inventoryitem) {
         // Filler item
-        var relative_id = item_id - global.AP_item_offset.filleritem;
+        var relative_id = item_id - global.AP_item_offset.inventoryitem;
         
         // This is how many items we've processed from the server
         var processedFiller = 0;
@@ -766,6 +778,7 @@ function AP_reset_items() {
     global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
     global.AP_shop_upgrades = 0;
     ds_map_clear(global.AP_processed_filler);
+    global.shared_savedata.unlocked_clothes = [];
 }
 
 enum UnknownEnum
