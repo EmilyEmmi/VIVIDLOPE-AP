@@ -19,25 +19,31 @@ ITEM_NAME_TO_ID = {
     "Finale Unlock": 10,
     "Level X Unlock": 11,
 
-    ItemNames.impact_unlock.value:    20,
-    ItemNames.dash_unlock.value:      21,
-    ItemNames.stamp_unlock.value:     22,
-    ItemNames.wrap_unlock.value:      23,
-    ItemNames.balloon_unlock.value:   24,
-    ItemNames.burst_unlock.value:     25,
-    ItemNames.bomb_unlock.value:      26,
-    ItemNames.insta_unlock.value:     27,
-    ItemNames.superjump_unlock.value: 28,
+    ItemNames.impact_unlock.value:     20,
+    ItemNames.dash_unlock.value:       21,
+    ItemNames.stamp_unlock.value:      22,
+    ItemNames.wrap_unlock.value:       23,
+    ItemNames.balloon_unlock.value:    24,
+    ItemNames.burst_unlock.value:      25,
+    ItemNames.bomb_unlock.value:       26,
+    ItemNames.insta_unlock.value:      27,
+    ItemNames.superjump_unlock.value:  28,
+    ItemNames.max_power_unlock.value:  29,
+    ItemNames.good_shoes_unlock.value: 30,
+    ItemNames.shield_unlock.value:     31,
 
     ItemNames.shop_upgrade.value: 40,
 
-    ItemNames.impact_filler.value:    50,
-    ItemNames.dash_filler.value:      51,
-    ItemNames.stamp_filler.value:     52,
-    ItemNames.wrap_filler.value:      53,
-    ItemNames.balloon_filler.value:   54,
-    ItemNames.burst_filler.value:     55,
-    ItemNames.bomb_filler.value:      56,
+    ItemNames.impact_filler.value:     50,
+    ItemNames.dash_filler.value:       51,
+    ItemNames.stamp_filler.value:      52,
+    ItemNames.wrap_filler.value:       53,
+    ItemNames.balloon_filler.value:    54,
+    ItemNames.burst_filler.value:      55,
+    ItemNames.bomb_filler.value:       56,
+    ItemNames.max_power_filler.value:  57,
+    ItemNames.good_shoes_filler.value: 58,
+    ItemNames.extra_life_filler.value: 59,
 
     ItemNames.attire_1.value:         70,
     ItemNames.attire_2.value:         71,
@@ -79,15 +85,18 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     "Level X Unlock": ItemClassification.progression,
     "Finale Unlock": ItemClassification.progression,
 
-    ItemNames.impact_unlock:    ItemClassification.progression,
-    ItemNames.dash_unlock:      ItemClassification.progression,
-    ItemNames.stamp_unlock:     ItemClassification.progression,
-    ItemNames.wrap_unlock:      ItemClassification.progression,
-    ItemNames.balloon_unlock:   ItemClassification.progression,
-    ItemNames.burst_unlock:     ItemClassification.useful,
-    ItemNames.bomb_unlock:      ItemClassification.useful,
-    ItemNames.insta_unlock:     ItemClassification.useful,
-    ItemNames.superjump_unlock: ItemClassification.progression,
+    ItemNames.impact_unlock:     ItemClassification.progression,
+    ItemNames.dash_unlock:       ItemClassification.progression,
+    ItemNames.stamp_unlock:      ItemClassification.progression,
+    ItemNames.wrap_unlock:       ItemClassification.progression,
+    ItemNames.balloon_unlock:    ItemClassification.progression,
+    ItemNames.burst_unlock:      ItemClassification.useful,
+    ItemNames.bomb_unlock:       ItemClassification.useful,
+    ItemNames.insta_unlock:      ItemClassification.useful,
+    ItemNames.superjump_unlock:  ItemClassification.progression,
+    ItemNames.max_power_unlock:  ItemClassification.useful,
+    ItemNames.good_shoes_unlock: ItemClassification.useful,
+    ItemNames.shield_unlock:     ItemClassification.useful,
 
     ItemNames.shop_upgrade: ItemClassification.progression,
 
@@ -98,6 +107,9 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     ItemNames.balloon_filler:    ItemClassification.filler,
     ItemNames.burst_filler:      ItemClassification.filler,
     ItemNames.bomb_filler:       ItemClassification.filler,
+    ItemNames.max_power_filler:  ItemClassification.filler,
+    ItemNames.good_shoes_filler: ItemClassification.filler,
+    ItemNames.extra_life_filler: ItemClassification.useful,
 
     ItemNames.attire_1:          ItemClassification.filler,
     ItemNames.attire_2:          ItemClassification.filler,
@@ -130,7 +142,7 @@ class VividlopeItem(Item):
     game = "VIVIDLOPE"
 
 def get_random_filler_item_name(world: VividlopeWorld) -> str:
-    random = world.random.randint(0, 6)
+    random = world.random.randint(0, 10)
     filler = [
         ItemNames.impact_filler,
         ItemNames.dash_filler,
@@ -138,7 +150,10 @@ def get_random_filler_item_name(world: VividlopeWorld) -> str:
         ItemNames.wrap_filler,
         ItemNames.balloon_filler,
         ItemNames.burst_filler,
-        ItemNames.bomb_filler
+        ItemNames.bomb_filler,
+        ItemNames.max_power_filler,
+        ItemNames.good_shoes_filler,
+        ItemNames.extra_life_filler, # Might be too common?
     ]
     return filler[random]
 
@@ -157,6 +172,8 @@ def create_all_items(world: VividlopeWorld) -> None:
         world.create_item(ItemNames.bomb_unlock),
         world.create_item(ItemNames.insta_unlock),
         world.create_item(ItemNames.superjump_unlock),
+        world.create_item(ItemNames.max_power_unlock),
+        world.create_item(ItemNames.good_shoes_unlock),
 
         world.create_item(ItemNames.shop_upgrade),
         world.create_item(ItemNames.shop_upgrade),
@@ -190,6 +207,12 @@ def create_all_items(world: VividlopeWorld) -> None:
         world.create_item(ItemNames.attire_24.value),
         world.create_item(ItemNames.attire_25.value)
     ]
+
+    # Create shield unlock; possibly add it to your starting inventory
+    if world.options.start_with_shield:
+        world.push_precollected(ItemNames.shield_unlock)
+    else:
+        itempool.append(world.create_item(ItemNames.shield_unlock))
 
     # Give the player a random level to start so they don't have 0 checks at the start of their game
     random_starting_level = world.random.randint(0, 10)

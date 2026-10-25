@@ -216,11 +216,8 @@ function enemy_spawn(arg0)
         }
         
         // ARCHIPELAGO: Prevent locked powerups from spawning
-        if (obj_to_spawn != -4 && AP_is_multiworld_active() && object_is_ancestor(obj_to_spawn, obj_par_powerup))
-        {
-            var powerup_name = struct_exists(global.AP_POWERUP_OBJ_MAP, obj_to_spawn) ? struct_get(global.AP_POWERUP_OBJ_MAP, obj_to_spawn) : "bonus_fruit";
-            if (!array_contains(global.AP_unlocked_items, powerup_name))
-                obj_to_spawn = -4;
+        if (obj_to_spawn != -4 && AP_is_multiworld_active() && object_is_ancestor(obj_to_spawn, obj_par_powerup) && !AP_is_powerup_obj_unlocked(obj_to_spawn)) {
+            obj_to_spawn = -4;
         }
         
         if (obj_to_spawn != -4)

@@ -138,5 +138,16 @@ function AP_initiate_overworld() {
 }
 
 function AP_is_multiworld_active(requireAuthentication = false) {
-    return (instance_exists(obj_archipelago_client) && variable_global_exists("AP_is_playing") && global.AP_is_playing && (!requireAuthentication || obj_archipelago_client.AP_isAuthenticated()))
+    return (instance_exists(obj_archipelago_client) && variable_global_exists("AP_is_playing") && global.AP_is_playing && (!requireAuthentication || obj_archipelago_client.AP_isAuthenticated()));
+}
+
+function AP_is_powerup_obj_unlocked(obj) {
+    var powerup_names = struct_get_names(global.AP_POWERUP_OBJ_MAP);
+    for (var i = 0; i < array_length(powerup_names); i++)
+    {
+        if (struct_get(global.AP_POWERUP_OBJ_MAP, powerup_names[i]) == obj) {
+            return array_contains(global.AP_unlocked_items, powerup_names[i]);
+        }
+    }
+    return true;
 }

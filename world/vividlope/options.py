@@ -1,6 +1,6 @@
 from dataclasses import dataclass
 
-from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle
+from Options import Choice, OptionGroup, PerGameCommonOptions, Range, Toggle, DefaultOnToggle
 
 class DeathLink(Toggle):
     """
@@ -80,6 +80,12 @@ class MaxRankCheck(Choice):
     option_v = 10
     default = 8
 
+class StartWithShield(DefaultOnToggle):
+    """
+    Start with the Shield power-up unlocked.
+    """
+    display_name = "Start With Shield"
+
 @dataclass
 class VividlopeOptions(PerGameCommonOptions):
     deathlink: DeathLink
@@ -89,3 +95,4 @@ class VividlopeOptions(PerGameCommonOptions):
     stage_shuffle: StageShuffle
     rank_checks: RankChecks
     max_rank_check: MaxRankCheck
+    start_with_shield: StartWithShield

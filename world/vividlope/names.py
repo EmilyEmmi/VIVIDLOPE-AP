@@ -58,15 +58,21 @@ class ItemNames(StrEnum):
     bomb_unlock = "Bomb Unlock"
     insta_unlock = "Instabomb Unlock" # Level exclusive
     superjump_unlock = "Superjump Unlock" # Level exclusive
+    max_power_unlock = "Max Power Unlock" # Shop exclusive
+    good_shoes_unlock = "Good Shoes Unlock" # Shop exclusive
+    shield_unlock = "Shield Unlock"
 
     # Filler unlocks
-    impact_filler   = "[Filler]: Impact"
-    dash_filler     = "[Filler]: Dash"
-    stamp_filler    = "[Filler]: Stamp"
-    wrap_filler     = "[Filler]: Wrap Paper"
-    balloon_filler  = "[Filler]: Paint Balloon"
-    burst_filler    = "[Filler]: Paint Burst"
-    bomb_filler     = "[Filler]: Bomb"
+    impact_filler     = "[Filler]: Impact"
+    dash_filler       = "[Filler]: Dash"
+    stamp_filler      = "[Filler]: Stamp"
+    wrap_filler       = "[Filler]: Wrap Paper"
+    balloon_filler    = "[Filler]: Paint Balloon"
+    burst_filler      = "[Filler]: Paint Burst"
+    bomb_filler       = "[Filler]: Bomb"
+    max_power_filler  = "[Filler]: Max Power"
+    good_shoes_filler = "[Filler]: Good Shoes"
+    extra_life_filler = "1UP"
 
     # Shop upgrades
     shop_upgrade = "Progressive Shop Upgrade"

@@ -16,6 +16,7 @@ UT_SLOT_DATA_OPTION_NAMES = (
     "stage_shuffle",
     "rank_checks",
     "max_rank_check",
+    "start_with_shield",
 )
 
 class VividlopeWorld(World):

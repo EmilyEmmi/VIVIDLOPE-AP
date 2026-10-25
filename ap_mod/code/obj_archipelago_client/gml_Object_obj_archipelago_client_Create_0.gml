@@ -79,7 +79,7 @@ global.AP_item_offset =
 // Game specific
 global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];
 global.AP_shop_upgrades = 0;
-global.AP_unlocked_items = ["bonus_fruit", "shield"];
+global.AP_unlocked_items = ["bonus_fruit"];
 global.AP_stage_shuffle_order = [];
 global.AP_goal_condition = 0;
 global.AP_goal_unlock = 0;
@@ -90,17 +90,17 @@ global.AP_processed_filler = ds_map_create();
 global.AP_other_games = []
 
 global.AP_POWERUP_OBJ_MAP = {
-    obj_powerup_impact: "impact",
-    obj_powerup_dash: "dash",
-    obj_powerup_stamphammer: "stamphammer",
-    obj_powerup_wrap_paper: "wrap_paper",
-    obj_powerup_paint_balloon: "paint_balloon",
-    obj_powerup_paint_burst: "paint_burst",
-    obj_powerup_bomb: "bomb",
-    obj_powerup_instant_bomb: "instant_bomb",
-    obj_powerup_superjump: "superjump",
-    obj_powerup_shield: "shield",
-    obj_powerup_cherry: "bonus_fruit",
+    "impact": obj_powerup_impact,
+    "dash": obj_powerup_dash,
+    "stamphammer": obj_powerup_stamphammer,
+    "wrap_paper": obj_powerup_wrap_paper,
+    "paint_balloon": obj_powerup_paint_balloon,
+    "paint_burst": obj_powerup_paint_burst,
+    "bomb": obj_powerup_bomb,
+    "instant_bomb": obj_powerup_instant_bomb,
+    "superjump": obj_powerup_superjump,
+    "shield": obj_powerup_shield,
+    "bonus_fruit": obj_powerup_cherry,
 };
 
 POWERUP_UNLOCK_LIST = [
@@ -113,6 +113,9 @@ POWERUP_UNLOCK_LIST = [
     "bomb",
     "instant_bomb",
     "superjump",
+    "max_power",
+    "good_shoes",
+    "shield",
 ];
 
 FILLER_LIST = [
@@ -123,6 +126,9 @@ FILLER_LIST = [
     "paint_balloon",
     "paint_burst",
     "bomb",
+    "max_power",
+    "good_shoes",
+    "1up",
 ];
 
 ATTIRE_LIST = [

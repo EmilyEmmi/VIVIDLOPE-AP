@@ -775,7 +775,7 @@ function AP_reset_items() {
     global.AP_item_from_server = [];
     global.AP_item_in_save = [];
     global.AP_unlocked_levels = [false, false, false, false, false, false, false, false, false, false, false];
-    global.AP_unlocked_items = [obj_powerup_cherry, obj_powerup_shield];
+    global.AP_unlocked_items = ["bonus_fruit"];
     global.AP_shop_upgrades = 0;
     ds_map_clear(global.AP_processed_filler);
     global.shared_savedata.unlocked_clothes = [];
