@@ -42,12 +42,10 @@ function popup_activate(arg0, arg1)
                 var obj = popup.object;
                 
                 // ARCHIPELAGO: Don't spawn powerups we don't have
-                if (object_is_ancestor(obj, obj_par_powerup)) {
-                    if (!AP_is_multiworld_active() || AP_is_powerup_obj_unlocked(obj)) {
-                        var o = instance_create_lay((arg0 * 32) + 16, (arg1 * 32) + 16, 300, obj);
-                        o.state = powerup_state_popup;
-                        o.visible = 0;
-                    }
+                if (object_is_ancestor(obj, obj_par_powerup) && AP_is_powerup_obj_unlocked(obj)) {
+                    var o = instance_create_lay((arg0 * 32) + 16, (arg1 * 32) + 16, 300, obj);
+                    o.state = powerup_state_popup;
+                    o.visible = 0;
                 }
                 
                 if (object_is_ancestor(obj, obj_par_popcorn_enemy) || object_is_ancestor(obj, obj_par_standard_enemy))

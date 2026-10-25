@@ -69,7 +69,13 @@ ITEM_NAME_TO_ID = {
     ItemNames.attire_22.value:        91,
     ItemNames.attire_23.value:        92,
     ItemNames.attire_24.value:        93,
-    ItemNames.attire_25.value:        94
+    ItemNames.attire_25.value:        94,
+
+    ItemNames.flowers.value:       100,
+    ItemNames.paint_rollers.value: 101,
+    ItemNames.paint_buckets.value: 102,
+    ItemNames.bubbles.value:       103,
+    ItemNames.snowmen.value:       104,
 }
 
 DEFAULT_ITEM_CLASSIFICATIONS = {
@@ -136,13 +142,19 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     ItemNames.attire_23:         ItemClassification.filler,
     ItemNames.attire_24:         ItemClassification.filler,
     ItemNames.attire_25:         ItemClassification.filler,
+
+    ItemNames.flowers:       ItemClassification.useful,
+    ItemNames.paint_rollers: ItemClassification.useful,
+    ItemNames.paint_buckets: ItemClassification.useful,
+    ItemNames.bubbles:       ItemClassification.useful,
+    ItemNames.snowmen:       ItemClassification.useful,
 }
 
 class VividlopeItem(Item):
     game = "VIVIDLOPE"
 
 def get_random_filler_item_name(world: VividlopeWorld) -> str:
-    random = world.random.randint(0, 10)
+    random = world.random.randint(0, 9)
     filler = [
         ItemNames.impact_filler,
         ItemNames.dash_filler,
@@ -205,7 +217,13 @@ def create_all_items(world: VividlopeWorld) -> None:
         world.create_item(ItemNames.attire_22.value),
         world.create_item(ItemNames.attire_23.value),
         world.create_item(ItemNames.attire_24.value),
-        world.create_item(ItemNames.attire_25.value)
+        world.create_item(ItemNames.attire_25.value),
+
+        world.create_item(ItemNames.flowers.value),
+        world.create_item(ItemNames.paint_rollers.value),
+        world.create_item(ItemNames.paint_buckets.value),
+        world.create_item(ItemNames.bubbles.value),
+        world.create_item(ItemNames.snowmen.value),
     ]
 
     # Create shield unlock; possibly add it to your starting inventory

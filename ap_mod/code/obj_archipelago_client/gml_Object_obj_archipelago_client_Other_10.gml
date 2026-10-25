@@ -719,7 +719,12 @@ function AP_handle_received_items(forceLoad = false) {
 }
 
 function AP_handle_receive_item(item_id) {
-    if (item_id >= global.AP_item_offset.attire) {
+    if (item_id >= global.AP_item_offset.elementunlock) {
+        // Level elements (Buckets, etc.)
+        var prop = global.AP_UNLOCKABLE_ELEMENTS[item_id - global.AP_item_offset.elementunlock];
+        if (!array_contains(global.AP_unlocked_elements, prop))
+            array_push(global.AP_unlocked_elements, prop);
+    } else if (item_id >= global.AP_item_offset.attire) {
         if (array_length(ATTIRE_LIST) <= item_id - global.AP_item_offset.attire) {
             show_message("Got invalid attire: " + string(item_id - global.AP_item_offset.attire) + "\nPlease report this!");
             exit;
@@ -776,6 +781,7 @@ function AP_reset_items() {
     global.AP_item_in_save = [];
     global.AP_unlocked_levels = [false, false, false, false, false, false, false, false, false, false, false];
     global.AP_unlocked_items = ["bonus_fruit"];
+    global.AP_unlocked_elements = [];
     global.AP_shop_upgrades = 0;
     ds_map_clear(global.AP_processed_filler);
     global.shared_savedata.unlocked_clothes = [];

@@ -104,5 +104,12 @@ class ItemNames(StrEnum):
     attire_24 = "Attire 24 (Recycle/Vintage/Time)"
     attire_25 = "Attire 25 (Black/Golden/Red)"
 
+    # Level element unlocks
+    flowers = "Flowers"
+    paint_rollers = "Paint Rollers"
+    paint_buckets = "Paint Buckets"
+    bubbles = "Bubbles"
+    snowmen = "Snowmen"
+
     # Events
     level_clear_event = "Level Clear Event Item"

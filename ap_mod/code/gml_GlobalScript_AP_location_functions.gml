@@ -84,6 +84,8 @@ function AP_sendStageLocation(level, stage, rank) {
     var stage_id = (level - 1) * 100 + (stage - 1);
     AP_sendLocation(stage_id);
     
+    if (level == 10) exit;
+    
     // Send checks for all ranks that we achieved and lower
     var rankPower = ds_map_exists(global.rank_power, rank) ? ds_map_find_value(global.rank_power, rank) : 0;
     var rank_id = rankPower - 1; // Lowest is D
@@ -142,6 +144,8 @@ function AP_is_multiworld_active(requireAuthentication = false) {
 }
 
 function AP_is_powerup_obj_unlocked(obj) {
+    if (!AP_is_multiworld_active()) return true;
+    
     var powerup_names = struct_get_names(global.AP_POWERUP_OBJ_MAP);
     for (var i = 0; i < array_length(powerup_names); i++)
     {
@@ -150,4 +154,13 @@ function AP_is_powerup_obj_unlocked(obj) {
         }
     }
     return true;
+}
+
+function AP_element_is_unlocked(prop) {
+    if (!AP_is_multiworld_active()) return true;
+    
+    // Treat weed (negative flower) as flower
+    if (prop == 8) prop = 1;
+    
+    return (!array_contains(global.AP_UNLOCKABLE_ELEMENTS, prop) || array_contains(global.AP_unlocked_elements, prop));
 }

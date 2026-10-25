@@ -211,13 +211,9 @@ function enemy_spawn(arg0)
         
         if (obj_to_spawn != -4)
         {
-            if (object_is_ancestor(obj_to_spawn, obj_par_powerup) && instance_number(obj_par_powerup) >= 8)
+            // ARCHIPELAGO: Prevent locked powerups from spawning
+            if (object_is_ancestor(obj_to_spawn, obj_par_powerup) && (instance_number(obj_par_powerup) >= 8 || !AP_is_powerup_obj_unlocked(obj_to_spawn)))
                 obj_to_spawn = -4;
-        }
-        
-        // ARCHIPELAGO: Prevent locked powerups from spawning
-        if (obj_to_spawn != -4 && AP_is_multiworld_active() && object_is_ancestor(obj_to_spawn, obj_par_powerup) && !AP_is_powerup_obj_unlocked(obj_to_spawn)) {
-            obj_to_spawn = -4;
         }
         
         if (obj_to_spawn != -4)
