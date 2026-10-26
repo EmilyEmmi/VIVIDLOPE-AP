@@ -76,12 +76,14 @@ global.AP_item_offset =
     inventoryitem: 50,
     attire: 70,
     elementunlock: 100,
+    enemytrap: 110,
 };
 // Game specific
 global.AP_unlocked_levels = [false, false, false, false, false,false, false, false, false, false, false];
 global.AP_shop_upgrades = 0;
-global.AP_unlocked_items = ["bonus_fruit"];
+global.AP_unlocked_items = ["bonus_fruit", "1up"];
 global.AP_unlocked_elements = [];
+global.AP_enemy_trap_queue = [];
 global.AP_stage_shuffle_order = [];
 global.AP_goal_condition = 0;
 global.AP_goal_unlock = 0;
@@ -103,8 +105,8 @@ global.AP_POWERUP_OBJ_MAP = {
     "superjump": obj_powerup_superjump,
     "shield": obj_powerup_shield,
     "bonus_fruit": obj_powerup_cherry,
+    "1up": obj_powerup_extra_life,
 };
-
 
 global.AP_UNLOCKABLE_ELEMENTS = [
     1, // Flower
@@ -112,6 +114,10 @@ global.AP_UNLOCKABLE_ELEMENTS = [
     9, // Bucket
     16, // Bubble
     21, // Snowman
+];
+
+global.AP_ENEMY_TRAP_LIST = [
+    obj_remover,
 ];
 
 POWERUP_UNLOCK_LIST = [

@@ -58,6 +58,12 @@ function npc_initialize(arg0)
             shadow_r = 11;
             event_array = [];
             
+            // ARCHIPELAGO: Despawn other variations of this guy
+            if (arg0 > 2 && AP_is_multiworld_active()) {
+                instance_destroy();
+                exit;
+            }
+            
             if (arg0 == 1)
             {
                 // ARCHIPELAGO: Guy tells you which level you're in
@@ -98,7 +104,6 @@ function npc_initialize(arg0)
                 if (AP_is_multiworld_active()) {
                     if (story_progression_has_normal_atrium()) {
                         AP_setup_wobbler_dialog();
-                        autofire = true;
                     } else {
                         instance_destroy();
                         exit;

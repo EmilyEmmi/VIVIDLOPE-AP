@@ -719,7 +719,34 @@ function AP_handle_received_items(forceLoad = false) {
 }
 
 function AP_handle_receive_item(item_id) {
-    if (item_id >= global.AP_item_offset.elementunlock) {
+    if (item_id >= global.AP_item_offset.enemytrap) {
+        // Enemy traps (spawn enemies in the level)
+        var relative_id = item_id - global.AP_item_offset.enemytrap;
+        var trap_id = item_id - global.AP_item_offset.inventoryitem; // Done this way to avoid overlap with inventory items
+        
+        // This is how many traps we've processed from the server
+        var processedTraps = 0;
+        if (!is_undefined(ds_map_find_value(global.AP_processed_filler, trap_id)))
+            processedTraps = ds_map_find_value(global.AP_processed_filler, trap_id);
+        processedTraps++;
+        ds_map_set(global.AP_processed_filler, trap_id, processedTraps);
+        
+        // This is how many traps were saved to the save file
+        var receivedTraps = 0;
+        if (!is_undefined(ds_map_find_value(global.AP_received_filler, trap_id)))
+            receivedTraps = ds_map_find_value(global.AP_received_filler, trap_id);
+        
+        if (array_length(global.AP_ENEMY_TRAP_LIST) <= relative_id) {
+            show_message("Got invalid enemy trap: " + relative_id + "\nPlease report this!");
+            exit;
+        }
+        
+        // If we've processed more traps than on the save file, add one trap the queue (they apply in enemy_spawner_scripts)
+        // We only add one, otherwise duplication would occur since they aren't received immediately
+        if (processedTraps > receivedTraps) {
+            array_push(global.AP_enemy_trap_queue, relative_id);
+        }
+    } else if (item_id >= global.AP_item_offset.elementunlock) {
         // Level elements (Buckets, etc.)
         var prop = global.AP_UNLOCKABLE_ELEMENTS[item_id - global.AP_item_offset.elementunlock];
         if (!array_contains(global.AP_unlocked_elements, prop))
@@ -760,6 +787,10 @@ function AP_handle_receive_item(item_id) {
         // If we've processed more items than on the save file, save the new items
         if (processedFiller > receivedFiller) {
             equip_item_add(FILLER_LIST[relative_id], processedFiller - receivedFiller);
+            if (FILLER_LIST[relative_id] == "1up") {
+                container_play("cnt_extra_life");
+                tempest_text_create_1up_ingame();
+            }
             ds_map_set(global.AP_received_filler, relative_id, processedFiller);
         }
     } else if (item_id >= global.AP_item_offset.shopupgrade) {
@@ -780,8 +811,9 @@ function AP_reset_items() {
     global.AP_item_from_server = [];
     global.AP_item_in_save = [];
     global.AP_unlocked_levels = [false, false, false, false, false, false, false, false, false, false, false];
-    global.AP_unlocked_items = ["bonus_fruit"];
+    global.AP_unlocked_items = ["bonus_fruit", "1up"];
     global.AP_unlocked_elements = [];
+    global.AP_enemy_trap_queue = [];
     global.AP_shop_upgrades = 0;
     ds_map_clear(global.AP_processed_filler);
     global.shared_savedata.unlocked_clothes = [];

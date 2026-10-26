@@ -111,5 +111,8 @@ class ItemNames(StrEnum):
     bubbles = "Bubbles"
     snowmen = "Snowmen"
 
+    # Enemy traps
+    enemy_trap_1 = "Remover Trap" # TEMP!!!
+
     # Events
     level_clear_event = "Level Clear Event Item"

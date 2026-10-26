@@ -195,7 +195,12 @@ function enemy_spawn(arg0)
     }
     else
     {
-        obj_to_spawn = global.enemy_spawn_order[global.enemy_spawn_order_iterator];
+        // ARCHIPELAGO: Handle enemy traps
+        if (AP_is_multiworld_active() && array_length(global.AP_enemy_trap_queue) > 0) {
+            obj_to_spawn = global.AP_ENEMY_TRAP_LIST[global.AP_enemy_trap_queue[0]];
+        } else {
+            obj_to_spawn = global.enemy_spawn_order[global.enemy_spawn_order_iterator];
+        }
         
         if (obj_to_spawn != -4)
         {
@@ -266,6 +271,21 @@ function enemy_spawn(arg0)
     
     if (queue_update != -1)
     {
+        // ARCHIPELAGO: update trap queue instead
+        if (AP_is_multiworld_active() && array_length(global.AP_enemy_trap_queue) > 0) {
+            // Save to save file
+            var trap_id = global.AP_enemy_trap_queue[0] + global.AP_item_offset.enemytrap - global.AP_item_offset.inventoryitem;
+            var receivedTraps = 0;
+            if (!is_undefined(ds_map_find_value(global.AP_received_filler, trap_id)))
+                receivedTraps = ds_map_find_value(global.AP_received_filler, trap_id);
+            ds_map_set(global.AP_received_filler, trap_id, receivedTraps+1);
+            
+            array_delete(global.AP_enemy_trap_queue, 0, 1);
+            if (queue_update == 1)
+                global.enemy_spawn_wait = min(global.enemy_spawn_wait, 60);
+            exit;
+        }
+        
         global.enemy_spawn_order_iterator = (global.enemy_spawn_order_iterator + 1) % array_length(global.enemy_spawn_order);
         hud_enemy_queue_command_pop(queue_update);
         

@@ -76,6 +76,8 @@ ITEM_NAME_TO_ID = {
     ItemNames.paint_buckets.value: 102,
     ItemNames.bubbles.value:       103,
     ItemNames.snowmen.value:       104,
+
+    ItemNames.enemy_trap_1.value: 110,
 }
 
 DEFAULT_ITEM_CLASSIFICATIONS = {
@@ -148,6 +150,8 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     ItemNames.paint_buckets: ItemClassification.useful,
     ItemNames.bubbles:       ItemClassification.useful,
     ItemNames.snowmen:       ItemClassification.useful,
+
+    ItemNames.enemy_trap_1: ItemClassification.trap,
 }
 
 class VividlopeItem(Item):
@@ -227,10 +231,11 @@ def create_all_items(world: VividlopeWorld) -> None:
     ]
 
     # Create shield unlock; possibly add it to your starting inventory
+    shield_item = world.create_item(ItemNames.shield_unlock)
     if world.options.start_with_shield:
-        world.push_precollected(ItemNames.shield_unlock)
+        world.push_precollected(shield_item)
     else:
-        itempool.append(world.create_item(ItemNames.shield_unlock))
+        itempool.append(shield_item)
 
     # Give the player a random level to start so they don't have 0 checks at the start of their game
     random_starting_level = world.random.randint(0, 10)
