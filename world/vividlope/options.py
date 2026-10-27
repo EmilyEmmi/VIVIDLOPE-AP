@@ -86,6 +86,108 @@ class StartWithShield(DefaultOnToggle):
     """
     display_name = "Start With Shield"
 
+
+class TrapFillPercentage(Range):
+    """
+    Replace a percentage of filler items in the item pool with random traps.
+    """
+    display_name = "Trap Fill Percentage"
+    range_start = 0
+    range_end = 100
+    default = 0
+
+
+class BaseTrapWeight(Choice):
+    """
+    Base Class for Trap Weights
+    """
+    option_none = 0
+    option_low = 1
+    option_medium = 2
+    option_high = 4
+    default = 2
+
+
+class BlibEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Blib.
+    This is a fast ball-shaped enemy.
+    """
+    display_name = "Blib Enemy Trap Weight"
+
+
+class DracoEnemyWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Draco.
+    This is a flying dragon-like enemy.
+    """
+    display_name = "Draco Enemy Trap Weight"
+
+
+class FuseEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Fuse.
+    This is a bomb-shaped enemy that chases the player and explodes.
+    """
+    display_name = "Fuse Enemy Trap Weight"
+
+
+class GeroEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Gero.
+    This is a fast frog-like enemy that chases the player.
+    """
+    display_name = "Gero Enemy Trap Weight"
+
+
+class GreenGooEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns Green Goo.
+    This is a green humanoid enemy that clones itself and drains power when touched.
+    """
+    display_name = "Green Goo Enemy Trap Weight"
+
+
+class ParrotEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Parrot.
+    This is a humanoid enemy that messes with the player's visuals.
+    """
+    display_name = "Parrot Enemy Trap Weight"
+
+
+class ProdigyEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Prodigy.
+    This is a fast, small heart-shaped enemy.
+    """
+    display_name = "Vlad Enemy Trap Weight"
+
+
+class RemoverEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Remover.
+    This is a blue X enemy that reverts tiles back to their original color.
+    """
+    display_name = "Remover Enemy Trap Weight"
+
+
+class UFOEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a UFO.
+    This is a flying UFO-like enemy that spawns shockwaves.
+    """
+    display_name = "UFO Enemy Trap Weight"
+
+
+class VladEnemyTrapWeight(BaseTrapWeight):
+    """
+    Likelihood of a receiving a trap which spawns a Vlad.
+    This is a creepy-looking enemy that chases the player and spawns shockwaves.
+    """
+    display_name = "Vlad Enemy Trap Weight"
+
+
 @dataclass
 class VividlopeOptions(PerGameCommonOptions):
     deathlink: DeathLink
@@ -96,3 +198,14 @@ class VividlopeOptions(PerGameCommonOptions):
     rank_checks: RankChecks
     max_rank_check: MaxRankCheck
     start_with_shield: StartWithShield
+    trap_fill_percentage: TrapFillPercentage
+    blib_enemy_trap_weight: BlibEnemyTrapWeight
+    draco_enemy_trap_weight: DracoEnemyWeight
+    fuse_enemy_trap_weight: FuseEnemyTrapWeight
+    gero_enemy_trap_weight: GeroEnemyTrapWeight
+    green_goo_enemy_trap_weight: GreenGooEnemyTrapWeight
+    parrot_enemy_trap_weight: ParrotEnemyTrapWeight
+    prodigy_enemy_trap_weight: ProdigyEnemyTrapWeight
+    remover_enemy_trap_weight: RemoverEnemyTrapWeight
+    ufo_enemy_trap_weight: UFOEnemyTrapWeight
+    vlad_enemy_trap_weight: VladEnemyTrapWeight

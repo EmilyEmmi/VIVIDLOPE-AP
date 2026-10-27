@@ -117,7 +117,16 @@ global.AP_UNLOCKABLE_ELEMENTS = [
 ];
 
 global.AP_ENEMY_TRAP_LIST = [
+    obj_blib,
+    obj_draco,
+    obj_fuse,
+    obj_gero,
+    obj_viruse,
+    obj_parrot,
+    obj_prodigy,
     obj_remover,
+    obj_ufo,
+    obj_vlad,
 ];
 
 POWERUP_UNLOCK_LIST = [

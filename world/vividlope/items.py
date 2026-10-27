@@ -4,6 +4,7 @@ from BaseClasses import Item, ItemClassification
 from .names import ItemNames, level_names
 if TYPE_CHECKING:
     from .world import VividlopeWorld
+import math
 
 # There's so few items in this game I just decided to give them all IDs by hand
 ITEM_NAME_TO_ID = {
@@ -77,7 +78,16 @@ ITEM_NAME_TO_ID = {
     ItemNames.bubbles.value:       103,
     ItemNames.snowmen.value:       104,
 
-    ItemNames.enemy_trap_1.value: 110,
+    ItemNames.enemy_trap_1.value:  110,
+    ItemNames.enemy_trap_2.value:  111,
+    ItemNames.enemy_trap_3.value:  112,
+    ItemNames.enemy_trap_4.value:  113,
+    ItemNames.enemy_trap_5.value:  114,
+    ItemNames.enemy_trap_6.value:  115,
+    ItemNames.enemy_trap_7.value:  116,
+    ItemNames.enemy_trap_8.value:  117,
+    ItemNames.enemy_trap_9.value:  118,
+    ItemNames.enemy_trap_10.value: 119,
 }
 
 DEFAULT_ITEM_CLASSIFICATIONS = {
@@ -151,7 +161,16 @@ DEFAULT_ITEM_CLASSIFICATIONS = {
     ItemNames.bubbles:       ItemClassification.useful,
     ItemNames.snowmen:       ItemClassification.useful,
 
-    ItemNames.enemy_trap_1: ItemClassification.trap,
+    ItemNames.enemy_trap_1:  ItemClassification.trap,
+    ItemNames.enemy_trap_2:  ItemClassification.trap,
+    ItemNames.enemy_trap_3:  ItemClassification.trap,
+    ItemNames.enemy_trap_4:  ItemClassification.trap,
+    ItemNames.enemy_trap_5:  ItemClassification.trap,
+    ItemNames.enemy_trap_6:  ItemClassification.trap,
+    ItemNames.enemy_trap_7:  ItemClassification.trap,
+    ItemNames.enemy_trap_8:  ItemClassification.trap,
+    ItemNames.enemy_trap_9:  ItemClassification.trap,
+    ItemNames.enemy_trap_10: ItemClassification.trap,
 }
 
 class VividlopeItem(Item):
@@ -258,6 +277,28 @@ def create_all_items(world: VividlopeWorld) -> None:
     number_of_items = len(itempool)
     number_of_unfilled_locations = len(world.multiworld.get_unfilled_locations(world.player))
     needed_number_of_filler_items = number_of_unfilled_locations - number_of_items
+
+    # Replace percentage of filler with traps
+    if (world.options.trap_fill_percentage != 0):
+        trap_weights = []
+        trap_weights += ([ItemNames.enemy_trap_1] * world.options.blib_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_2] * world.options.draco_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_3] * world.options.fuse_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_4] * world.options.gero_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_5] * world.options.green_goo_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_6] * world.options.parrot_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_7] * world.options.prodigy_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_8] * world.options.remover_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_9] * world.options.ufo_enemy_trap_weight.value)
+        trap_weights += ([ItemNames.enemy_trap_10] * world.options.vlad_enemy_trap_weight.value)
+        trap_count = 0 if (len(trap_weights) == 0) else math.ceil(needed_number_of_filler_items * (world.options.trap_fill_percentage.value / 100.0))
+        needed_number_of_filler_items -= trap_count
+        trap_pool = []
+        for i in range(trap_count):
+            trap_item = world.random.choice(trap_weights)
+            trap_pool.append(world.create_item(trap_item))
+        itempool += trap_pool
+
     itempool += [world.create_filler() for _ in range(needed_number_of_filler_items)]
 
     world.multiworld.itempool += itempool

@@ -17,6 +17,17 @@ UT_SLOT_DATA_OPTION_NAMES = (
     "rank_checks",
     "max_rank_check",
     "start_with_shield",
+    "trap_fill_percentage",
+    "blib_enemy_trap_weight",
+    "draco_enemy_trap_weight",
+    "fuse_enemy_trap_weight",
+    "gero_enemy_trap_weight",
+    "green_goo_enemy_trap_weight",
+    "parrot_enemy_trap_weight",
+    "prodigy_enemy_trap_weight",
+    "remover_enemy_trap_weight",
+    "ufo_enemy_trap_weight",
+    "vlad_enemy_trap_weight",
 )
 
 class VividlopeWorld(World):

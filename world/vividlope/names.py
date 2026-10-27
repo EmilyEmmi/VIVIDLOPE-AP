@@ -112,7 +112,16 @@ class ItemNames(StrEnum):
     snowmen = "Snowmen"
 
     # Enemy traps
-    enemy_trap_1 = "Remover Trap" # TEMP!!!
+    enemy_trap_1 = "Blib Enemy Trap"
+    enemy_trap_2 = "Draco Enemy Trap"
+    enemy_trap_3 = "Fuse Enemy Trap"
+    enemy_trap_4 = "Gero Enemy Trap"
+    enemy_trap_5 = "Green Goo Enemy Trap"
+    enemy_trap_6 = "Parrot Enemy Trap"
+    enemy_trap_7 = "Prodigy Enemy Trap"
+    enemy_trap_8 = "Remover Enemy Trap"
+    enemy_trap_9 = "UFO Enemy Trap"
+    enemy_trap_10 = "Vlad Enemy Trap"
 
     # Events
     level_clear_event = "Level Clear Event Item"
