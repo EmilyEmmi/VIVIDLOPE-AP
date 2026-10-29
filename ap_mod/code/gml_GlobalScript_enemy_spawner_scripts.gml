@@ -46,7 +46,9 @@ function enemy_spawn_reset()
     global.enemy_just_fruited = false;
     
     // ARCHIPELAGO: reset trap queue if we haven't finished the stage
-    array_copy(global.AP_enemy_trap_queue, 0, global.AP_stored_enemy_trap_queue, 0, array_length(global.AP_stored_enemy_trap_queue));
+    if (AP_is_multiworld_active()) {
+        array_copy(global.AP_enemy_trap_queue, 0, global.AP_stored_enemy_trap_queue, 0, array_length(global.AP_stored_enemy_trap_queue));
+    }
 }
 
 function enemy_spawn_step()

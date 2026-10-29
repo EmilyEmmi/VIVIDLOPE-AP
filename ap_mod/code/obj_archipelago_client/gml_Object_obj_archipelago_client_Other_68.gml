@@ -110,6 +110,8 @@ if (ds_map_exists(async_load, "buffer"))
                         global.AP_goal_condition = data[i].slot_data.options.goal_condition;
                     if (variable_struct_exists(data[i].slot_data.options, "goal_unlock"))
                         global.AP_goal_unlock = data[i].slot_data.options.goal_unlock;
+                    if (variable_struct_exists(data[i].slot_data.options, "nerfed_finale"))
+                        global.AP_nerfed_finale = data[i].slot_data.options.nerfed_finale;
                         
                     // Set up stage shuffle
                     if (variable_struct_exists(data[i].slot_data.options, "stage_shuffle") && data[i].slot_data.options.stage_shuffle && variable_struct_exists(data[i].slot_data, "stage_shuffle_order")) {

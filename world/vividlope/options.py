@@ -87,6 +87,14 @@ class StartWithShield(DefaultOnToggle):
     display_name = "Start With Shield"
 
 
+class NerfedFinale(DefaultOnToggle):
+    """
+    Stages in Finale will have their usual percentage required in Stage Shuffle.
+    When disabled, all tiles have to be flipped, which can be very tedious in some stages.
+    """
+    display_name = "Easier Finale in Stage Shuffle"
+
+
 class TrapFillPercentage(Range):
     """
     Replace a percentage of filler items in the item pool with random traps.
@@ -198,6 +206,7 @@ class VividlopeOptions(PerGameCommonOptions):
     rank_checks: RankChecks
     max_rank_check: MaxRankCheck
     start_with_shield: StartWithShield
+    nerfed_finale: NerfedFinale
     trap_fill_percentage: TrapFillPercentage
     blib_enemy_trap_weight: BlibEnemyTrapWeight
     draco_enemy_trap_weight: DracoEnemyWeight

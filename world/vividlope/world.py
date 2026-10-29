@@ -17,6 +17,7 @@ UT_SLOT_DATA_OPTION_NAMES = (
     "rank_checks",
     "max_rank_check",
     "start_with_shield",
+    "nerfed_finale",
     "trap_fill_percentage",
     "blib_enemy_trap_weight",
     "draco_enemy_trap_weight",
