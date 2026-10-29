@@ -17,6 +17,11 @@ if (variable_global_exists("AP_is_playing") && global.AP_is_playing) {
     global.save_base_dir = game_save_id;
     global.steem_is_initialised = (steem_initialised());
     
+    // Disconnect
+    if (AP_is_multiworld_active(false)) {
+        obj_archipelago_client.AP_disconnect(false);
+    }
+    
     // Load save
     prep_legacy_savefiles();
     loading_buffer_shared_savedata_load();

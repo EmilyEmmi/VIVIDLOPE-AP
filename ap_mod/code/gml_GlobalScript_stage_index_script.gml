@@ -68,10 +68,10 @@ function stage_index_add_stage(arg0, arg1)
     }
 }
 
-function stage_get_level_code(arg0)
+function stage_get_level_code(arg0, ignoreRando = false)
 {
     // get true values in level shuffle
-    if (ds_map_exists(global.stage_index_to_true_code, arg0)) {
+    if (!ignoreRando && ds_map_exists(global.stage_index_to_true_code, arg0)) {
         return ds_map_find_value(global.stage_index_to_true_code, arg0);
     }
 

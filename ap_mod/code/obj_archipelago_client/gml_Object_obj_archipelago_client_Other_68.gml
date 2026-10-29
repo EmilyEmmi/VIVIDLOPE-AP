@@ -59,14 +59,16 @@ if (ds_map_exists(async_load, "buffer"))
                     global.AP_stage_shuffle_order = [];
                     show_debug_message("Login successful!");
                     
-                    // Load save file if we're on the right menu (TEMP: doesn't work)
+                    // Load save file if we're on the right menu
                     menu_set_top_caption("Connected!");
                     if (room == rm_mainmenu && instance_exists(obj_menu_screen_archipelago)) {
+                        global.AP_is_playing = true;
+                        
                         // Switch to alt save
-                        if (!(variable_global_exists("AP_is_playing") && global.AP_is_playing)) {
-                            global.save_base_dir = game_save_id + AP_get_save_folder_prefix();
-                            global.steem_is_initialised = false;
-                            
+                        var prev_save_dir = global.save_base_dir;
+                        global.save_base_dir = game_save_id + AP_get_save_folder_prefix();
+                        global.steem_is_initialised = false;
+                        if (global.save_base_dir != prev_save_dir) {
                             // Load save
                             prep_legacy_savefiles();
                             loading_buffer_shared_savedata_load();
@@ -75,7 +77,6 @@ if (ds_map_exists(async_load, "buffer"))
                                 loading_buffer_savedata_preview_load(saveslot);
                         }
                         
-                        global.AP_is_playing = true;
                         global.current_savedata_slot = 7;
                         with (obj_menu_screen_archipelago) {
                             if (file_exists(shared_savedata_get_filename())) {
@@ -100,9 +101,6 @@ if (ds_map_exists(async_load, "buffer"))
                         global.AP_slotinfo[ii + 1] = slot_info.game;
                     }
 
-
-                    global.AP_slot = data[i].slot;
-
                     // Settings here
                     if (variable_struct_exists(data[i].slot_data.options, "deathlink"))
                         global.AP_deathlink = data[i].slot_data.options.deathlink;
@@ -112,10 +110,6 @@ if (ds_map_exists(async_load, "buffer"))
                         global.AP_goal_condition = data[i].slot_data.options.goal_condition;
                     if (variable_struct_exists(data[i].slot_data.options, "goal_unlock"))
                         global.AP_goal_unlock = data[i].slot_data.options.goal_unlock;
-                    
-                    // get current deaths from the server
-                    if global.AP_deathlink and global.AP_deathlink_amnesty > 1
-                        AP_getDataStorage("current_deaths");
                         
                     // Set up stage shuffle
                     if (variable_struct_exists(data[i].slot_data.options, "stage_shuffle") && data[i].slot_data.options.stage_shuffle && variable_struct_exists(data[i].slot_data, "stage_shuffle_order")) {
@@ -380,11 +374,11 @@ if (ds_map_exists(async_load, "buffer"))
                 case "Retrieved":
                     if (variable_struct_exists(data[i], "keys"))
                     {
-                        var keys = variable_struct_get_names(data[i].keys);
+                        var keys = data[i].keys;
 
                         if (variable_struct_exists(keys, AP_getDatastoragePrefix() + "current_deaths"))
                         {
-                            global.AP_deathlink_current_deaths = variable_struct_get(keys, AP_getDatastoragePrefix() + "current_deaths")
+                            global.AP_deathlink_current_deaths = variable_struct_get(keys, AP_getDatastoragePrefix() + "current_deaths");
                         }
                     }
                     break;

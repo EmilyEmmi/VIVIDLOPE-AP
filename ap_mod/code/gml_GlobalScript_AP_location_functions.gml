@@ -80,8 +80,20 @@ function AP_sendHint(location_id)
 }
 
 function AP_sendStageLocation(level, stage, rank) {
+    // Update stored trap queue to clear out traps
+    while (array_length(global.AP_stored_enemy_trap_queue) > array_length(global.AP_enemy_trap_queue)) {
+        // Save to save file
+        var trap_id = global.AP_stored_enemy_trap_queue[0] + global.AP_item_offset.enemytrap - global.AP_item_offset.inventoryitem;
+        var receivedTraps = 0;
+        if (!is_undefined(ds_map_find_value(global.AP_received_filler, trap_id)))
+            receivedTraps = ds_map_find_value(global.AP_received_filler, trap_id);
+        ds_map_set(global.AP_received_filler, trap_id, receivedTraps+1);
+        
+        array_shift(global.AP_stored_enemy_trap_queue);
+    }
+    
     // Send base clear check
-    var stage_id = (level - 1) * 100 + (stage - 1);
+    var stage_id = level * 100 + (stage - 1);
     AP_sendLocation(stage_id);
     
     if (level == 10) exit;
@@ -163,4 +175,17 @@ function AP_element_is_unlocked(prop) {
     if (prop == 8) prop = 1;
     
     return (!array_contains(global.AP_UNLOCKABLE_ELEMENTS, prop) || array_contains(global.AP_unlocked_elements, prop));
+}
+
+function AP_has_noir_attack(type) {
+    if (!AP_is_multiworld_active()) return true;
+    
+    var NOIR_ATTACK_LIST = [
+        "paint_balloon",
+        "wrap_paper",
+        "impact",
+        "dash",
+    ];
+    
+    return array_contains(global.AP_unlocked_items, NOIR_ATTACK_LIST[type]);
 }

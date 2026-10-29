@@ -431,6 +431,10 @@ function AP_postScouting()
     //AP_initializeCurrentLocation();
     AP_fill_id_to_itemname_struct();
     
+    // get current deaths from the server
+    if global.AP_deathlink and global.AP_deathlink_amnesty > 1
+        AP_getDataStorage("current_deaths");
+    
     /*if (variable_global_exists("chapter"))
     {
         AP_game_start_post_connexion();
@@ -745,6 +749,7 @@ function AP_handle_receive_item(item_id) {
         // We only add one, otherwise duplication would occur since they aren't received immediately
         if (processedTraps > receivedTraps) {
             array_push(global.AP_enemy_trap_queue, relative_id);
+            array_push(global.AP_stored_enemy_trap_queue, relative_id);
         }
     } else if (item_id >= global.AP_item_offset.elementunlock) {
         // Level elements (Buckets, etc.)
@@ -814,6 +819,7 @@ function AP_reset_items() {
     global.AP_unlocked_items = ["bonus_fruit", "1up"];
     global.AP_unlocked_elements = [];
     global.AP_enemy_trap_queue = [];
+    global.AP_stored_enemy_trap_queue = [];
     global.AP_shop_upgrades = 0;
     ds_map_clear(global.AP_processed_filler);
     global.shared_savedata.unlocked_clothes = [];

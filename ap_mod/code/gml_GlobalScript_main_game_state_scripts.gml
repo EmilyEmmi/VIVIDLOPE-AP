@@ -120,9 +120,9 @@ function game_get_current_stage()
     return a[0];
 }
 
-function game_get_current_substage()
+function game_get_current_substage(ignoreRando = false)
 {
-    var a = stage_get_level_code(global.current_stage);
+    var a = stage_get_level_code(global.current_stage, ignoreRando);
     return a[1];
 }
 

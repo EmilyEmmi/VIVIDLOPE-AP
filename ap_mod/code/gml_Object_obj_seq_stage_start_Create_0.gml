@@ -16,6 +16,8 @@ hide = 0;
 var s = lang("test_stage");
 var level = game_get_current_stage();
 var stage = game_get_current_substage();
+// ARCHIPELAGO: In finale, display progress
+var dispFinalePart = (AP_is_multiworld_active() && level_get_current() == 10);
 
 if (game_is_current_stage_valid())
 {
@@ -61,6 +63,16 @@ if (level == 10)
         o.str2 = lang("finale_subtitle_f");
     else
         o.str2 = lang1("finale_subtitle", string(game_get_current_substage()));
+        
+    if (dispFinalePart) {
+        // ARCHIPELAGO: In finale, display progress
+        o.str += " " + o.str2;
+        o.str2 = string("{0}/7", game_get_current_substage(true));
+    }
+} else if (dispFinalePart) {
+    // ARCHIPELAGO: In finale, display progress
+    o.str2_displayed = true;
+    o.str2 = string("{0}/7", game_get_current_substage(true));
 }
 
 if (global.gmode == UnknownEnum.Value_13 || global.gmode == UnknownEnum.Value_14 || global.gmode == UnknownEnum.Value_15)

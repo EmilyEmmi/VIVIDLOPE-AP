@@ -27,13 +27,13 @@ def generate_location_table() -> dict[str, int]:
         location_table[f"{level_names[level]} Clear"] = 200000 + level
 
         for stage in range(1,16):
-            # Stage location IDs take up this form: XYYZZ
+            # Stage location IDs take up this form: XXYYZZ
             # Where X depends on the location type:
             # 0 for generic Completion checks
             # 1-11 for D-V Ranks
             # YY is the level number: 1-9 -> 1-9, Finale -> 10, X -> 11
             # and ZZ is the stage number minus 1, 0-14.
-            stage_id = level * 100 + (stage - 1)
+            stage_id = (level + 1) * 100 + (stage - 1)
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_clear}"] = stage_id
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_d}"] = stage_id + 10000
             location_table[f"{stage_prefixes[level]}{stage} {LocationSuffix.stage_dp}"] = stage_id + 20000

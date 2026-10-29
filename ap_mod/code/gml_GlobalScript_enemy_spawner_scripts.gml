@@ -44,6 +44,9 @@ function enemy_spawn_reset()
     global.enemy_spawn_dir = [0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3];
     global.enemy_spawn_fruit_override = 0;
     global.enemy_just_fruited = false;
+    
+    // ARCHIPELAGO: reset trap queue if we haven't finished the stage
+    array_copy(global.AP_enemy_trap_queue, 0, global.AP_stored_enemy_trap_queue, 0, array_length(global.AP_stored_enemy_trap_queue));
 }
 
 function enemy_spawn_step()
@@ -273,14 +276,7 @@ function enemy_spawn(arg0)
     {
         // ARCHIPELAGO: update trap queue instead
         if (AP_is_multiworld_active() && array_length(global.AP_enemy_trap_queue) > 0) {
-            // Save to save file
-            var trap_id = global.AP_enemy_trap_queue[0] + global.AP_item_offset.enemytrap - global.AP_item_offset.inventoryitem;
-            var receivedTraps = 0;
-            if (!is_undefined(ds_map_find_value(global.AP_received_filler, trap_id)))
-                receivedTraps = ds_map_find_value(global.AP_received_filler, trap_id);
-            ds_map_set(global.AP_received_filler, trap_id, receivedTraps+1);
-            
-            array_delete(global.AP_enemy_trap_queue, 0, 1);
+            array_shift(global.AP_enemy_trap_queue);
             if (queue_update == 1)
                 global.enemy_spawn_wait = min(global.enemy_spawn_wait, 60);
             exit;

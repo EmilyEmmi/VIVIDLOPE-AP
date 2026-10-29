@@ -84,6 +84,7 @@ global.AP_shop_upgrades = 0;
 global.AP_unlocked_items = ["bonus_fruit", "1up"];
 global.AP_unlocked_elements = [];
 global.AP_enemy_trap_queue = [];
+global.AP_stored_enemy_trap_queue = [];
 global.AP_stage_shuffle_order = [];
 global.AP_goal_condition = 0;
 global.AP_goal_unlock = 0;

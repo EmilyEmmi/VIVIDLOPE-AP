@@ -61,7 +61,7 @@ menu_screen_add_option(new MENU_OPTION("ap_connect", spr_menu_icon_none, 0, func
 menu_screen_add_option(new MENU_OPTION("ap_erase", spr_menu_icon_none, 0, function()
     {
         text_l = "Erase AP Data";
-        color = #FF0000;
+        color = #FF2020;
         color_secondary = #FF5050;
     }, function()
     {
