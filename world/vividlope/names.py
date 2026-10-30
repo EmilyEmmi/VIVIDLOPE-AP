@@ -10,8 +10,8 @@ level_names: dict[int, str] = {
     6: "Level 7",
     7: "Level 8",
     8: "Level 9",
-    9: "Finale",
-    10: "Level X",
+    9: "Level X",
+    10: "Finale",
 }
 stage_prefixes: dict[int, str] = {
     0: "1-",
@@ -23,8 +23,8 @@ stage_prefixes: dict[int, str] = {
     6: "7-",
     7: "8-",
     8: "9-",
-    9: "Finale Part ",
-    10: "X-",
+    9: "X-",
+    10: "Finale Part ",
 }
 
 class LocationSuffix(StrEnum):

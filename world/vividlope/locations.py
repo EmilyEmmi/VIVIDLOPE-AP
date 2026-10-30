@@ -71,7 +71,7 @@ def create_map_regions(world: VividlopeWorld):
 
         # Stage entrance regions in that level
         for stage in range(0, 15):
-            if level == 9 and stage >= 7:
+            if level == 10 and stage >= 7:
                 break # Finale only has 7 parts, so this prevents it from adding more
 
             # Keep in mind these are only containers for stage randomization.
@@ -85,8 +85,8 @@ def create_map_regions(world: VividlopeWorld):
         clear_location_name = f"{level_names[level]} {LocationSuffix.level_clear}"
 
         # If this world is a goal, we need to make a lot of things different to account for it
-        if (level == 9 and world.options.goal_condition == 0) or ( # Finale
-            level == 10 and world.options.goal_condition == 1): # Level X
+        if (level == 10 and world.options.goal_condition == 0) or ( # Finale
+            level == 9 and world.options.goal_condition == 1): # Level X
             world.set_rule(overworld_to_level, Has(ItemNames.level_clear_event, count=FromOption(GoalUnlock)))
 
             level_region.add_event(f"{clear_location_name} Goal Event", "Victory", location_type=VividlopeLocation, item_type=VividlopeItem)
@@ -138,7 +138,7 @@ def attach_shuffled_levels(world: VividlopeWorld):
         # level_region = world.get_region(level_names[level])
 
         for stage in range(0, 15):
-            if level == 9 and stage >= 7:
+            if level == 10 and stage >= 7:
                 break # Finale only has 7 parts, so this prevents it from checking for extra
             entrance_region = world.get_region(f"{stage_prefixes[level]}{stage} Entrance")
             random_stage = stages[stage_index]
