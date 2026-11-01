@@ -257,12 +257,11 @@ def create_all_items(world: VividlopeWorld) -> None:
         itempool.append(shield_item)
 
     # Give the player a random level to start so they don't have 0 checks at the start of their game
-    random_starting_level = world.random.randint(0, 10)
-    # If Finale is our goal level and we pick it, pick Level X as the start instead
-    if (random_starting_level == 10 and world.options.goal_condition == 0):
-        random_starting_level = 9
-    elif (random_starting_level == 9 and world.options.goal_condition == 1): # and vice versa
-        random_starting_level = 10
+    # We can only pick Level X at the starting level if Finale is our goal (Finale can never be the starting level)
+    if (world.options.goal_condition == 1):
+        random_starting_level = world.random.randint(0, 9)
+    else:
+        random_starting_level = world.random.randint(0, 10)
 
     for i in range(0, 11):
         # Skip creating the unlock for the goal world since we wont need it
