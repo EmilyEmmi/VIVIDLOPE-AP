@@ -381,6 +381,9 @@ if (ds_map_exists(async_load, "buffer"))
                         if (variable_struct_exists(keys, AP_getDatastoragePrefix() + "current_deaths"))
                         {
                             global.AP_deathlink_current_deaths = variable_struct_get(keys, AP_getDatastoragePrefix() + "current_deaths");
+                            if (global.AP_deathlink_current_deaths == undefined) {
+                                global.AP_deathlink_current_deaths = 0;
+                            }
                         }
                     }
                     break;
