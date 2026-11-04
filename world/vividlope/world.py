@@ -7,6 +7,12 @@ from worlds.AutoWorld import World
 # Imports of your world's files must be relative.
 from . import locations, items
 from . import options as vividlope_options  # rename due to a name conflict with World.options
+from .names import stage_prefixes, level_names, LocationSuffix
+from .data import stage_data
+
+# Logging
+import logging
+logger = logging.getLogger("VIVIDLOPE")
 
 UT_SLOT_DATA_OPTION_NAMES = (
     "deathlink",
@@ -45,6 +51,11 @@ class VividlopeWorld(World):
     item_name_to_id = items.ITEM_NAME_TO_ID
 
     origin_region_name = "Overworld"
+
+    # Mapping for stage shuffle
+    stage_shuffle_order: list
+
+    ut_can_gen_without_yaml = True
     
     def pre_fill(self):
         return items.create_all_items
@@ -73,3 +84,93 @@ class VividlopeWorld(World):
         if (self.options.stage_shuffle):
             slot_data["stage_shuffle_order"] = self.stage_shuffle_order
         return slot_data
+
+    # Display actual stage location in hints
+    def extend_hint_information(self, hint_data: dict[int, dict[int, str]]) -> None:
+        if not self.options.stage_shuffle:
+            return
+        
+        stage_hint_data = {}
+        stage_index = 0
+        for orig_stage in stage_data:
+            stage_id = self.stage_shuffle_order[stage_index]
+            placed_level = stage_id // 100
+            placed_stage = stage_id % 100 + 1
+
+            # Display level name only unless we're in Finale
+            if orig_stage.level != 11:
+                orig_name = f"{stage_prefixes[orig_stage.level-1]}{orig_stage.stage}"
+            else:
+                orig_name = f"{level_names[orig_stage.level-1]}"
+
+            location_names = []
+            if self.options.rank_checks != 2:
+                location_names.append(f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_clear}")
+            if self.options.rank_checks != 0:
+                all_location_names = [
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_d}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_dp}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_c}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_cp}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_b}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_bp}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_a}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_ap}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_s}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_sp}",
+                    f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_v}",
+                ]
+                if self.options.rank_checks == 1:
+                    location_name = all_location_names[self.options.max_rank_check]
+                    location_names.append(location_name)
+                else:
+                    for n in range(0, self.options.max_rank_check+1):
+                        location_name = all_location_names[n]
+                        location_names.append(location_name)
+
+            for locationName in location_names:
+                location = self.multiworld.get_location(locationName, self.player)
+                stage_hint_data[location.address] = orig_name
+
+            stage_index += 1
+        hint_data[self.player] = stage_hint_data
+
+    # All stuff for UT
+    @staticmethod
+    def interpret_slot_data(slot_data: dict[str, Any]) -> dict[str, Any]:
+        return slot_data
+
+    def _get_ut_slot_data(self) -> dict[str, Any] | None:
+        re_gen_passthrough = getattr(self.multiworld, "re_gen_passthrough", {})
+        if re_gen_passthrough and self.game in re_gen_passthrough:
+            slot_data: dict[str, Any] = re_gen_passthrough[self.game]
+            if isinstance(slot_data, dict):
+                return slot_data
+        return None
+
+    def _restore_ut_slot_data(self, slot_data: dict[str, Any]) -> None:
+        if slot_data.get("options") == None:
+            return
+        for option_name in UT_SLOT_DATA_OPTION_NAMES:
+            if option_name not in slot_data["options"]:
+                continue
+            option = getattr(self.options, option_name, None)
+            if option is not None:
+                setattr(self.options, option_name, option.from_any(slot_data["options"][option_name]))
+
+        stage_shuffle_order = slot_data.get("stage_shuffle_order")
+        if isinstance(stage_shuffle_order, list):
+            self.stage_shuffle_order = stage_shuffle_order
+        elif self.options.stage_shuffle:
+            logger.warning(
+                "VIVIDLOPE (%s): UT slot data is missing stage_shuffle_order while stage shuffle is enabled. "
+                "Tracker logic may be inaccurate.",
+                self.player_name,
+            )
+    
+    def generate_early(self) -> None:
+        self.stage_shuffle_order = []
+
+        slot_data = self._get_ut_slot_data()
+        if slot_data:
+            self._restore_ut_slot_data(slot_data)

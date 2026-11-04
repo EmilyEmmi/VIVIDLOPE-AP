@@ -369,6 +369,13 @@ function stage_index_setup()
                 var location_id = stage_shuffle_order[i];
                 var l = floor(location_id / 100) - 1;
                 var s = location_id % 100;
+                
+                // Swap Level X and Finale
+                if (l == 9)
+                    l = 10
+                else if (l == 10)
+                    l = 9
+                
                 /*if (array_length(level_order) >= 15 && array_length(level_order) < 30) {
                     show_message(string("Stage shuffle: 2-{0} to {1}-{2} ({3})", (array_length(level_order)-14), l+1, s+1, location_id));
                 }*/

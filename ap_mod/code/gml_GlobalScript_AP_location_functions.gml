@@ -92,11 +92,17 @@ function AP_sendStageLocation(level, stage, rank) {
         array_shift(global.AP_stored_enemy_trap_queue);
     }
     
+    // Swap Finale and Level X
+    if (level == 10)
+        level = 11
+    else if (level == 11)
+        level = 10
+    
     // Send base clear check
     var stage_id = level * 100 + (stage - 1);
     AP_sendLocation(stage_id);
     
-    if (level == 10) exit;
+    if (level == 11) exit;
     
     // Send checks for all ranks that we achieved and lower
     var rankPower = ds_map_exists(global.rank_power, rank) ? ds_map_find_value(global.rank_power, rank) : 0;

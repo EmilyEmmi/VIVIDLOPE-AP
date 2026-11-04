@@ -128,10 +128,13 @@ def attach_shuffled_levels(world: VividlopeWorld):
 
     # The levels only get shuffled if the option to shuffle them is on.
     # But the comments from here on out will act like they are always shuffled.
-    world.stage_shuffle_order = []
     if world.options.stage_shuffle:
-        world.random.shuffle(stages)
-        world.stage_shuffle_order = [stage.location_id() for stage in stages]
+        if len(world.stage_shuffle_order) != 0:
+            # NOTE: This only works because all levels except Finale have 15 stages
+            stages: list[Stage] = [stage_data[(stage_id // 100 - 1) * 15 + stage_id % 100] for stage_id in world.stage_shuffle_order]
+        else:
+            world.random.shuffle(stages)
+            world.stage_shuffle_order = [stage.location_id() for stage in stages]
 
     stage_index = 0
     for level in range(0, 11):
