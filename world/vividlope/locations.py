@@ -124,7 +124,7 @@ def attach_shuffled_levels(world: VividlopeWorld):
     multiworld = world.multiworld
     player = world.player
     # table = generate_location_table()
-    stages: list[Stage] = stage_data
+    stages: list[Stage] = stage_data.copy()
 
     # The levels only get shuffled if the option to shuffle them is on.
     # But the comments from here on out will act like they are always shuffled.

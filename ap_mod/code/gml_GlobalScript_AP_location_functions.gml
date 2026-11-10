@@ -119,10 +119,16 @@ function AP_sendStageLocation(level, stage, rank) {
 function AP_handleLevelClear(level) {
     if (!AP_is_multiworld_active(false)) exit;
     
+    // Swap Finale and Level X
+    if (level == 10)
+        level = 11
+    else if (level == 11)
+        level = 10
+    
     AP_sendLocation(200000 + level - 1);
     AP_initiate_overworld();
     
-    if (level == 10 && global.AP_goal_condition == 0) || (level == 11 && global.AP_goal_condition == 1) {
+    if (level == 11 && global.AP_goal_condition == 0) || (level == 10 && global.AP_goal_condition == 1) {
         obj_archipelago_client.AP_goal();
     }
 }

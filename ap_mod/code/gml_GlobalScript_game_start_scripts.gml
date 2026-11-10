@@ -42,7 +42,8 @@ function start_story_mode_new(arg0 = -1, arg1 = -1)
     // ARCHIPELAGO: allow accessing all levels except Finale
     AP_initiate_overworld();
     
-    if (arg1 == UnknownEnum.Value_4)
+    // ARCHIPELAGO: skip intro
+    if (AP_is_multiworld_active(false) || arg1 == UnknownEnum.Value_4)
         room_goto_transition_slow_fade(rm_maingame);
     else
         room_goto_transition_slow_fade(rm_story_intro);

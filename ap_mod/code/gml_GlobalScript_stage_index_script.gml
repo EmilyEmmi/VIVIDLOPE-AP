@@ -363,14 +363,14 @@ function stage_index_setup()
     if (AP_is_multiworld_active()) {
         var stage_shuffle_order = global.AP_stage_shuffle_order
         if (array_length(stage_shuffle_order) != 0) {
-            // go backwards so we pop in the correct  order
+            // go backwards so we pop in the correct order
             for (var i = array_length(stage_shuffle_order) - 1; i >= 0; i--)
             {
                 var location_id = stage_shuffle_order[i];
                 var l = floor(location_id / 100) - 1;
                 var s = location_id % 100;
                 
-                // Swap Level X and Finale
+                // Swap Level X and Finale (for the output)
                 if (l == 9)
                     l = 10
                 else if (l == 10)
@@ -403,8 +403,15 @@ function stage_index_setup()
     }
     
     if (array_length(level_order) != 0) {
-        for (var l = 0; l < 11; l++)
+        for (var i = 0; i < 11; i++)
         {
+            var l = i;
+            // Swap Level X and Finale (when putting the stages in)
+            if (l == 9)
+                l = 10
+            else if (l == 10)
+                l = 9
+            
             for (var s = 0; s < ((l == 9) ? 7 : 15); s++)
             {
                 var stage = array_pop(level_order);

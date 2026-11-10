@@ -256,6 +256,22 @@ def create_all_items(world: VividlopeWorld) -> None:
     else:
         itempool.append(shield_item)
 
+    # Handle the Early Offensive Item option
+    if world.options.early_offense != 0:
+        offensive_items = [
+            ItemNames.impact_unlock,
+            ItemNames.dash_unlock,
+            ItemNames.wrap_unlock,
+            ItemNames.balloon_unlock,
+            ItemNames.stamp_unlock,
+        ]
+        # Don't include Stamp Hammer if Noir option is set
+        if world.options.early_offense == 2:
+            offensive_items.pop()
+
+        # Give one offensive item at random
+        world.multiworld.early_items[world.player][world.random.choice(offensive_items)] = 1
+
     # Give the player a random level to start so they don't have 0 checks at the start of their game
     # We can only pick Level X as the starting level if Finale is our goal (Finale can never be the starting level)
     if (world.options.goal_condition == 1):

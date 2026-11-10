@@ -22,19 +22,8 @@ UT_SLOT_DATA_OPTION_NAMES = (
     "stage_shuffle",
     "rank_checks",
     "max_rank_check",
-    "start_with_shield",
     "nerfed_finale",
-    "trap_fill_percentage",
-    "blib_enemy_trap_weight",
-    "draco_enemy_trap_weight",
-    "fuse_enemy_trap_weight",
-    "gero_enemy_trap_weight",
-    "green_goo_enemy_trap_weight",
-    "parrot_enemy_trap_weight",
-    "prodigy_enemy_trap_weight",
-    "remover_enemy_trap_weight",
-    "ufo_enemy_trap_weight",
-    "vlad_enemy_trap_weight",
+    "forced_character",
 )
 
 class VividlopeWorld(World):
@@ -98,7 +87,7 @@ class VividlopeWorld(World):
             placed_stage = stage_id % 100 + 1
 
             # Display level name only unless we're in Finale
-            if orig_stage.level != 11:
+            if orig_stage.level == 11:
                 orig_name = f"{stage_prefixes[orig_stage.level-1]}{orig_stage.stage}"
             else:
                 orig_name = f"{level_names[orig_stage.level-1]}"

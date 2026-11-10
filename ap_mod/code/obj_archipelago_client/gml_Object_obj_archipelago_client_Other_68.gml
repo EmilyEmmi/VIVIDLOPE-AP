@@ -59,34 +59,6 @@ if (ds_map_exists(async_load, "buffer"))
                     global.AP_stage_shuffle_order = [];
                     show_debug_message("Login successful!");
                     
-                    // Load save file if we're on the right menu
-                    menu_set_top_caption("Connected!");
-                    if (room == rm_mainmenu && instance_exists(obj_menu_screen_archipelago)) {
-                        global.AP_is_playing = true;
-                        
-                        // Switch to alt save
-                        var prev_save_dir = global.save_base_dir;
-                        global.save_base_dir = game_save_id + AP_get_save_folder_prefix();
-                        global.steem_is_initialised = false;
-                        if (global.save_base_dir != prev_save_dir) {
-                            // Load save
-                            prep_legacy_savefiles();
-                            loading_buffer_shared_savedata_load();
-                            
-                            for (var saveslot = 0; saveslot < 8; saveslot++)
-                                loading_buffer_savedata_preview_load(saveslot);
-                        }
-                        
-                        global.current_savedata_slot = 7;
-                        with (obj_menu_screen_archipelago) {
-                            if (file_exists(shared_savedata_get_filename())) {
-                                menu_flow_script_after_shutdown(start_story_mode_load, -1);
-                            } else {
-                                menu_flow_goto_menu_screen(obj_menu_screen_chara_select, -1);
-                            }
-                        }
-                    }
-                    
                     with (obj_ap_notification_scheduler)
                         instance_destroy();
 
@@ -112,6 +84,46 @@ if (ds_map_exists(async_load, "buffer"))
                         global.AP_goal_unlock = data[i].slot_data.options.goal_unlock;
                     if (variable_struct_exists(data[i].slot_data.options, "nerfed_finale"))
                         global.AP_nerfed_finale = data[i].slot_data.options.nerfed_finale;
+                    if (variable_struct_exists(data[i].slot_data.options, "forced_character"))
+                        global.AP_forced_character = data[i].slot_data.options.forced_character;
+                        
+                    // Load save file if we're on the right menu
+                    menu_set_top_caption("Connected!");
+                    if (room == rm_mainmenu && instance_exists(obj_menu_screen_archipelago)) {
+                        global.AP_is_playing = true;
+                        
+                        // Switch to alt save
+                        var prev_save_dir = global.save_base_dir;
+                        global.save_base_dir = game_save_id + AP_get_save_folder_prefix();
+                        global.steem_is_initialised = false;
+                        if (global.save_base_dir != prev_save_dir) {
+                            // Load save
+                            prep_legacy_savefiles();
+                            loading_buffer_shared_savedata_load();
+                            
+                            for (var saveslot = 0; saveslot < 8; saveslot++)
+                                loading_buffer_savedata_preview_load(saveslot);
+                        }
+                        
+                        global.current_savedata_slot = 7;
+                        with (obj_menu_screen_archipelago) {
+                            if (file_exists(shared_savedata_get_filename())) {
+                                menu_flow_script_after_shutdown(start_story_mode_load, -1);
+                            } else {
+                                if (global.AP_forced_character != 0) {
+                                    // 1 -> 0 (Cerise); 2 -> 1 (Ecru); 3 -> 4 (Ms. Noir)
+                                    if (global.AP_forced_character == 3)
+                                        global.player_character = 4;
+                                    else
+                                        global.player_character = global.AP_forced_character - 1;
+                                    
+                                    menu_flow_script_after_shutdown(start_story_mode_new, -1);
+                                } else {
+                                    menu_flow_goto_menu_screen(obj_menu_screen_chara_select, -1);
+                                }
+                            }
+                        }
+                    }
                         
                     // Set up stage shuffle
                     if (variable_struct_exists(data[i].slot_data.options, "stage_shuffle") && data[i].slot_data.options.stage_shuffle && variable_struct_exists(data[i].slot_data, "stage_shuffle_order")) {

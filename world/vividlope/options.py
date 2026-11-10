@@ -95,6 +95,37 @@ class NerfedFinale(DefaultOnToggle):
     display_name = "Easier Finale in Stage Shuffle"
 
 
+class ForcedCharacter(Choice):
+    """
+    Forces you to play as one of the three playable characters.
+    off - You can choose anyone at the start.
+    cerise - Play as Cerise.
+    ecru - Play as Ecru.
+    msnoir - Play as Ms. Noir.
+    Note that Ms. Noir's 4 attacks are locked behind the powerups they are based on (Paint Balloon, Wrap Paper, Impact, and Dash), regardless of this option.
+    """
+    display_name = "Forced Character"
+    option_off = 0
+    option_cerise = 1
+    option_ecru = 2
+    option_msnoir = 3
+    default = 0
+
+
+class EarlyOffense(Choice):
+    """
+    Places a random offensive item in Sphere 1.
+    off - Place all offensive items normally.
+    on - Places Stamp Hammer, Impact, Dash, Wrap Paper, or Paint Balloon in Sphere 1.
+    noir - Places one of the above, excluding Stamp Hammer (meaning you're guaranteed at least one of Ms Noir's attacks).
+    """
+    display_name = "Early Offensive Item"
+    option_off = 0
+    option_on = 1
+    option_noir = 2
+    default = 0
+
+
 class TrapFillPercentage(Range):
     """
     Replace a percentage of filler items in the item pool with random traps.
@@ -207,6 +238,8 @@ class VividlopeOptions(PerGameCommonOptions):
     max_rank_check: MaxRankCheck
     start_with_shield: StartWithShield
     nerfed_finale: NerfedFinale
+    forced_character: ForcedCharacter
+    early_offense: EarlyOffense
     trap_fill_percentage: TrapFillPercentage
     blib_enemy_trap_weight: BlibEnemyTrapWeight
     draco_enemy_trap_weight: DracoEnemyWeight
