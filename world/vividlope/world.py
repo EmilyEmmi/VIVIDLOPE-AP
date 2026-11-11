@@ -20,6 +20,8 @@ UT_SLOT_DATA_OPTION_NAMES = (
     "goal_condition",
     "goal_unlock",
     "stage_shuffle",
+    "exclude_finale",
+    "exclude_level_x",
     "rank_checks",
     "max_rank_check",
     "nerfed_finale",
@@ -91,6 +93,12 @@ class VividlopeWorld(World):
                 orig_name = f"{stage_prefixes[orig_stage.level-1]}{orig_stage.stage}"
             else:
                 orig_name = f"{level_names[orig_stage.level-1]}"
+
+            # Don't run for excluded levels
+            if (orig_stage.level == 11 and self.options.exclude_finale and self.options.goal_condition != 0):
+                continue
+            if (orig_stage.level == 10 and self.options.exclude_level_x and self.options.goal_condition != 1):
+                continue
 
             location_names = []
             if self.options.rank_checks != 2 or orig_stage.level == 11:

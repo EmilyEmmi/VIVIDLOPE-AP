@@ -17,13 +17,18 @@ if (ds_map_exists(async_load, "buffer"))
             {
                 show_debug_message(data[i])
             }
-            // get archipelago multiworld
-            if(global.AP_multiworld == 0)
-			    global.AP_multiworld = data[0].seed_name;
 
             switch (data[i].cmd)
             {
                 case "RoomInfo":
+                    // Get archipelago multiworld; fail on purpose if the seed is different and we're reconnecting
+                    if (!global.AP_is_playing) {
+                        global.AP_multiworld = data[i].seed_name;
+                    } else if (global.AP_multiworld != data[i].seed_name) {
+                        AP_disconnect(true);
+                        menu_set_top_caption("Wrong seed");
+                        break;
+                    }
                     global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.GOT_ROOMINFO;
                     if (variable_struct_exists(data[i], "games"))
                     {
@@ -100,6 +105,8 @@ if (ds_map_exists(async_load, "buffer"))
                         global.steem_is_initialised = false;
                         if (global.save_base_dir != prev_save_dir) {
                             // Load save
+                            shared_savedata_reset();
+                            global.shared_savedata.unlocked_clothes = [];
                             prep_legacy_savefiles();
                             loading_buffer_shared_savedata_load();
                             

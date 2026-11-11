@@ -285,6 +285,11 @@ def create_all_items(world: VividlopeWorld) -> None:
             i == 9 and world.options.goal_condition == 1):  # Level X
             continue
 
+        # Skip creating unlock for excluded levels
+        if (i == 10 and world.options.exclude_finale) or (  # Finale
+            i == 9 and world.options.exclude_level_x):  # Level X
+            continue
+
         unlock_item = world.create_item(f"{level_names[i]} Unlock")
         if i == random_starting_level:
             world.push_precollected(unlock_item)

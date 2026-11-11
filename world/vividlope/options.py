@@ -37,7 +37,7 @@ class GoalUnlock(Range):
     display_name = "Clears Until Unlock"
 
     range_start = 1
-    range_end = 9
+    range_end = 10
     default = 6
 
 class StageShuffle(Toggle):
@@ -45,6 +45,23 @@ class StageShuffle(Toggle):
     Whether stages are shuffled to be in a random order.
     """
     display_name = "Shuffle Stages"
+
+
+class ExcludeFinale(Toggle):
+    """
+    Excludes Finale from stage shuffle.
+    If your goal is Level X, it is also excluded from the multiworld.
+    """
+    display_name = "Exclude Finale"
+
+
+class ExcludeLevelX(DefaultOnToggle):
+    """
+    Excludes Level X from stage shuffle.
+    If your goal is Finale, it is also excluded from the multiworld.
+    """
+    display_name = "Exclude Level X"
+
 
 class RankChecks(Choice):
     """
@@ -238,6 +255,8 @@ class VividlopeOptions(PerGameCommonOptions):
     max_rank_check: MaxRankCheck
     start_with_shield: StartWithShield
     nerfed_finale: NerfedFinale
+    exclude_finale: ExcludeFinale
+    exclude_level_x: ExcludeLevelX
     forced_character: ForcedCharacter
     early_offense: EarlyOffense
     trap_fill_percentage: TrapFillPercentage

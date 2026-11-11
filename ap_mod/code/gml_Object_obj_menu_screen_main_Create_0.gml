@@ -23,6 +23,8 @@ if (variable_global_exists("AP_is_playing") && global.AP_is_playing) {
     }
     
     // Load save
+    shared_savedata_reset();
+    global.shared_savedata.unlocked_clothes = [];
     prep_legacy_savefiles();
     loading_buffer_shared_savedata_load();
     

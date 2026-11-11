@@ -103,6 +103,10 @@ function gstate_activate_player_ko(arg0)
         // Send deathlink
         if (AP_is_multiworld_active(false)) {
             obj_archipelago_client.AP_sendDeathlink(global.AP_name + " was KOed");
+            // Reset finale save if we game over
+            if (global.player_lives <= 0 && game_is_in_final_level()) {
+                obj_archipelago_client.AP_reset_finale_save(true);
+            }
         }
     }
 }

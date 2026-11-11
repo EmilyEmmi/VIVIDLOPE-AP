@@ -101,29 +101,36 @@ def create_map_regions(world: VividlopeWorld):
                 prev_region.connect(stage_region)
                 prev_region = stage_region
 
+        # Don't create rules for excluded levels
+        if level == 10 and world.options.exclude_finale and world.options.goal_condition != 0:
+            continue
+        if level == 9 and world.options.exclude_level_x and world.options.goal_condition != 1:
+            continue
+
         # Level region rules:
         overworld_to_level = overworld.connect(level_region)
         clear_location_name = f"{level_names[level]} {LocationSuffix.level_clear}"
+        clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
+        level_clear_rule = Has(clear_item_name, count=level_clear_count[level])
 
         # If this world is a goal, we need to make a lot of things different to account for it
         if (level == 10 and world.options.goal_condition == 0) or ( # Finale
             level == 9 and world.options.goal_condition == 1): # Level X
             world.set_rule(overworld_to_level, Has(ItemNames.level_clear_event, count=FromOption(GoalUnlock)))
 
-            level_region.add_event(f"{clear_location_name} Goal Event", "Victory", location_type=VividlopeLocation, item_type=VividlopeItem)
+            level_region.add_event(f"{clear_location_name} Goal Event", "Victory", location_type=VividlopeLocation, item_type=VividlopeItem, rule=level_clear_rule)
             world.set_completion_rule(Has("Victory"))
         else:
             # Players can only enter the level if they have the unlock
             world.set_rule(overworld_to_level, Has(f"{level_names[level]} Unlock"))
 
             # Add a level clear event and event item pair for the goal
-            level_region.add_event(f"{level_names[level]} {LocationSuffix.level_clear_event}", ItemNames.level_clear_event, location_type=VividlopeLocation, item_type=VividlopeItem)
+            level_region.add_event(f"{level_names[level]} {LocationSuffix.level_clear_event}", ItemNames.level_clear_event, location_type=VividlopeLocation, item_type=VividlopeItem, rule=level_clear_rule)
 
             # Add the level clear location to the newly created region
             clear_location = VividlopeLocation(player, clear_location_name, world.location_name_to_id[clear_location_name], level_region)
             level_region.locations.append(clear_location)
-            clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
-            world.set_rule(clear_location, Has(clear_item_name, count=level_clear_count[level]))
+            world.set_rule(clear_location, level_clear_rule)
 
     # Shop regions
     shop_check_number = 1
@@ -154,12 +161,35 @@ def attach_shuffled_levels(world: VividlopeWorld):
             # NOTE: This only works because all levels except Finale have 15 stages
             stages: list[Stage] = [stage_data[(stage_id // 100 - 1) * 15 + stage_id % 100] for stage_id in world.stage_shuffle_order]
         else:
+            # Temporarily remove excluded stages
+            curr_index = 9 * 15
+            excluded_stages = []
+            if world.options.exclude_level_x:
+                for i in range(0, 15):
+                    excluded_stages.append(stages.pop(curr_index))
+                if world.options.exclude_finale:
+                    for i in range(0, 7):
+                        excluded_stages.append(stages.pop(curr_index))
+            elif world.options.exclude_finale:
+                curr_index = 10 * 15
+                for i in range(0, 7):
+                    excluded_stages.append(stages.pop(curr_index))
+
+            # Do the shuffle
             world.random.shuffle(stages)
+
+            # Put excluded stages back in
+            for stage in excluded_stages:
+                stages.insert(curr_index, stage)
+                curr_index += 1
+
             world.stage_shuffle_order = [stage.location_id() for stage in stages]
 
     stage_index = 0
     for level in range(0, 10):
-        # level_region = world.get_region(level_names[level])
+        # Don't create locations for Level X if excluded and not goal
+        if level == 9 and world.options.exclude_level_x and world.options.goal_condition != 1:
+            continue
 
         # Define event item for later
         clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
@@ -221,6 +251,9 @@ def attach_shuffled_levels(world: VividlopeWorld):
 
     # Build Finale locations differently.
     # Stages in Finale always have a clear location, and only the last stage has rank checks (for Finale as a whole)
+    # Don't create locations for Finale if excluded and not goal
+    if world.options.exclude_finale and world.options.goal_condition != 0:
+        return
     level = 10
     clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
     all_rank_items = True_()
