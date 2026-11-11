@@ -3,7 +3,7 @@ from typing import TYPE_CHECKING
 from BaseClasses import Entrance, Region, Location
 from rule_builder.field_resolvers import FromOption
 from rule_builder.options import OptionFilter
-from rule_builder.rules import Has, HasAll, Rule
+from rule_builder.rules import Has, HasAll, Rule, True_
 from .items import VividlopeItem
 from .names import level_names, stage_prefixes, LocationSuffix, ItemNames
 from .data import stage_data, level_clear_count, Stage
@@ -51,6 +51,20 @@ def generate_location_table() -> dict[str, int]:
         # Shop ids are in the range 150000-150024
         location_table[f"Shop Purchase {shop + 1}"] = 150000 + shop
 
+    # Finale rank locations are in the range 160001-160011
+    finale_prefix = level_names[10]
+    location_table[f"{finale_prefix} {LocationSuffix.stage_d}"] = 160001
+    location_table[f"{finale_prefix} {LocationSuffix.stage_dp}"] = 160002
+    location_table[f"{finale_prefix} {LocationSuffix.stage_c}"] = 160003
+    location_table[f"{finale_prefix} {LocationSuffix.stage_cp}"] = 160004
+    location_table[f"{finale_prefix} {LocationSuffix.stage_b}"] = 160005
+    location_table[f"{finale_prefix} {LocationSuffix.stage_bp}"] = 160006
+    location_table[f"{finale_prefix} {LocationSuffix.stage_a}"] = 160007
+    location_table[f"{finale_prefix} {LocationSuffix.stage_ap}"] = 160008
+    location_table[f"{finale_prefix} {LocationSuffix.stage_s}"] = 160009
+    location_table[f"{finale_prefix} {LocationSuffix.stage_sp}"] = 160010
+    location_table[f"{finale_prefix} {LocationSuffix.stage_v}"] = 160011
+
     return location_table
 
 # Creates the regions that deal with the map portion of the world.
@@ -70,15 +84,22 @@ def create_map_regions(world: VividlopeWorld):
         multiworld.regions.append(level_region)
 
         # Stage entrance regions in that level
-        for stage in range(0, 15):
-            if level == 10 and stage >= 7:
-                break # Finale only has 7 parts, so this prevents it from adding more
-
-            # Keep in mind these are only containers for stage randomization.
-            # We will connect a (random) stage region with locations in another function
-            stage_region = Region(f"{stage_prefixes[level]}{stage} Entrance", player, multiworld)
-            multiworld.regions.append(stage_region)
-            level_region.connect(stage_region)
+        if level != 10:
+            for stage in range(0, 15):
+                # Keep in mind these are only containers for stage randomization.
+                # We will connect a (random) stage region with locations in another function
+                stage_region = Region(f"{stage_prefixes[level]}{stage+1} Entrance", player, multiworld)
+                multiworld.regions.append(stage_region)
+                level_region.connect(stage_region)
+        else:
+            # Finale connects all of the stages in a row instead
+            prev_region = level_region
+            for stage in range(0, 7):
+                # These are containers (see above)
+                stage_region = Region(f"{stage_prefixes[level]}{stage+1} Entrance", player, multiworld)
+                multiworld.regions.append(stage_region)
+                prev_region.connect(stage_region)
+                prev_region = stage_region
 
         # Level region rules:
         overworld_to_level = overworld.connect(level_region)
@@ -137,13 +158,14 @@ def attach_shuffled_levels(world: VividlopeWorld):
             world.stage_shuffle_order = [stage.location_id() for stage in stages]
 
     stage_index = 0
-    for level in range(0, 11):
+    for level in range(0, 10):
         # level_region = world.get_region(level_names[level])
 
+        # Define event item for later
+        clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
+
         for stage in range(0, 15):
-            if level == 10 and stage >= 7:
-                break # Finale only has 7 parts, so this prevents it from checking for extra
-            entrance_region = world.get_region(f"{stage_prefixes[level]}{stage} Entrance")
+            entrance_region = world.get_region(f"{stage_prefixes[level]}{stage+1} Entrance")
             random_stage = stages[stage_index]
 
             # Create region from the randomly selected level
@@ -155,9 +177,8 @@ def attach_shuffled_levels(world: VividlopeWorld):
             if random_stage.req_items != None:
                 world.set_rule(connection, random_stage.req_items)
 
-            # Create an event item so we can keep track of mow many stages are beat in a level
+            # Create an event item so we can keep track of how many stages are beat in a level
             # for proper logic for the level clear checks.
-            clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
             stage_region.add_event(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear_event}", clear_item_name, location_type=VividlopeLocation, item_type=VividlopeItem)
 
             location_names = []
@@ -197,3 +218,84 @@ def attach_shuffled_levels(world: VividlopeWorld):
                         world.set_rule(world.get_location(location_name), random_stage.req_items_rank)
 
             stage_index += 1
+
+    # Build Finale locations differently.
+    # Stages in Finale always have a clear location, and only the last stage has rank checks (for Finale as a whole)
+    level = 10
+    clear_item_name = f"{level_names[level]} {LocationSuffix.stage_clear_event} Item"
+    all_rank_items = True_()
+    prev_entrance_name = level_names[level]
+    for stage in range(0, 7):
+        entrance_name = f"{stage_prefixes[level]}{stage+1} Entrance"
+        entrance_region = world.get_region(entrance_name)
+        random_stage = stages[stage_index]
+
+        # Create region from the randomly selected level
+        stage_region = Region(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage}", player, multiworld)
+        multiworld.regions.append(stage_region)
+        connection = entrance_region.connect(stage_region)
+
+        # Assign rules
+        # If nerf finale is off, we need to clear all tiles, so require the rank items
+        entrance = world.get_entrance(f"{prev_entrance_name} -> {entrance_name}")
+        prev_entrance_name = entrance_name
+        if random_stage.req_items_rank != None and not world.options.nerfed_finale:
+            world.set_rule(entrance, random_stage.req_items_rank)
+        elif random_stage.req_items != None:
+            world.set_rule(entrance, random_stage.req_items)
+            if random_stage.req_items_rank != None:
+                all_rank_items = all_rank_items | random_stage.req_items_rank
+
+        # Create an event item so we can keep track of how many stages are beat in a level
+        # for proper logic for the level clear checks.
+        stage_region.add_event(f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear_event}", clear_item_name, location_type=VividlopeLocation, item_type=VividlopeItem)
+
+        # Create stage clear location regardless of rank options
+        location_names = [f"{stage_prefixes[random_stage.level-1]}{random_stage.stage} {LocationSuffix.stage_clear}"]
+        location_ids = get_location_names_with_ids(location_names)
+        stage_region.add_locations(location_ids, VividlopeLocation)
+
+        # At the final stage, add all of the finale rank checks
+        if stage == 6 and world.options.rank_checks != 0 and world.options.goal_condition != 0:
+            finale_prefix = level_names[10]
+            location_names = []
+            all_location_names = [
+                f"{finale_prefix} {LocationSuffix.stage_d}",
+                f"{finale_prefix} {LocationSuffix.stage_dp}",
+                f"{finale_prefix} {LocationSuffix.stage_c}",
+                f"{finale_prefix} {LocationSuffix.stage_cp}",
+                f"{finale_prefix} {LocationSuffix.stage_b}",
+                f"{finale_prefix} {LocationSuffix.stage_bp}",
+                f"{finale_prefix} {LocationSuffix.stage_a}",
+                f"{finale_prefix} {LocationSuffix.stage_ap}",
+                f"{finale_prefix} {LocationSuffix.stage_s}",
+                f"{finale_prefix} {LocationSuffix.stage_sp}",
+                f"{finale_prefix} {LocationSuffix.stage_v}",
+            ]
+            if world.options.rank_checks == 1:
+                location_name = all_location_names[world.options.max_rank_check]
+                location_names.append(location_name)
+            else:
+                for n in range(0, world.options.max_rank_check+1):
+                    location_name = all_location_names[n]
+                    location_names.append(location_name)
+            
+            location_ids = get_location_names_with_ids(location_names)
+            stage_region.add_locations(location_ids, VividlopeLocation)
+
+            # Require items for ranks B and higher
+            # Note that if nerfed finale is off, this is skipped since the entire level
+            # is already locked behind those items.
+            if all_rank_items != True_() and world.options.rank_checks != 0 and world.options.max_rank_check >= 4:
+                if world.options.rank_checks == 1:
+                    world.set_rule(world.get_location(location_names[0]), all_rank_items)
+                else:
+                    for n in range(4, world.options.max_rank_check+1):
+                        location_name = location_names[n]
+                        world.set_rule(world.get_location(location_name), all_rank_items)
+
+        stage_index += 1
+
+        
+
+    

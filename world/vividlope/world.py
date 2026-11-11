@@ -93,9 +93,9 @@ class VividlopeWorld(World):
                 orig_name = f"{level_names[orig_stage.level-1]}"
 
             location_names = []
-            if self.options.rank_checks != 2:
+            if self.options.rank_checks != 2 or orig_stage.level == 11:
                 location_names.append(f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_clear}")
-            if self.options.rank_checks != 0:
+            if self.options.rank_checks != 0 and orig_stage.level != 11:
                 all_location_names = [
                     f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_d}",
                     f"{stage_prefixes[placed_level-1]}{placed_stage} {LocationSuffix.stage_dp}",

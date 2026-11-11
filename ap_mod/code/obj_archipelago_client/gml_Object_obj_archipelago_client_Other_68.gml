@@ -57,6 +57,8 @@ if (ds_map_exists(async_load, "buffer"))
                     global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.CONNECTED;
                     global.AP_connection_errors = undefined;
                     global.AP_stage_shuffle_order = [];
+                    global.AP_current_deaths = 0;
+                    AP_reset_finale_save();
                     show_debug_message("Login successful!");
                     
                     with (obj_ap_notification_scheduler)
@@ -393,8 +395,19 @@ if (ds_map_exists(async_load, "buffer"))
                         if (variable_struct_exists(keys, AP_getDatastoragePrefix() + "current_deaths"))
                         {
                             global.AP_deathlink_current_deaths = variable_struct_get(keys, AP_getDatastoragePrefix() + "current_deaths");
-                            if (global.AP_deathlink_current_deaths == undefined) {
+                            if (is_undefined(global.AP_deathlink_current_deaths)) {
                                 global.AP_deathlink_current_deaths = 0;
+                            }
+                        }
+                        
+                        // Get or save saved finale data
+                        for (var i = 0; i < array_length(FINALE_SAVEABLES); i++) {
+                            var key = "VIVIDLOPE_"+FINALE_SAVEABLES[i];
+                            if (variable_struct_exists(keys, AP_getDatastoragePrefix() + key)) {
+                                var value = variable_struct_get(keys, AP_getDatastoragePrefix() + key);
+                                if (!is_undefined(value)) {
+                                    ds_map_set(AP_saved_finale_stats, value);
+                                }
                             }
                         }
                     }

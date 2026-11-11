@@ -93,6 +93,7 @@ global.AP_forced_character = 0;
 global.AP_override_level_x_reveal = false;
 global.AP_received_filler = ds_map_create();
 global.AP_processed_filler = ds_map_create();
+AP_saved_finale_stats = ds_map_create();
 
 global.AP_other_games = []
 
@@ -187,6 +188,8 @@ ATTIRE_LIST = [
     ["cerise_hat_recycle",      "ecru_hat_vintage",     "missnoir_hat_time"],
     ["cerise_hat_black",        "ecru_hat_gold",        "missnoir_hat_red"],
 ]
+
+FINALE_SAVEABLES = ["compound_stat_stages", "compound_stat_fruit", "compound_stat_end_percent_sum", "compound_stat_best_chain", "compound_stat_kos", "player_lives", "rank_cap", "stage_difficulty"];
 
 step = 0;
 

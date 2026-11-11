@@ -180,16 +180,27 @@ function game_setup_stage_generic(arg0 = false)
     global.compound_stat_end_percent_sum = 0;
     global.compound_stat_best_chain = 0;
     global.compound_stat_stages = 0;
+    
+    // ARCHIPELAGO: Load/reset finale data
+    if (AP_is_multiworld_active() and game_is_in_final_level()) {
+        if (global.current_stage != global.stage_order[9][0]) {
+            obj_archipelago_client.AP_load_finale_save();
+        } else {
+            obj_archipelago_client.AP_reset_finale_save(true);
+        }
+    }
 }
 
 function game_setup_stage_retry()
 {
-    game_setup_stage_generic();
-    
     if (game_is_in_final_level())
         global.current_stage = global.stage_order[9][0];
     else
         global.just_restarted = true;
+    
+    // ARCHIPELAGO: Moved this call down so that your stage
+    // resets when selecting "retry"
+    game_setup_stage_generic();
     
     if (global.gstate == UnknownEnum.Value_4)
         global.ignore_next_hint = true;
@@ -214,8 +225,8 @@ function game_mark_stage_as_cleared(arg0, arg1)
         }
         
         // ARCHIPELAGO: Send finale goal
-        AP_handleLevelClear(level);
         shared_savedata_register_rank("finale", arg1);
+        AP_handleLevelClear(level);
         exit;
     }
     

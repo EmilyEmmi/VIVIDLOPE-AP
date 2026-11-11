@@ -431,9 +431,21 @@ function AP_postScouting()
     //AP_initializeCurrentLocation();
     AP_fill_id_to_itemname_struct();
     
+    var to_get = [];
     // get current deaths from the server
     if global.AP_deathlink and global.AP_deathlink_amnesty > 1
-        AP_getDataStorage("current_deaths");
+        array_push(to_get, "current_deaths");
+    
+    // Get or save saved finale data
+    for (var i = 0; i < array_length(FINALE_SAVEABLES); i++) {
+        var key = FINALE_SAVEABLES[i];
+        if (room == rm_maingame) {
+            AP_setDataStorage("VIVIDLOPE_"+key, variable_global_get(key));
+        } else {
+            array_push(to_get, "VIVIDLOPE_"+key);
+        }
+    }
+    AP_getDataStorage(to_get);
     
     /*if (variable_global_exists("chapter"))
     {
@@ -823,6 +835,35 @@ function AP_reset_items() {
     global.AP_shop_upgrades = 0;
     ds_map_clear(global.AP_processed_filler);
     global.shared_savedata.unlocked_clothes = [];
+}
+
+function AP_update_finale_save() {
+    for (var i = 0; i < array_length(FINALE_SAVEABLES); i++) {
+        var key = FINALE_SAVEABLES[i];
+        var value = variable_global_get(key);
+        ds_map_set(AP_saved_finale_stats, key, value);
+        AP_setDataStorage("VIVIDLOPE_"+key, value);
+    }
+}
+
+function AP_load_finale_save() {
+    // Don't load anything if stages cleared is 0
+    var stages_cleared = ds_map_find_value(AP_saved_finale_stats, "compound_stat_stages");
+    if (is_undefined(stages_cleared) || stages_cleared == 0) return;
+    
+    for (var i = 0; i < array_length(FINALE_SAVEABLES); i++) {
+        var key = FINALE_SAVEABLES[i];
+        var value = ds_map_find_value(AP_saved_finale_stats, key);
+        if (!is_undefined(value)) variable_global_set(key, value);
+    }
+}
+
+function AP_reset_finale_save(store = false) {
+    ds_map_clear(AP_saved_finale_stats);
+    
+    if (store) {
+        AP_setDataStorage("VIVIDLOPE_compound_stat_stages", 0);
+    }
 }
 
 enum UnknownEnum

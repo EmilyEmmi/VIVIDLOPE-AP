@@ -102,14 +102,27 @@ function AP_sendStageLocation(level, stage, rank) {
     var stage_id = level * 100 + (stage - 1);
     AP_sendLocation(stage_id);
     
-    if (level == 11) exit;
-    
     // Send checks for all ranks that we achieved and lower
     var rankPower = ds_map_exists(global.rank_power, rank) ? ds_map_find_value(global.rank_power, rank) : 0;
     var rank_id = rankPower - 1; // Lowest is D
     if (rank_id > 0) {
         for (var i = 1; i <= rank_id; i++) {
             AP_sendLocation(10000 * i + stage_id);
+        }
+    }
+    
+    // Store or reset finale save data
+    if (game_is_in_final_level() && AP_is_multiworld_active(false)) {
+        if (!game_is_in_final_stage()) {
+            var prev_player_lives = global.player_lives;
+            if (global.player_lives < global.player_lives_max) {
+                // Include extra life from beating the stage
+                global.player_lives++;
+            }
+            obj_archipelago_client.AP_update_finale_save();
+            global.player_lives = prev_player_lives;
+        } else {
+            obj_archipelago_client.AP_reset_finale_save(true);
         }
     }
     
@@ -127,6 +140,20 @@ function AP_handleLevelClear(level) {
     
     AP_sendLocation(200000 + level - 1);
     AP_initiate_overworld();
+    
+    // Send finale rank checks
+    if (level == 11) {
+        var rank = ds_map_find_value(global.saved_rank, "finale");
+        
+        // Send checks for all ranks that we achieved and lower
+        var rankPower = ds_map_exists(global.rank_power, rank) ? ds_map_find_value(global.rank_power, rank) : 0;
+        var rank_id = rankPower - 1; // Lowest is D
+        if (rank_id > 0) {
+            for (var i = 1; i <= rank_id; i++) {
+                AP_sendLocation(160000 + i);
+            }
+        }
+    }
     
     if (level == 11 && global.AP_goal_condition == 0) || (level == 10 && global.AP_goal_condition == 1) {
         obj_archipelago_client.AP_goal();
