@@ -166,6 +166,11 @@ class VividlopeWorld(World):
             )
     
     def generate_early(self) -> None:
+        # Prevent generation failure if we exclude too many levels
+        if self.options.goal_unlock >= 10 and ((self.options.exclude_finale and self.options.goal_condition != 0) or (self.options.exclude_level_x and self.options.goal_condition != 1)):
+            logger.warning(f"VIVIDLOPE ({self.player_name}): Reduced goal unlock to 9 since too many levels are excluded")
+            self.options.goal_unlock.value = 9
+                    
         self.stage_shuffle_order = []
 
         slot_data = self._get_ut_slot_data()

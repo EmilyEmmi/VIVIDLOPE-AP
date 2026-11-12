@@ -27,7 +27,7 @@ xx += (string_width("20 ") * fns);
 draw_text_transformed(lx + xx + mx, 704 - my, "Jaklub", fns, fns, 0);
 // Draw AP marker
 xx += (string_width("Jaklub ") * fns);
-draw_text_transformed(lx + xx + mx, 704 - my, "AP beta", fns, fns, 0);
+draw_text_transformed(lx + xx + mx, 704 - my, "AP v1.0.0", fns, fns, 0);
 draw_set_halign(fa_right);
 
 if (trange(press_start_flash, press_start_flash, 0, 0.7))

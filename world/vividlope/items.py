@@ -273,8 +273,8 @@ def create_all_items(world: VividlopeWorld) -> None:
         world.multiworld.early_items[world.player][world.random.choice(offensive_items)] = 1
 
     # Give the player a random level to start so they don't have 0 checks at the start of their game
-    # We can only pick Level X as the starting level if Finale is our goal (Finale can never be the starting level)
-    if (world.options.goal_condition == 1):
+    # We can only pick Level X as the starting level if Finale is our goal and it isn't excluded (Finale can never be the starting level)
+    if (world.options.goal_condition == 1 or world.options.exclude_level_x):
         random_starting_level = world.random.randint(0, 8)
     else:
         random_starting_level = world.random.randint(0, 9)
