@@ -90,6 +90,7 @@ global.AP_goal_condition = 0;
 global.AP_goal_unlock = 0;
 global.AP_nerfed_finale = true;
 global.AP_forced_character = 0;
+global.AP_starting_level = -1;
 global.AP_override_level_x_reveal = false;
 global.AP_received_filler = ds_map_create();
 global.AP_processed_filler = ds_map_create();

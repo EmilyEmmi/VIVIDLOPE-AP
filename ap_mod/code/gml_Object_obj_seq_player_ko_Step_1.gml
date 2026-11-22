@@ -276,8 +276,7 @@ if (timer >= time_len)
             {
                 var f = ds_grid_get(global.stage_grid, save_gx, save_gy);
                 
-                // fix deathlink bug
-                if (f == undefined || !(struct_exists(f, "walkable")) || f.walkable <= 0 || !cubea_is_floor_safe(f))
+                if (!(struct_exists(f, "walkable")) || f.walkable <= 0 || !cubea_is_floor_safe(f))
                 {
                     player_assure_safe_position_is_safe();
                     save_gx = safe_gx;
@@ -307,8 +306,7 @@ if (timer >= time_len)
                 save_gy = gy;
                 var f = ds_grid_get(global.stage_grid, save_gx, save_gy);
                 
-                // fix deathlink bug
-                if (f == undefined || !(struct_exists(f, "walkable")) || f.walkable <= 0 || !cubea_is_floor_safe(f))
+                if (!(struct_exists(f, "walkable")) || f.walkable <= 0 || !cubea_is_floor_safe(f))
                 {
                     player_assure_safe_position_is_safe();
                     save_gx = safe_gx;

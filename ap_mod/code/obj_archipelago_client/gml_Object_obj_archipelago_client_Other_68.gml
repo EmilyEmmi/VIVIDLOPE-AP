@@ -62,6 +62,7 @@ if (ds_map_exists(async_load, "buffer"))
                     global.AP_connection_state = global.AP_ENUM_CONNECTION_STATE.CONNECTED;
                     global.AP_connection_errors = undefined;
                     global.AP_stage_shuffle_order = [];
+                    global.AP_starting_level = -1;
                     global.AP_current_deaths = 0;
                     AP_reset_finale_save();
                     show_debug_message("Login successful!");
@@ -93,6 +94,8 @@ if (ds_map_exists(async_load, "buffer"))
                         global.AP_nerfed_finale = data[i].slot_data.options.nerfed_finale;
                     if (variable_struct_exists(data[i].slot_data.options, "forced_character"))
                         global.AP_forced_character = data[i].slot_data.options.forced_character;
+                    if (variable_struct_exists(data[i].slot_data, "starting_level"))
+                        global.AP_starting_level = data[i].slot_data.starting_level;
                         
                     // Load save file if we're on the right menu
                     menu_set_top_caption("Connected!");
@@ -265,12 +268,9 @@ if (ds_map_exists(async_load, "buffer"))
                                     }
 
                                     global.AP_deathlink_infos = {source: source, cause: cause, time: time, uuid: uuid};
-                                    global.AP_deathlink_protected = true;
-                                    if (cause != undefined) {
-                                        AP_create_notification(cause, true);
-                                    }
-                                    gstate_activate_player_ko(5); // KO player
-                                    global.AP_deathlink_protected = false;
+                                    var handler = instance_create_depth(0, 0, 0, obj_ap_deathlink_handler);
+                                    with (handler)
+                                        text = cause;
                                 }
                             }
                             else if (data[i].tags[ii] == ("SharedDamage" + global.AP_damagelink_group) && data[i].data.uuid != global.AP_uuid && !global.AP_damagelink_protected)

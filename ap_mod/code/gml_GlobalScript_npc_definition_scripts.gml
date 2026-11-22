@@ -10,33 +10,61 @@ function overworld_progress()
 }
 
 function AP_setup_wobbler_dialog() {
+    var start_line = "";
     var unlocked_level_list = [];
     for (var i = 0; i < array_length(global.AP_unlocked_levels); i++) {
         if (global.AP_unlocked_levels[i]) {
+            var level_name = "Level "+string(i+1);
             if (i == 9) {
-                array_push(unlocked_level_list, "Finale");
+                level_name = "Finale";
             } else if (i == 10) {
-                array_push(unlocked_level_list, "Level X");
-            } else {
-                array_push(unlocked_level_list, "Level "+string(i+1));
+                level_name = "Level X";
             }
+            
+            if (global.AP_starting_level != i)
+                array_push(unlocked_level_list, level_name);
+            else
+                start_line = string("The starting level is {0}!", level_name);
         }
     }
     
     var base_line = "";
-    if (array_length(unlocked_level_list) == 0) {
-        base_line = "None of the VIVIDCORE is open right now... I'll have to report this to the Boss.";
-    } else if (array_length(unlocked_level_list) == 1) {
-        base_line = string("The starting level is {0}!", unlocked_level_list[0]);
-    } else if (array_length(unlocked_level_list) == 2) {
-        base_line = string("{0} and {1} are open right now.", unlocked_level_list[0], unlocked_level_list[1]);
-    } else {
-        for (var i = 0; i < (array_length(unlocked_level_list) - 1); i++) {
-            base_line += (unlocked_level_list[i] + ", ");
+    if (start_line != "") {
+        if (array_length(unlocked_level_list) == 1) {
+            base_line = string("{0} is also available.", unlocked_level_list[0]);
+        } else if (array_length(unlocked_level_list) == 2) {
+            base_line = string("{0} and {1} are also available.", unlocked_level_list[0], unlocked_level_list[1], open_right_now);
+        } else if (array_length(unlocked_level_list) != 0) {
+            for (var i = 0; i < (array_length(unlocked_level_list) - 1); i++) {
+                base_line += (unlocked_level_list[i] + ", ");
+            }
+            base_line += ("and " + unlocked_level_list[array_length(unlocked_level_list) - 1] + " are also available.");
         }
-        base_line += ("and " + unlocked_level_list[array_length(unlocked_level_list) - 1] + " are open right now.");
     }
-    event_array = [base_line];
+    else {
+        // old behavior (no starting level found)
+        if (array_length(unlocked_level_list) == 0) {
+            if (global.player_character != 4)
+                base_line = "None of the VIVIDSCAPE is open right now... I'll have to report this to the Boss.";
+            else
+                base_line = "Boss, there's some sort of issue with the VIVIDSCAPE! None of the levels are available!";
+        } else if (array_length(unlocked_level_list) == 1) {
+            base_line = string("The starting level is {0}!", unlocked_level_list[0]);
+        } else if (array_length(unlocked_level_list) == 2) {
+            base_line = string("{0} and {1} are open right now.", unlocked_level_list[0], unlocked_level_list[1]);
+        } else {
+            for (var i = 0; i < (array_length(unlocked_level_list) - 1); i++) {
+                base_line += (unlocked_level_list[i] + ", ");
+            }
+            base_line += ("and " + unlocked_level_list[array_length(unlocked_level_list) - 1] + " are open right now.");
+        }
+    }
+    
+    event_array = [[]];
+    if (start_line != "")
+        array_push(event_array[0], start_line);
+    if (base_line != "")
+        array_push(event_array[0], base_line);
 }
 
 function npc_initialize(arg0)
