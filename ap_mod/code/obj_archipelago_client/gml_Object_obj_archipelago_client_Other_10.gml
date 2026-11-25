@@ -701,7 +701,7 @@ function AP_add_new_datapackage(data)
 }
 
 function AP_create_notification(str, priority = false) {
-    var o = instance_create_lay(0, 0, 2, obj_ap_notification_scheduler);
+    var o = instance_create_depth(0, 0, 0, obj_ap_notification_scheduler);
     with (o)
         text = str;
         if (priority) {

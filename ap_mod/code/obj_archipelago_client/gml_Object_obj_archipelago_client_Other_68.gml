@@ -413,7 +413,7 @@ if (ds_map_exists(async_load, "buffer"))
                             if (variable_struct_exists(keys, AP_getDatastoragePrefix() + key)) {
                                 var value = variable_struct_get(keys, AP_getDatastoragePrefix() + key);
                                 if (!is_undefined(value)) {
-                                    ds_map_set(AP_saved_finale_stats, value);
+                                    ds_map_set(AP_saved_finale_stats, FINALE_SAVEABLES[i], value);
                                 }
                             }
                         }
